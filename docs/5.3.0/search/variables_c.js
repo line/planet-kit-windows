@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['pbuffer_0',['pbuffer',['../struct_planet_kit_1_1_s_video_frame.html#a8f2bff94ebeb0e49cafd56bc9d162f79',1,'PlanetKit::SVideoFrame']]],
+  ['pdata_1',['pData',['../struct_planet_kit_1_1_s_short_data.html#a839a01cd958aeb6ee0bd41d6989f2eea',1,'PlanetKit::SShortData']]],
+  ['peer_2',['Peer',['../namespace_planet_kit.html#a67da95a6ddc8875aefcec3248afd96ee',1,'PlanetKit']]],
+  ['peercontrol_3',['PeerControl',['../namespace_planet_kit.html#ac7b68a4b5f57399321071c183d4ec3cd',1,'PlanetKit']]],
+  ['peerhold_4',['PeerHold',['../namespace_planet_kit.html#a1e15171ba80ae5bc2903c3d788a77745',1,'PlanetKit']]],
+  ['peervideostatus_5',['PeerVideoStatus',['../namespace_planet_kit.html#ad64aee2866f6f718ee809803acaf86f6',1,'PlanetKit']]],
+  ['pinfo_6',['pInfo',['../struct_planet_kit_1_1_s_window_state_change_param.html#aa3af1a23cc05b6ad1f6aa88e57d5c7bf',1,'PlanetKit::SWindowStateChangeParam']]],
+  ['planetkitcall_7',['PlanetKitCall',['../namespace_planet_kit.html#ab8b4a75918eed9b77de2eff173bd3a6f',1,'PlanetKit']]],
+  ['planetkitconference_8',['PlanetKitConference',['../namespace_planet_kit.html#aa0349fe5f95aad344ca5eb324e7192ff',1,'PlanetKit']]],
+  ['planetkitmainroomname_9',['PlanetKitMainRoomName',['../namespace_planet_kit.html#a0e0152dab780449d2caf1fe58e2a34c8',1,'PlanetKit']]],
+  ['plnk_5fconference_5froom_5ftype_5fdefault_10',['PLNK_CONFERENCE_ROOM_TYPE_DEFAULT',['../namespace_planet_kit.html#ac033c008b9b39365698a1da50df467af',1,'PlanetKit']]],
+  ['plnk_5fconference_5froom_5ftype_5fsubgrp_11',['PLNK_CONFERENCE_ROOM_TYPE_SUBGRP',['../namespace_planet_kit.html#a7a096b7cef2b336c0356e83ed76395ff',1,'PlanetKit']]],
+  ['ppeerinfo_12',['pPeerInfo',['../struct_planet_kit_1_1_s_conference_subgroup_peer_update.html#a774a0b5bf08c1aca30e86d0f21dc9669',1,'PlanetKit::SConferenceSubgroupPeerUpdate']]],
+  ['ppvideoactivated_13',['ppVideoActivated',['../struct_planet_kit_1_1_s_conference_video_update_param.html#a90b3ab57832f5dcd97b0c63e0fd813bd',1,'PlanetKit::SConferenceVideoUpdateParam']]],
+  ['ppvideoinactivated_14',['ppVideoInactivated',['../struct_planet_kit_1_1_s_conference_video_update_param.html#adf9011661f21e2f0bef1b4de5fcb9725',1,'PlanetKit::SConferenceVideoUpdateParam']]],
+  ['psubgroup_15',['pSubgroup',['../struct_planet_kit_1_1_s_conference_video_update_param.html#ab185c0ec7f5802ee64b8ff9f8d98811e',1,'PlanetKit::SConferenceVideoUpdateParam']]],
+  ['psubscribed_16',['pSubscribed',['../struct_planet_kit_1_1_s_conference_subgroup_peer_update.html#adf42e5bb041859cd73178643d2136311',1,'PlanetKit::SConferenceSubgroupPeerUpdate']]],
+  ['punsubscribed_17',['pUnsubscribed',['../struct_planet_kit_1_1_s_conference_subgroup_peer_update.html#a387d5d7ae52d1aaddbd0457c6917240a',1,'PlanetKit::SConferenceSubgroupPeerUpdate']]],
+  ['pupdatedpeer_18',['pUpdatedPeer',['../struct_planet_kit_1_1_s_conference_subgroup_update_param.html#a65ae81f297d6f60323c41da3ccf40e29',1,'PlanetKit::SConferenceSubgroupUpdateParam']]]
+];

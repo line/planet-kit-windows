@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['callconnectedparamptr_0',['CallConnectedParamPtr',['../namespace_planet_kit.html#aaa4a39f62aa8e4f0bc87edd92cd3f76b',1,'PlanetKit']]],
+  ['calldisconnectedparamptr_1',['CallDisconnectedParamPtr',['../namespace_planet_kit.html#ace8a93603005f6a85461ff2711436858',1,'PlanetKit']]],
+  ['callparamptr_2',['CallParamPtr',['../namespace_planet_kit.html#a631d155e125682febff9a5c7e2bba1d2',1,'PlanetKit']]],
+  ['callstartmessageptr_3',['CallStartMessagePtr',['../namespace_planet_kit.html#a62e0f4e91d81a5c72f100eed1217a3f8',1,'PlanetKit']]],
+  ['callverifiedparamptr_4',['CallVerifiedParamPtr',['../namespace_planet_kit.html#aa556ea7b2319e56d47f908f21355946e',1,'PlanetKit']]],
+  ['cameracontrollerptr_5',['CameraControllerPtr',['../namespace_planet_kit.html#af05a922e25a918ff194c164add01fe8c',1,'PlanetKit']]],
+  ['camerainfoarray_6',['CameraInfoArray',['../namespace_planet_kit.html#a9070b1b1e65233130e00204101f3e8e2',1,'PlanetKit']]],
+  ['camerainfoptr_7',['CameraInfoPtr',['../namespace_planet_kit.html#a835a2de6a4f3afb374dff5d6a17aa1a1',1,'PlanetKit']]],
+  ['ccparamptr_8',['CCParamPtr',['../namespace_planet_kit.html#aa2e982c340d020bd790d6c389f510053',1,'PlanetKit']]],
+  ['commonsetsharedcontentarray_9',['CommonSetSharedContentArray',['../namespace_planet_kit.html#a92311af78940ecca4dfe96785cc6d09b',1,'PlanetKit']]],
+  ['commonsetsharedcontentptr_10',['CommonSetSharedContentPtr',['../namespace_planet_kit.html#a5f8459e1218c34cdaadd71a63669a415',1,'PlanetKit']]],
+  ['conferenceconnectedparamptr_11',['ConferenceConnectedParamPtr',['../namespace_planet_kit.html#aa430fdf6d0d9c652ad4d77ccc25870fa',1,'PlanetKit']]],
+  ['conferencedisconnectedparamptr_12',['ConferenceDisconnectedParamPtr',['../namespace_planet_kit.html#ad18121b70ed170b67583d7d50c08f0af',1,'PlanetKit']]],
+  ['conferenceexceptionarray_13',['ConferenceExceptionArray',['../namespace_planet_kit.html#a1f08438b47601dc2d93810508cf257b7',1,'PlanetKit']]],
+  ['conferenceexceptionptr_14',['ConferenceExceptionPtr',['../namespace_planet_kit.html#ab97cffea6200eab98b3a31a998747275',1,'PlanetKit']]],
+  ['conferencejoinparamptr_15',['ConferenceJoinParamPtr',['../namespace_planet_kit.html#a10bea5e704166f6878086af68c451929',1,'PlanetKit']]],
+  ['conferencepeerscreensharingupdateinfo_16',['ConferencePeerScreenSharingUpdateInfo',['../namespace_planet_kit.html#aff80a8df619332b6c70b3a89c0f18b9a',1,'PlanetKit']]],
+  ['conferencepeerupdateparamptr_17',['ConferencePeerUpdateParamPtr',['../namespace_planet_kit.html#ad17f778aa88963ce5fdf72b44a5c547b',1,'PlanetKit']]],
+  ['conferencesubgroupupdatepeerarray_18',['ConferenceSubgroupUpdatePeerArray',['../namespace_planet_kit.html#a5a14582662824116ad4d20a9e486f9ff',1,'PlanetKit']]],
+  ['conferencesubgroupupdatepeerptr_19',['ConferenceSubgroupUpdatePeerPtr',['../namespace_planet_kit.html#abd7b7947e77c4a48f79260be459dc606',1,'PlanetKit']]],
+  ['configurationptr_20',['ConfigurationPtr',['../namespace_planet_kit.html#a087d5f33ab5dff79dccc0d9e4922b65c',1,'PlanetKit']]],
+  ['contentshareinterfaceoptional_21',['ContentShareInterfaceOptional',['../namespace_planet_kit.html#a605ce868dbef43db093bc4177e72c2c9',1,'PlanetKit']]],
+  ['contentshareinterfaceptr_22',['ContentShareInterfacePtr',['../namespace_planet_kit.html#a4dcd714260c4ee5502744cd307180f64',1,'PlanetKit']]]
+];
