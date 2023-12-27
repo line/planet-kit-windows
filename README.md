@@ -9,7 +9,7 @@ There are more resources for you to give information such as Planet specificatio
 ## API Reference
 For detailed APIs, please refer to the following documents.
 
-[API Reference](#)
+[API Reference](https://line.github.io/planet-kit-windows/)
 
 ## Issues and Inquiries
 
