@@ -5,7 +5,7 @@ LINE Planet is a cloud-based real-time communications platform as a service (CPa
 [LINE Planet Documentation](https://docs.lineplanet.me/) provides additional resources to help you integrate LINE Planet into your service. These resources include LINE Planet specifications, developer guides for each client platform, and server API references.
 
 ## API Reference
-For detailed information on APIs, please refer to the following documents. [API Reference](https://line.github.io/planet-kit-windows/)
+For detailed information on APIs, please refer to the following documents. [API Reference](https://docs.lineplanet.me/api-reference/client/windows/5.3/index.html)
 
 ## Issues and Inquiries
 
