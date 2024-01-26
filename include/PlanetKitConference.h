@@ -658,7 +658,6 @@ namespace PlanetKit
          * @return true on success
          * @remark
          * - Switches to a video call.
-         * - If a specific camera has not been selected, the default camera will be chosen.
          */
         virtual bool EnableVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
 
