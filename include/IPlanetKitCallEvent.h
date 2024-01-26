@@ -559,9 +559,9 @@ namespace PlanetKit
         /**
         * Called when video is enabled by the peer.
         * @param pPlanetKitCall Call instance that the event was registered to.
-        * @param bVideoCapturerStartSuccess Video capturer start result. If false, use ResumeMyVideo(VideoCapturer) to reopen the device and unpause video streams.
+        * @param bIsSendingMyVideo This indicates whether the local user's video is being sent to the peer. If this value is false, the local user's video is in a paused state.
         */
-        virtual void OnVideoEnabledByPeer(PlanetKitCallPtr pPlanetKitCall, bool bVideoCapturerStartSuccess) = 0;
+        virtual void OnVideoEnabledByPeer(PlanetKitCallPtr pPlanetKitCall, bool bIsSendingMyVideo) = 0;
 
 
         /**

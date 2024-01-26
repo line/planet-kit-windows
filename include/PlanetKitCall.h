@@ -439,9 +439,8 @@ namespace PlanetKit
         * @return true on success
         * @remark
         * - Switches to a video call.
-        * - If a specific camera has not been selected, the default camera will be chosen.
         */
-        virtual EVideoControlResult EnableVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
+        virtual bool EnableVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
 
         PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool DisableVideo(void *pResultUserData, IResultHandler *pResultHandler)")
         /**
