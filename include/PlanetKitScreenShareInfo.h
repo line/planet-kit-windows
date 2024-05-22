@@ -25,7 +25,7 @@ namespace PlanetKit {
          * Gets the name of the target to share the screen with.
          * @return The name of the target to share the screen with.
          */
-        virtual wchar_t* GetName() = 0;
+        virtual const WString& GetName() = 0;
 
         /**
          * Gets the screen share target ID.
@@ -49,8 +49,11 @@ namespace PlanetKit {
     };
 
     /// ScreenShareInfo pointer as AutoPtr
+    template class PLANETKIT_API AutoPtr<ScreenShareInfo>;
     typedef AutoPtr<ScreenShareInfo> ScreenShareInfoPtr;
+
     /// Array of ScreenShareInfo
+    template class PLANETKIT_API Array<ScreenShareInfoPtr>;
     typedef Array<ScreenShareInfoPtr> ScreenShareInfoArray;
 
     /**

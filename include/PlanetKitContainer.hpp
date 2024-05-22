@@ -62,6 +62,20 @@ namespace PlanetKit
         }
 
         /**
+         * Gets buffer.
+         */
+        const T* Buffer() const {
+            return m_pData;
+        }
+
+        /**
+         * Gets buffer.
+         */
+        T* Buffer() {
+            return m_pData;
+        }
+
+        /**
          * Sets the number of array elements and allocates memory.
          * @param size Size of the array
          * @remark This API internally calls Clear() before resizing.
@@ -80,7 +94,7 @@ namespace PlanetKit
          * @param idx Element index
          * @param rhs Element value to be set.
          */
-        void SetAt(int idx, const T& rhs) {
+        void SetAt(size_t idx, const T& rhs) {
             m_pData[idx] = rhs;
         }
 
@@ -96,7 +110,7 @@ namespace PlanetKit
          * @param idx Index of the array
          * @return Element item
          */
-        T& At(int idx) const {
+        T& At(size_t idx) const {
             return m_pData[idx];
         }
 
@@ -105,7 +119,7 @@ namespace PlanetKit
          * @param idx Index of the array
          * @return Element item
          */
-        T& operator[](int idx) const {
+        T& operator[](size_t idx) const {
             return m_pData[idx];
         }
 

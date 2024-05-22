@@ -45,5 +45,6 @@ namespace PlanetKit {
         virtual unsigned int GetSize() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<ShortDataParam>;
     typedef AutoPtr<ShortDataParam> ShortDataParamPtr;
 };

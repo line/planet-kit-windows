@@ -16,14 +16,11 @@
 
 /*! \file */
 
-#include "PlanetKit.h"
 #include "PlanetKitUserId.h"
 
 namespace PlanetKit 
 {
     class PLANETKIT_API VideoRender;
-
-    class PLANETKIT_API VideoCapturer;
 
     /**
      * Enumeration for the result of capturer APIs
@@ -136,6 +133,13 @@ namespace PlanetKit
         PLNK_CAMERA_RESOLUTION_FHD 
     }ECameraResolution;
 
+#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
+    constexpr ECameraResolution ECameraResolutionDefault = PLNK_CAMERA_RESOLUTION_HD;
+#else
+#define ECameraResolutionDefault (PlanetKit::ECameraResolution::PLNK_CAMERA_RESOLUTION_HD)
+#endif
+    
+
     /**
      * Camera FPS that PlanetKit can support.
      */
@@ -178,6 +182,13 @@ namespace PlanetKit
         PLNK_VIDEO_FPS_MAX = PLNK_VIDEO_FPS_30,
     }EVideoFps;
 
+
+#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
+    constexpr EVideoFps EVideoFpsDefault = PLNK_VIDEO_FPS_15;
+#else
+#define EVideoFpsDefault (PlanetKit::EVideoFps::PLNK_VIDEO_FPS_15)
+#endif
+
     /**
      * Capture media type
      */
@@ -208,18 +219,29 @@ namespace PlanetKit
     }ECapturerMediaType;
 
     /**
+     * An enumeration representing the mirroring types of a view.
+     */
+    typedef enum EVideoMirrorType {
+        /// For the local user's video, the mirroring mode is determined based on the currently used camera.
+        PLNK_MIRROR_TYPE_AUTO = 0,
+        /// Activates mirroring for the view, displaying the original video flipped horizontally.
+        PLNK_MIRROR_TYPE_MIRRORED = 1,
+        /// Deactivates mirroring for the view, displaying the original video as it is.
+        PLNK_MIRROR_TYPE_UNMIRRORED = 2
+    } EVideoMirrorType;
+
+    /**
      * Rotation of video
      */
-    typedef enum EVideoRotation
-    {
+    typedef enum EVideoRotation {
         /// No rotation
-        PLNK_VIDEO_ROTATION_0,
+        PLNK_VIDEO_ROTATION_0 = 0,
         /// Rotation by 90 degrees
-        PLNK_VIDEO_ROTATION_90,
+        PLNK_VIDEO_ROTATION_90 = 1,
         /// Rotation by 180 degrees
-        PLNK_VIDEO_ROTATION_180,
+        PLNK_VIDEO_ROTATION_180 = 2,
         /// Rotation by 270 degrees
-        PLNK_VIDEO_ROTATION_270
+        PLNK_VIDEO_ROTATION_270 = 3
     }EVideoRotation;
 
     /**
@@ -246,7 +268,13 @@ namespace PlanetKit
         PLNK_CAMERA_INFO_ONLY_MJPEG,
         /// This type excludes the MJPEG type when opening the camera.
         PLNK_CAMERA_INFO_NOT_USE_MJPEG
-    };
+    }ECameraInfoType;
+
+#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
+    constexpr ECameraInfoType ECameraInfoTypeDefault = PLNK_CAMERA_INFO_NORMAL;
+#else
+#define ECameraInfoTypeDefault (PlanetKit::ECameraInfoType::PLNK_CAMERA_INFO_NORMAL)
+#endif
 
     /**
      * Video capability
@@ -312,26 +340,23 @@ namespace PlanetKit
     typedef struct SVideoFrame
     {
         /// Pointer to the frame buffer
-        unsigned char           *pbuffer;
+        unsigned char *pbuffer;
         /// Allocated buffer size
-        unsigned int            unBufferSize;
+        unsigned int unBufferSize;
         /// Length (in bytes) of buffer
-        unsigned int            unDataLength;
+        unsigned int unDataLength;
         /// Width
-        unsigned int            unWidth;
+        unsigned int unWidth;
         /// Height
-        unsigned int            unHeight;
+        unsigned int unHeight;
         /// Tick
-        long long               llTick;
+        long long llTick;
         /// Time stamp
-        long long               llTimeStamp;
+        long long llTimeStamp;
         /// Duration
-        long long               llDuration;
+        long long llDuration;
         /// Rotation
         EVideoRotation eRotation;
-
-        /// Capture frame is mirrored
-        bool bMirrored;
 
         /// You can use this flag to check whether the frame belongs to the main room.
         bool bSubgroupMain;
@@ -357,40 +382,12 @@ namespace PlanetKit
         virtual int GetStride() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<VideoFrame>;
     typedef AutoPtr<VideoFrame> VideoFramePtr;
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1.19 or later. Use class CameraInfo")
-    /**
-     * @deprecated This will not be supported in 5.1.19 or later.
-     * @see CameraInfo
-     */
-    struct SCameraInfo
-    {
-
-    };
     
-    // TODO: replace screen id and window id with source id
     typedef  void * ScreenId;
     typedef  void * WindowId; //HWND
     typedef  void * ScreenShareID; //HWND
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2. Use class ScreenShareInfo")
-    /**
-     * @deprecated This will not be supported in 5.2
-     * @see ScreenShareInfo
-     */
-    typedef struct SScreenInfo
-    {
-    } SDesktopInfo;
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2. Use class ScreenShareInfo")
-    /**
-     * @deprecated This will not be supported in 5.2
-     * @see ScreenShareInfo
-     */
-    typedef struct SWindowInfo
-    {
-    } SWindowInfo;
 
     /**
      * This class is provided to receive peer's video data and render it directly.
@@ -405,8 +402,8 @@ namespace PlanetKit
      *   - PlanetKitConference::DeregisterPeersVideoReceiver
      *   - PeerControl::SetReceiver
      */
-    class PLANETKIT_API IVideoReceiver
-    {
+
+    class PLANETKIT_API IVideoReceiver {
     public:
         /**
          * Called when the peer's video data is activated.
@@ -417,18 +414,11 @@ namespace PlanetKit
          * - In the case of the local user's own frame, the ID and ServiceID will be nullptr.
          */
         virtual void OnVideo(const SVideoFrame *pVideoFrame, UserIdPtr pUserID) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see MakeCallParamPtr OnVideo(const SVideoFrame *pVideoFrame, const wchar_t *szPeerId, const wchar_t *szPeerServiceId)
-         */
-        void OnVideo(const SVideoFrame *pVideoFrame, const char *szPeerId, const char *szPeerServiceId);
     };
 
     template<typename T>
     inline T GET_VIDEO_DATA_LENGTH(const T& witdh, const T& height)
     {
-        return(witdh * height * 1.5);
+        return (T)(witdh * height * 1.5);
     }
 }

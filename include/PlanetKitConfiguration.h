@@ -14,11 +14,11 @@
 
 #pragma once
 #include "PlanetKit.h"
-#include "PlanetKitAutoPtr.hpp"
 
 namespace PlanetKit {
     class Configuration;
 
+    template class PLANETKIT_API AutoPtr<Configuration>;
     typedef AutoPtr<Configuration> ConfigurationPtr;
 
     /**
@@ -62,8 +62,8 @@ namespace PlanetKit {
     public :
         /**
          * Create an instance of the Configuration class.
-         * @param lpszBasePath Path of PlanetKit binaries. You can use absolute or relative path.<br>String encoding must be UTF-16.<br>It can be an empty string like "", but it can't be nullptr.
-         * @param lpszDatabasePath Path of PlanetKit database that includes some configuration options. You can use absolute or relative path.<br>String encoding must be UTF-16.<br>It can be an empty string like "", but it can't be nullptr.
+         * @param strBasePath Path of PlanetKit binaries. You can use absolute or relative path.<br>String encoding must be UTF-16.<br>It can be an empty string like "", but it can't be nullptr.
+         * @param strDatabasePath Path of PlanetKit database that includes some configuration options. You can use absolute or relative path.<br>String encoding must be UTF-16.<br>It can be an empty string like "", but it can't be nullptr.
          * @return
          *  - If it successfully created an instance, it returns the pointer to the instance.<br>
          *  - If it failed to create an instance, it returns nullptr.
@@ -71,7 +71,7 @@ namespace PlanetKit {
          *  - This API can fail when any parameters are nullptr.<br>
          *  - If you put an empty string like L"", then the path will be the path of the current process.
          */
-        static ConfigurationPtr Create(const wchar_t* lpszBasePath, const wchar_t* lpszDatabasePath);
+        static ConfigurationPtr Create(const WString& strBasePath, const WString& strDatabasePath);
 
         /**
          * Sets the log level of PlanetKit.<br>Default value is PLNK_LOG_SILENT.
@@ -100,14 +100,14 @@ namespace PlanetKit {
          * @return
          *  - Base path string that is encoded in UTF-16.
          */
-        virtual const wchar_t* GetBasePath() = 0;
+        virtual const WString& GetBasePath() = 0;
 
         /**
          * Gets the database path that you set.
          * @return
          *  - Database path string that is encoded in UTF-16.
          */
-        virtual const wchar_t* GetDatabasePath() = 0;
+        virtual const WString& GetDatabasePath() = 0;
 
         /**
          * Gets the log level that you set.

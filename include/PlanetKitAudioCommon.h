@@ -17,7 +17,8 @@
 #define MAX_DEVICE_ID_SIZE 512
 #define MAX_DEVICE_NAME_SIZE 512
 
-#include "PlanetKit.h"
+#include "PlanetKitTypes.h"
+#include "PlanetKitUserId.h"
 
 namespace PlanetKit 
 {
@@ -71,25 +72,6 @@ namespace PlanetKit
         PLNK_PHYSICAL_FORM_FACTOR_NONE
     }EPhysicalFormFactor;
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     * @see AudioDeviceInfo
-     */
-    class SAudioDeviceInfo : public Base
-    {
-    public :
-        /// Device id
-        wchar_t wszID;
-        /// Device name
-        wchar_t wszName;
-        /// Device type
-        EAudioDeviceType eAudioDeviceType = EAudioDeviceType::PLNK_AUDIO_DEVICE_TYPE_UNDEFINED;
-        /// Physical form factor of device
-        EPhysicalFormFactor ePhysicalFormFactor = EPhysicalFormFactor::PLNK_PHYSICAL_FORM_FACTOR_NONE;
-
-    };
-
     /**
      * Audio device information class
      */
@@ -106,7 +88,10 @@ namespace PlanetKit
         virtual EPhysicalFormFactor GetFormFactor() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<AudioDeviceInfo>;
     typedef AutoPtr<AudioDeviceInfo> AudioDeviceInfoPtr;
+
+    template class PLANETKIT_API Array<AudioDeviceInfoPtr>;
     typedef Array<AudioDeviceInfoPtr> AudioDeviceInfoArray;
 
     /**
@@ -164,4 +149,32 @@ namespace PlanetKit
         /// Device master volume
         float fMasterVolume;
     } SAudioEndpointVolumeInfo;
+
+    /**
+     * @brief Audio description of a peer, which can be obtained with IConferenceEvent::OnPeersAudioDescriptionUpdated
+     */
+    typedef struct PeerAudioDescription {
+        /// Peer's user ID
+        UserIdPtr pUserId;
+        /// Peer's average volume level[0:100]
+        unsigned char ucVolume;
+        /// Name of the subgroup from which this audio originated. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strSentSubgroupName;
+        /// Name of the subgroup where this audio was tagged by the peer. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strTaggedSubgroupName;
+    }PeerAudioDescription;
+
+    typedef Array<PeerAudioDescription> PeerAudioDescriptionArray;
+
+    /**
+     * @brief Audio description of the local user, which can be obtained with IConferenceEvent::OnMyAudioDescriptionUpdated or IMyMediaStatusEvent::OnMyAudioDescriptionUpdated
+     */
+    typedef struct MyAudioDescription {
+        /// Local user's average volume level[0:100]
+        unsigned char ucVolume;
+        /// Name of the subgroup from which this audio originated. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strSentSubgroupName;
+        /// Name of the subgroup where this audio was tagged by the peer. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strTaggedSubgroupName;
+    }MyAudioDescription;
 }

@@ -20,36 +20,14 @@
 
 namespace PlanetKit
 {
-
-    //PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use OutboundDataSession.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    class PLANETKIT_API SendDataSessionInterface;
-
-    //PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use InboundDataSession.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    class PLANETKIT_API RecvDataSessionInterface;
-
     class PLANETKIT_API OutboundDataSession;
     class PLANETKIT_API InboundDataSession;
 
+    template class PLANETKIT_API AutoPtr<OutboundDataSession>;
     typedef AutoPtr<OutboundDataSession> OutboundDataSessionPtr;
+
+    template class PLANETKIT_API AutoPtr<InboundDataSession>;
     typedef AutoPtr<InboundDataSession> InboundDataSessionPtr;
-
-    //PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use OutboundDataSessionPtr.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    typedef AutoPtr<SendDataSessionInterface> SendDataSessionInterfacePtr;
-    //PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use InboundDataSessionPtr.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    typedef AutoPtr<RecvDataSessionInterface> ReceiveDataSessionInterfacePtr;
-
     
     const unsigned int kDataSessionStreamIdMin = 100;
     const unsigned int kDataSessionStreamIdMax = 1000;
@@ -72,20 +50,6 @@ namespace PlanetKit
         /// Not supported type
         PLNK_DATA_SESS_TYPE_UNKNOWN
     } EDataSessionType;
-    
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use EDataSessionFailReason.")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     */
-    typedef enum EMakeDataSessionResult
-    {
-        /// Succeed to create data session
-        PLNK_MAKE_DATA_SESSION_RESULT_SUCCESS = 0,
-        /// Failed to create data session
-        PLNK_MAKE_DATA_SESSION_RESULT_FAILED_TO_CREATE,
-        /// There is data session that has same stream ID<br>You can get DataSessionInterface with GetOutboundDataSession or GetInboundDataSession APIs.
-        PLNK_MAKE_DATA_SESSION_RESULT_ALREADY_EXIST_STREAM_ID
-    } EMakeDataSessionResult;
 
     /**
      * @brief This is the definition of an exception that occurred during data session communication.
@@ -104,26 +68,26 @@ namespace PlanetKit
         /// Reason none
         PLNK_DATA_SESS_FAIL_REASON_NONE = 0,
         /// An internal error occurred.
-        PLNK_DATA_SESS_FAIL_REASON_INTERNAL,
-        /// The data session is unsupported.
-        PLNK_DATA_SESS_FAIL_REASON_UNSUPPORTED,
+        PLNK_DATA_SESS_FAIL_REASON_INTERNAL = 1,
         /// There is no incoming data.
-        PLNK_DATA_SESS_FAIL_REASON_NOT_INCOMING,
+        PLNK_DATA_SESS_FAIL_REASON_NOT_INCOMING = 3,
         /// The stream ID already exists.
-        PLNK_DATA_SESS_FAIL_REASON_ALREADY_EXIST,
+        PLNK_DATA_SESS_FAIL_REASON_ALREADY_EXIST = 4,
         /// The stream ID is invalid.
-        PLNK_DATA_SESS_FAIL_REASON_INVALID_ID,
+        PLNK_DATA_SESS_FAIL_REASON_INVALID_ID = 5,
         /// The data session type is invalid.
-        PLNK_DATA_SESS_FAIL_REASON_INVALID_TYPE,
+        PLNK_DATA_SESS_FAIL_REASON_INVALID_TYPE = 6,
     } EDataSessionFailReason;
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use DataSessionFrame")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     * @see DataSessionFrame
-     */
-    typedef struct SDataSessionFrame {
-    } SDataSessionFrame;
+
+    typedef enum EDataSessionClosedReason {
+        /// Data session has ended.
+        PLNK_DATA_SESSION_CLOSED_REASON_SESSION_END = 0,
+        /// Unexpected error occurred internally.
+        PLNK_DATA_SESSION_CLOSED_REASON_INTERNAL = 1,
+        /// Data session ID is unsupported by the peer.
+        PLNK_DATA_SESSION_CLOSED_REASON_UNSUPPORTED = 2,
+    } EDataSessionClosedReason;
 
     /**
      * Data session frame
@@ -156,23 +120,8 @@ namespace PlanetKit
         virtual UserIdPtr GetUserID() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<DataSessionFrame>;
     typedef AutoPtr<DataSessionFrame> DataSessionFramePtr;
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use ISendDataSessionHandler and IDataSessionReceiver.")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     */
-    class PLANETKIT_API IDataSessionExceptionHandler
-    {
-    public:
-        void OnDataSessionException(void *pUserData, EDataSessException eException, bool bTriggered);
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use IInboudDataSessionHandler.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    class ISendDataSessionHandler;
 
     /**
      * Defines a set of callbacks related to changes of OutboundDataSession.
@@ -206,6 +155,14 @@ namespace PlanetKit
          * @see EDataSessionFailReason
          */
         virtual void OnError(void* pUserData, EDataSessionFailReason eFailReason) = 0;
+
+        /**
+         * Called when an outbound data session is closed.
+         * @param pUserData User data that you sent when you called the MakeInboundDataSession API.
+         * @param eClosedReason Reason for closure.
+         * @see EDataSessionClosedReason
+         */
+        virtual void OnClosed(void* pUserData, EDataSessionClosedReason eClosedReason) = 0;
     };
 
     class IReceiveDataSessionHandler;
@@ -214,14 +171,6 @@ namespace PlanetKit
      */
     class PLANETKIT_API IInboundDataSessionHandler {
     public:
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use OnReceive(DataSessionStreamIdT nStreamId, DataSessionFramePtr pFrame)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see OnReceive(DataSessionStreamIdT nStreamId, DataSessionFramePtr pFrame)
-         */
-        void OnReceive(DataSessionStreamIdT nStreamId, SDataSessionFrame* pFrame);
-
         /**
          * Called when when a chunk of data is received from the peer.
          * @param nStreamId Stream ID
@@ -243,15 +192,14 @@ namespace PlanetKit
          * @see EDataSessionFailReason
          */
         virtual void OnError(void* pUserData, EDataSessionFailReason eFailReason) = 0;
-    };
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use IReceiveDataSessionHandler")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     * @see IInboundDataSessionHandler
-     */
-    class PLANETKIT_API IDataSessionReceiver
-    {
+        /**
+         * Called when an inbound data session is closed.
+         * @param pUserData User data that you sent when you called the MakeInboundDataSession API.
+         * @param eClosedReason Reason for closure.
+         * @see EDataSessionClosedReason
+         */
+        virtual void OnClosed(void* pUserData, EDataSessionClosedReason eClosedReason) = 0;
     };
 
     class PLANETKIT_API OutboundDataSession : public Base {
@@ -286,15 +234,15 @@ namespace PlanetKit
         /**
          * Changes the target of the current data session.
          * @param pPeerId Peer's ID.
-         * @param pUserData User data for result handler
-         * @param pResultHandler Result callback handler
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true if successful
          * @remark 
-         *  - This API only works for outbound data sessions.
-         *  - If you want to send a message to everyone, set the pPeerId to nullptr.
+         *  - This API only works for outbound data sessions.<br>
+         *  - If you want to send a message to everyone, set the pPeerId to nullptr.<br>
          *  - UserIdPtr(nullptr)
          */
-        virtual bool ChangeDestination(UserIdPtr pPeerId, void* pUserData, IResultHandler* pResultHandler) = 0;
+        virtual bool ChangeDestination(UserIdPtr pPeerId, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 
     class PLANETKIT_API InboundDataSession : public Base {
@@ -310,53 +258,5 @@ namespace PlanetKit
         * @return IInboundDataSessionHandler instance
         */
         virtual IInboundDataSessionHandler* GetReceiver() = 0;
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use ISendDataSessionHandler or IReceiveDataSessionHandler")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     * @see IOutboundDataSessionHandler
-     * @see IInboundDataSessionHandler
-     */
-    class PLANETKIT_API IDataSessionHandler
-    {
-    public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use void OnMakeSendDataSessionResult(SendDataSessionInterfacePtr pSendDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see OnMakeSendDataSessionResult
-         */
-        void OnMakeSendDataSessionResult(SendDataSessionInterface** pSendDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use void OnMakeRecvDataSessionResult(RecvDataSessionInterfacePtr pRecvDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see OnMakeRecvDataSessionResult
-         */
-        void OnMakeRecvDataSessionResult(RecvDataSessionInterface** pRecvDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnMakeSendDataSessionResult(SendDataSessionInterfacePtr pSendDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnMakeRecvDataSessionResult(ReceiveDataSessionInterfacePtr pRecvDataInterface, void* pUserData, bool bSuccess, const char* szExceptDesc);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnMakeSendDataSessionResult(SendDataSessionInterfacePtr pSendDataInterface, void* pUserData, EDataSessionFailReason eFailReason, IOutboundDataSessionHandler* pSessionHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnMakeRecvDataSessionResult(ReceiveDataSessionInterfacePtr pRecvDataInterface, void* pUserData, EDataSessionFailReason eFailReason, IDataSessionReceiver* pReceiver);
     };
 }

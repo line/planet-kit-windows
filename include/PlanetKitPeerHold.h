@@ -15,45 +15,24 @@
 #pragma once
 
 #include "PlanetKit.h"
+
 #include "PlanetKitPeer.h"
 
 namespace PlanetKit
 {
     class PLANETKIT_API PeerHold;
 
+    template class PLANETKIT_API AutoPtr<PeerHold>;
     typedef AutoPtr<PeerHold> PeerHoldPtr;
+
+    template class PLANETKIT_API Array<PeerHoldPtr>;
     typedef Array<PeerHoldPtr> PeerHoldArray;
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    */
-    class PLANETKIT_API CommonReceivedHolds
-    {
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    */
-    class PLANETKIT_API CommonReceivedHold
-    {
-    };
-
-    class PLANETKIT_API PeerHold : public Base
-    {
+    class PLANETKIT_API PeerHold : public Base {
     public:
         /// Gets the user ID.
         virtual PeerPtr GetPeer() = 0;
         /// Gets the hold Reason.
-        virtual const String& HoldReason() = 0;
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    */
-    class PLANETKIT_API CommonReceivedHoldPeersHoldParam : public Base
-    {
+        virtual const WString& HoldReason() = 0;
     };
 };

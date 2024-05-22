@@ -78,8 +78,8 @@ namespace PlanetKit
         }
     private:
         CameraControllerPtr GetCameraController() {
-            PlanetKitManager* pManager = PlanetKitManager::GetInstance();
-            if (nullptr == pManager) {
+            PlanetKitManagerPtr pManager = PlanetKitManager::GetInstance();
+            if (nullptr == *pManager) {
                 return CameraControllerPtr(nullptr);
             }
 
@@ -92,8 +92,8 @@ namespace PlanetKit
         }
 
         ScreenShareControllerPtr GetSCreenShareController() {
-            PlanetKitManager* pManager = PlanetKitManager::GetInstance();
-            if (nullptr == pManager) {
+            PlanetKitManagerPtr pManager = PlanetKitManager::GetInstance();
+            if (nullptr == *pManager) {
                 return ScreenShareControllerPtr(nullptr);
             }
 

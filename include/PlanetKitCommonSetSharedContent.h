@@ -16,27 +16,12 @@
 
 #include "PlanetKit.h"
 #include "PlanetKitTypes.h"
+
 #include "PlanetKitPeer.h"
 
-namespace PlanetKit
-{
-    class PLANETKIT_API CommonSetSharedContent : public Base
-    {
+namespace PlanetKit {
+    class PLANETKIT_API CommonSetSharedContent : public Base {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. UseUserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const String& PeerId();
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. UseUserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const String& ServiceId();
-
         /**
          * Gets the peer's ID.
          */
@@ -51,19 +36,5 @@ namespace PlanetKit
         virtual BYTE* Data() = 0;
         /// Size of the shared data
         virtual unsigned int DataSize() = 0;
-    };
-
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    */
-    class PLANETKIT_API CommonSetSharedContents : public Base
-    {
-    public:
-        /// Get count of array elements.
-        virtual size_t GetCount() = 0;
-        /// Get CommonSetSharedContent* at index.
-        virtual CommonSetSharedContent* At(size_t nIdx) = 0;
     };
 };

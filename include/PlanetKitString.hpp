@@ -15,9 +15,16 @@
 #pragma once
 
 #include <string.h>
+#include <assert.h>
+
+#pragma warning(push)
+
+// Disable warning: multiple copy constructors specified
+#pragma warning(disable: 4521)
+
 
 namespace PlanetKit {
-    class String {
+    class PLANETKIT_API String {
     public:
         /**
          * Normal creator
@@ -184,12 +191,14 @@ namespace PlanetKit {
         size_t m_nSize = 0;
     };
 
-    class WString {
+    class PLANETKIT_API WString {
     public:
         /**
          * Normal creator
          */
-        WString() = default;
+        WString() {
+            Initialize();
+        }
 
         /**
          * Create with string
@@ -253,7 +262,9 @@ namespace PlanetKit {
          * Compare between string
          */
         bool operator==(const wchar_t* rhs) const {
-            if (m_pData == nullptr && rhs == nullptr) {
+            assert(!(rhs == nullptr));
+
+            if (m_nSize == 0 && rhs == nullptr) {
                 return true;
             }
 
@@ -264,12 +275,60 @@ namespace PlanetKit {
                     return false;
                 }
 
-                if (wcscmp(m_pData, rhs) == 0) {
+                if (m_nSize == 0 && nLen == 0) {
+                    return true;
+                }
+                else  if (wcscmp(m_pData, rhs) == 0) {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        bool operator==(const WString& rhs) const {
+            if (m_nSize == 0 && rhs.Size() == 0) {
+                return true;
+            }
+
+            if (this->Size() != rhs.Size()) {
+                return false;
+            }
+
+            if (wcscmp(m_pData, rhs.c_str()) == 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        bool operator!=(const WString& rhs) const {
+            if (m_nSize == 0 && rhs.Size() == 0) {
+                return false;
+            }
+
+            if (this->Size() != rhs.Size()) {
+                return true;
+            }
+
+            if (wcscmp(m_pData, rhs.c_str()) == 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+
+        const wchar_t operator[] (int idx) {
+            assert(!(idx > (int)m_nSize));
+            assert(!(idx < 0));
+
+            if (idx >= (int)m_nSize) {
+                return L'\0';
+            }
+            else {
+                return m_pData[idx];
+            }
         }
 
         /**
@@ -300,52 +359,133 @@ namespace PlanetKit {
         }
 
         /**
-         * Copy string
+         * Append string
          */
-        void Copy(const wchar_t* src) {
-            Clear();
+        WString& operator+=(const WString& rhs) {
+            AppendData(rhs.c_str());
 
-            if (src) {
-                m_nSize = wcslen(src);
+            return *this;
+        }
 
-                if (m_nSize > 0) {
-                    m_pData = new wchar_t[m_nSize + 1];
-                    wcscpy_s(m_pData, m_nSize + 1, src);
+        /**
+         * Substring
+         */
+        WString Substring(const unsigned int unStart, const unsigned unLength = 0) const{
+            WString strTemp;
+            wchar_t* pstrChar = m_pData + unStart;
+            if (unLength == 0) {
+                strTemp = pstrChar;
+                return strTemp;
+            }
+            else {
+                if (unStart + unLength > m_nSize) {
+                    return strTemp;
+                }
+                else {
+                    wchar_t charTemp = m_pData[unStart + unLength];
+                    m_pData[unStart + unLength] = L'\0';
+
+                    strTemp = pstrChar;
+                    m_pData[unStart + unLength] = charTemp;
+
+                    return strTemp;
                 }
             }
         }
 
-        /**
-         * Clear string
-         */
-        void Clear() {
-            if (m_pData && m_nSize) {
-                delete[] m_pData;
+        private :
+            WString(int) {} // Disable creation with NULL
+            WString(void*) {} // Disable creation with std::nullptr
+
+            WString& operator=(int) { return *this; }
+            WString& operator=(void*) { return *this; }
+
+            bool operator==(int) { return false; }
+            bool operator==(void*) { return false; }
+
+            bool operator!=(int) { return false; }
+            bool operator!=(void*) { return false; }
+
+            WString& operator+=(int) { return *this; }
+            WString& operator+=(void*) { return *this; }
+
+            WString& Append(int) { return *this; }
+            WString& Append(void*) { return *this; }
+
+            /**
+             * Copy string
+             */
+            void Copy(const wchar_t* src) {
+                Clear();
+
+                assert(!(src == nullptr));
+
+                if (src) {
+                    m_nSize = wcslen(src);
+
+                    if (m_nSize > 0) {
+                        m_pData = new wchar_t[m_nSize + 1];
+                        wcscpy_s(m_pData, m_nSize + 1, src);
+                    }
+                    else {
+                        Initialize();
+                    }
+                }
+                else {
+                    Initialize();
+                }
+            }
+
+            /**
+             * Append string
+             */
+            void AppendData(const wchar_t* rhs) {
+                assert(!(rhs == nullptr));
+
+                if (rhs != nullptr) {
+                    size_t nLen = wcslen(rhs);
+
+                    if (nLen > 0) {
+                        if (m_nSize > 0) {
+                            wchar_t* pTemp = m_pData;
+
+                            m_nSize += nLen;
+                            m_pData = new wchar_t[m_nSize + 1];
+                            wcscpy_s(m_pData, m_nSize + 1, pTemp);
+                            wcscat_s(m_pData, m_nSize + 1, rhs);
+
+                            delete[] pTemp;
+                        }
+                        else {
+                            Copy(rhs);
+                        }
+                    }
+                }
+            }
+
+            void Clear() {
+                if (m_pData && m_nSize) {
+                    delete[] m_pData;
+                }
+                else if (m_pData) {
+                    delete m_pData;
+                }
+
                 m_pData = nullptr;
                 m_nSize = 0;
             }
-        }
 
-        /**
-         * Append string
-         */
-        void AppendData(const wchar_t* rhs) {
-            if (rhs != nullptr) {
-                size_t nLen = wcslen(rhs);
-
-                wchar_t* pTemp = m_pData;
-
-                m_nSize += nLen;
-                m_pData = new wchar_t[m_nSize + 1];
-                wcscpy_s(m_pData, m_nSize + 1, pTemp);
-                wcscat_s(m_pData, m_nSize + 1, rhs);
-
-                delete[] pTemp;
+            void Initialize() {
+                m_pData = new wchar_t;
+                *m_pData = L'\0';
+                m_nSize = 0;
             }
-        }
 
     private:
         wchar_t* m_pData = nullptr;
         size_t m_nSize = 0;
     };
 };
+
+
+#pragma warning(pop)

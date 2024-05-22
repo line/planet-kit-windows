@@ -73,57 +73,50 @@ namespace PlanetKit
 
 
         /**
-        * Sets the video mirror configuration.
-        */
-        virtual void SetMirror(bool bMirror) = 0;
+         * Sets the mirroring type of the view.
+         * @param eMirrorType Mirroring type.
+         * @remark
+         *  - The default value is `PLNK_MIRROR_TYPE_AUTO`.
+         */
+        virtual void SetMirrorType(EVideoMirrorType eMirrorType) = 0;
 
         /**
-        * Gets the video mirror configuration.
-        * @return Mirror configuration
-        */
-        virtual bool GetMirror() = 0;
+         * Gets the mirroring type of the view.
+         */
+        virtual EVideoMirrorType GetMirrorType() = 0;
 
         /**
-        * Sets the background color of the video.
-        */
+         * Sets the rotation state of the view.
+         * @param eRotation Rotation state.
+         * @remark
+         *  - The default value is `PLNK_VIDEO_ROTATION_0`.
+         */
+        virtual void SetRotation(EVideoRotation eRotation) = 0;
+
+        /**
+         * Gets the rotation state of the view.
+         */
+        virtual EVideoRotation GetRotation() = 0;
+
+        /**
+         * Sets the background color of the video.
+         */
         virtual void SetBackgroundColor(COLORREF rgbClr) = 0;
 
     protected:
         virtual ~VideoRender() {}
     };
 
+    template class PLANETKIT_API AutoPtr<VideoRender>;
     typedef AutoPtr<VideoRender> VideoRenderPtr;
+
+    template class PLANETKIT_API Optional<VideoRenderPtr>;
     typedef Optional<VideoRenderPtr> VideoRenderOptional;
 
     class PLANETKIT_API IVideoRenderEvent {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-            /**
-             * @deprecated This will not be supported in 5.0 or later.
-             */
-            void OnRenderStart(const VideoRender *pRender);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-            /**
-             * @deprecated This will not be supported in 5.0 or later.
-             */
-            void OnRenderFailure(const VideoRender *pRender);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-            /**
-             * @deprecated This will not be supported in 5.2 or later.
-             */
-            void OnRenderStart(const VideoRenderPtr pRender);
-
         /// Called when the rendering starts.
         virtual void OnRenderStart(HWND hWnd) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-            /**
-             * @deprecated This will not be supported in 5.2 or later.
-             */
-            void OnRenderFailure(const VideoRenderPtr pRender);
 
         /**
          * Called when the rendering fails.

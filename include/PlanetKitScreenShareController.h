@@ -69,5 +69,6 @@ namespace PlanetKit
         virtual bool DeregisterCapturerEvent() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<ScreenShareController>;
     typedef AutoPtr<ScreenShareController> ScreenShareControllerPtr;
 }

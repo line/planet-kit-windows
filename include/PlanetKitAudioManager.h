@@ -18,32 +18,15 @@
 #include "PlanetKitAudioCommon.h"
 #include "PlanetKitAudioDevice.h"
 
-namespace PlanetKit 
-{
+namespace PlanetKit {
+    class PLANETKIT_API AudioManager;
+    typedef AutoPtr<AudioManager> AudioManagerPtr;
+
     /**
      * Event listeners to notify you of audio device changes
      */
-    class PLANETKIT_API IAudioDeviceEvent
-    {
+    class PLANETKIT_API IAudioDeviceEvent {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnDefaultAudioDeviceChanged(SAudioDeviceInfo *pAudioDeviceInfo);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnAudioDeviceAdded(SAudioDeviceInfo *pAudioDeviceInfo);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        void OnAudioDeviceRemoved(SAudioDeviceInfo *pAudioDeviceInfo);
-
         /// Called when the default audio device is changed.
         virtual void OnDefaultAudioDeviceChanged(AudioDeviceInfoPtr pAudioDeviceInfo) = 0;
         /// Called when an audio device is added.
@@ -54,28 +37,13 @@ namespace PlanetKit
     };
 
 
-    class PLANETKIT_API AudioManager : public Base
-    {
+    class PLANETKIT_API AudioManager : public Base {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
         /**
-         * @deprecated This will not be supported in 5.1 or later.
+         * Creates an audio device.
+         * @param pInfo
+         * @return Created audio device object
          */
-        bool CopySAudioDeviceInfo(SAudioDeviceInfo *pDstSAudioDeviceInfo, const SAudioDeviceInfo *pSrcSAudioDeviceInfo);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see GetAudioInputDeviceList
-         */
-        AudioDevicePtr CreateAudioDevice(SAudioDeviceInfo *pInfo);
-
-
-        /**
-        * Creates an audio device.
-        * @param pInfo
-        * @return Created audio device object
-        */
         virtual AudioDevicePtr CreateAudioDevice(AudioDeviceInfoPtr pInfo) = 0;
 
         /**
@@ -90,76 +58,45 @@ namespace PlanetKit
          */
         virtual AudioDevicePtr CreateDefaultOutputDevice( ) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
         /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see GetAudioInputDeviceList
+         * Gets the available audio input device list.
+         * @param pResultArray Array of SAudioDeviceInfo.
+         * @return true on success
          */
-        bool GetAudioInputDeviceInfoList(SAudioDeviceInfo *pInputDeviceInfoListBuffer, size_t nBufferSize, size_t *pAudioInputDeviceCount);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see GetAudioOutputDeviceList
-         */
-        bool GetAudioOutputDeviceInfoList(SAudioDeviceInfo *pOutputDeviceInfoListBuffer, size_t nBufferSize, size_t *pAudioOutputDeviceCount);
-
-        /**
-        * Gets the available audio input device list.
-        * @param pResultArray Array of SAudioDeviceInfo.
-        * @return true on success
-        */
         virtual bool GetAudioInputDeviceList(AudioDeviceInfoArray* pResultArray) = 0;
 
         /**
-        * Gets the available audio output device list.
-        * @param pResultArray Array of SAudioDeviceInfo.
-        * @return true on success
-        */
+         * Gets the available audio output device list.
+         * @param pResultArray Array of SAudioDeviceInfo.
+         * @return true on success
+         */
         virtual bool GetAudioOutputDeviceList(AudioDeviceInfoArray* pResultArray) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
         /**
-         * @deprecated This will not be supported in 5.1 or later.
+         * Gets the default audio input device.
+         * @param pAudioDeviceInfo Buffer to store default audio input device information. Must not be NULL.
+         * @return true on success
          */
-        bool GetDefaultAudioInputDeviceInfo(SAudioDeviceInfo* pAudioDeviceInfo);
-
-        /**
-        * Gets the default audio input device.
-        * @param pAudioDeviceInfo Buffer to store default audio input device information. Must not be NULL.
-        * @return true on success
-        */
         virtual bool GetDefaultAudioInputDeviceInfo(AudioDeviceInfoPtr* pAudioDeviceInfo) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
         /**
-         * @deprecated This will not be supported in 5.1 or later.
+         * Gets the default audio output device.
+         * @param pAudioDeviceInfo Buffer to store default audio output device information. Must not be NULL.
+         * @return true on success
          */
-        bool GetDefaultAudioOutputDeviceInfo(SAudioDeviceInfo* pAudioDeviceInfo);
-
-        /**
-        * Gets the default audio output device.
-        * @param pAudioDeviceInfo Buffer to store default audio output device information. Must not be NULL.
-        * @return true on success
-        */
         virtual bool GetDefaultAudioOutputDeviceInfo(AudioDeviceInfoPtr* pAudioDeviceInfo) = 0;
 
-
         /**
-        * Registers an audio device event delegate.
-        * @param pEvent
-        * @return true on success
-        */
+         * Registers an audio device event delegate.
+         * @param pEvent
+         * @return true on success
+         */
         virtual bool RegisterAudioDeviceEvent(IAudioDeviceEvent* pEvent) = 0;
 
-
         /**
-        * Deregisters the audio device event delegate.
-        * @return true on success
-        */
+         * Deregisters the audio device event delegate.
+         * @return true on success
+         */
         virtual bool DeregisterAudioDeviceEvent() = 0;
     };
 }

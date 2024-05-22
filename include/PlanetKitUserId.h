@@ -15,21 +15,12 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitCommonTypes.h"
 
-namespace PlanetKit
-{
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use UserId")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    * @see UserId
-    */
-    class PLANETKIT_API InitUserId
-    {
-
-    };
-
+namespace PlanetKit {
     class PLANETKIT_API UserId;
 
+    template class PLANETKIT_API AutoPtr<UserId>;
     typedef AutoPtr<UserId> UserIdPtr;
 
     /// User identifier information class
@@ -37,55 +28,20 @@ namespace PlanetKit
     public :
         /**
          * Creates an instance of the UserId class.
-         * @param szID User ID string, which is encoded in UTF-16 and null-terminated.
-         * @param szServiceID User service ID string, which is encoded in UTF-16 and null-terminated.
-         * @param szCountryCode User country code string, which is encoded in UTF-16 and null-terminated.<br>It can be nullptr.
+         * @param strID User ID string, which is encoded in UTF-16 and null-terminated.
+         * @param strServiceID User service ID string, which is encoded in UTF-16 and null-terminated.
+         * @param strCountryCode User country code string, which is encoded in UTF-16 and null-terminated.<br>It can be WStringOptional(nullOpt).
          * @return
          *  - If successfully created an instance of the UserId class, returns the pointer to the instance.<br>
          *  - If failed to create an instance of the UserId class, returns nullptr.
          */
-        static UserIdPtr Create(const wchar_t* szID, const wchar_t* szServiceID, const wchar_t* szCountryCode = nullptr);
+        static UserIdPtr Create(const WString& strID, const WString& strServiceID, const WStringOptional& strCountryCode = NullOptional);
 
         /// Gets the user ID.
-        virtual const wchar_t* GetID() const = 0;
+        virtual const WString& GetID() const = 0;
         /// Gets the user service ID.
-        virtual const wchar_t* GetServiceID() const = 0;
+        virtual const WString& GetServiceID() const = 0;
         /// Gets the user country code.
-        virtual const wchar_t* GetCountry() const = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserId::Create(const wchar_t* szID, const wchar_t* szServiceID, const wchar_t* szCountryCode = nullptr);
-         */
-        bool SetId(const char* lpszUserId);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see const wchar_t* GetID() const
-         */
-        const char* GetId() const;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserId::Create(const wchar_t* szID, const wchar_t* szServiceID, const wchar_t* szCountryCode = nullptr);
-         */
-        bool SetServiceId(const char* lpszServiceId);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see const wchar_t* GetServiceID() const
-         */
-        const char* GetServiceId() const;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool SetCountry(const wchar_t* szCountry)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserId::Create(const wchar_t* szID, const wchar_t* szServiceID, const wchar_t* szCountryCode = nullptr);
-         */
-        bool SetCountry(const char* lpszCountry);
+        virtual const WStringOptional& GetCountry() const = 0;
     };
 }
