@@ -16,22 +16,20 @@
 
 #include "PlanetKit.h"
 #include "PlanetKitTypes.h"
+#include "PlanetKitUserId.h"
 #include "IPlanetKitResultHandler.h"
+
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitVideoStatus.h"
-#include "PlanetKitUserId.h"
 #include "PlanetKitPeer.h"
 
-namespace PlanetKit
-{
-
+namespace PlanetKit {
     constexpr wchar_t* PlanetKitMainRoomName = nullptr;
 
     /**
      * @brief Reasons for subgroup subscription failure
      */
-    typedef enum ESubgroupSubscribeFailReason
-    {
+    typedef enum ESubgroupSubscribeFailReason {
         /// Undefined
         PLNK_SUBGRP_SUBS_FAIL_REASON_UNDEFINED = 0,
         /// Timeout
@@ -80,64 +78,8 @@ namespace PlanetKit
 
     } ESubgroupPeerUpdateType;
 
-
-    class PLANETKIT_API ISubscribeSubgroupResultHandler
-    {
-    public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnResult(Subgroup *pSubgroup, bool bSuccess, ESubgroupSubscribeFailReason eReason, void * pUserData);
-
-        /**
-         * Result of subscribing
-         */
-        virtual void OnResult(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupSubscribeFailReason eReason, void * pUserData) = 0;
-    };
-
-    class PLANETKIT_API IUnsubscribeSubgroupResultHandler
-    {
-    public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnResult(Subgroup *pSubgroup, bool bSuccess, ESubgroupUnsubscribeFailReason eReason, void * pUserData);
-
-        /**
-         * Result of unsubscribing
-         */
-        virtual void OnResult(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupUnsubscribeFailReason eReason, void * pUserData) = 0;
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use ConferencePeer class.")
-    /**
-     * @deprecated This will not be supported in 4.4 or later.
-     * @see ConferencePeer
-     */
-    class SubgroupPeerInfo : public Base
-    {
-    public:
-        virtual const char * UserId() = 0;
-        virtual const char * ServiceId() = 0;
-
-        virtual bool SendingVideo();
-        virtual VideoStatus GetVideoStatus();
-        virtual uint32_t AudioVolumeSetting();
-    protected:
-        virtual ~SubgroupPeerInfo() {}
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     * @see SubgroupAttribute
-     */
-    class PLANETKIT_API SubgroupState {
-    public:
-        
-    };
+    using SubscribeResult = void(*)(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupSubscribeFailReason eReason, void* pUserData);
+    using UnsubscribeResult = void(*)(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupUnsubscribeFailReason eReason, void* pUserData);
 
     /**
      * Information class about Subgroup's attribute.
@@ -156,50 +98,21 @@ namespace PlanetKit
         virtual ESubgroupPeerUpdateType GetPeerUpdateType() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<SubgroupAttribute>;
     typedef AutoPtr<SubgroupAttribute> SubgroupAttributePtr;
 
     class PLANETKIT_API Subgroup : public Base {
     public:
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. Use GetPeerList(ConferencePeers*& pDstPeer)")
-        /**
-         * @deprecated This will not be supported in 4.4 or later.
-         * @see ConferencePeer
-         */
-        bool GetPeerList(SubgroupPeerInfo **ppDstBuffer, size_t nBufferLength, size_t *nWrittenCount);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0. Use PeerArray GetPeerList()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetPeerList
-         */
-        bool GetPeerList(ConferencePeers*& pDstPeers);
-
         /**
         * Gets the peer list.
         * @return Array of Peers
         */
         virtual bool GetPeerList(PeerArray& arrResult) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2. Use GetAttribute")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see GetAttribute
-         */
-        SubgroupState* GetState();
-
         /**
          * Gets the instance of subgroup's attribute..
          */
         virtual SubgroupAttributePtr GetAttribute() = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2. Use GetTotalPeersCount")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see GetTotalPeersCount
-        */
-        size_t GetPeerListLength();
 
         /**
         * Gets the current peer list length.
@@ -207,77 +120,11 @@ namespace PlanetKit
         */
         virtual size_t GetTotalPeersCount() = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. Use GetState()->IsSilenced")
         /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see Subgroup
-        */
-        bool IsAudioRecvSilenced();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. Use GetState()->IsAutoVolumeFocused")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see Subgroup
-        */
-        bool IsAudioRecvAutoVolumeControlEnabled();
-
-
-        /**
-        * Gets the subgroup name string which is encoded in UTF-16 and null-terminated.
+        * Gets the subgroup name string which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
         * @return The subgroup name string.
         */
-        virtual const wchar_t* GetSubgroupName() = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2. Use SubgroupAttribute::GetPeerUpdateType")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see SubgroupAttribute::GetPeerUpdateType
-         */
-        ESubgroupPeerUpdateType GetPeerUpdateType();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. Use GetState()->IsVideoUpdate")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see Subgroup
-        */
-        bool EnableVideoUpdate();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. Use GetState()->IsSupportedDataSession")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see Subgroup
-        */
-        bool DataSession();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4. If it is not subscribed then GetState() will be nullptr")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see Subgroup
-        */
-        bool IsSubscribed();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        bool MakeSendDataSession(int nStreamId, EDataSessionType eType,
-            NULLABLE void* pResultUserData, NULLABLE IDataSessionHandler* pResultHandler,
-            void* pExceptionUserData, IDataSessionExceptionHandler* pExceptionHandler
-        );
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use MakeReceiveDataSession.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see MakeReceiveDataSession
-         */
-        bool MakeRecvDataSession(int nStreamId, IDataSessionReceiver* pIDataSessionReceiver,
-            NULLABLE void* pResultUserData, NULLABLE IDataSessionHandler* pResultHandler,
-            void* pExceptionUserData, IDataSessionExceptionHandler* pExceptionHandler);
+        virtual const WStringOptional& GetSubgroupName() = 0;
 
         /**
          * Gets the existing outbound data session.
@@ -295,15 +142,6 @@ namespace PlanetKit
          */
         virtual bool GetInboundDataSession(int nStreamId, InboundDataSessionPtr* pResult) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see MakeOutboundDataSession
-        */
-        bool MakeSendDataSession(int nStreamId, EDataSessionType eType,
-            NULLABLE void* pResultUserData, ISendDataSessionHandler* pSendDataSessionHandler
-        );
-
         /**
          * Makes an outbound data session.
          * @param nStreamId Stream ID from 100 to 999
@@ -316,14 +154,6 @@ namespace PlanetKit
             NULLABLE void* pResultUserData, IOutboundDataSessionHandler* pDataSessionHandler
         ) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see MakeInboundDataSession
-        */
-        bool MakeReceiveDataSession(int nStreamId, NULLABLE void *pResultUserData, IReceiveDataSessionHandler* pReceiveDataSessionHandler);
-
         /**
          * Makes an inbound data session.
          * @param nStreamId Stream ID from 100 to 999
@@ -333,14 +163,6 @@ namespace PlanetKit
          */
         virtual bool MakeInboundDataSession(int nStreamId, NULLABLE void *pResultUserData, IInboundDataSessionHandler* pDataSessionHandler) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see UnsupportInboundDataSession
-        */
-        bool UnsupportRecvDataSession(DataSessionStreamIdT nStreamId);
-
         /**
         * Unsupports an inbound data session.
         * @param nStreamId
@@ -349,78 +171,38 @@ namespace PlanetKit
         virtual bool UnsupportInboundDataSession(DataSessionStreamIdT nStreamId) = 0;
     };
 
-
-    PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use SubgroupManager")
-    /**
-     * @deprecated This will not be supported in 4.4 or later.
-     * @see SubgroupManager
-     */
-    class PLANETKIT_API SubgroupInterface
-    {
-
-    };
-
     class PLANETKIT_API SubgroupManager : public Base {
     public:
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool SubscribeSubgroup(const char *szSubgroupName, ESubgroupPeerUpdateType eUpdateType,
-            bool bEnableVideoUpdate, bool bPdtpDataSession, void *pResultUserData, ISubscribeSubgroupResultHandler *pResultHandler);
-
         /**
          * Subscribes to a Subgroup. If a subgroup exists, eUpdateType, bEnableVideoUpdate, and bUseDataSession must match the existing subgroup to join.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param strSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
          * @param eUpdateType Update type
          * @param bEnableVideoUpdate The flag value of video update
          * @param bUseDataSession Whether to use data sessions
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SubscribeSubgroup(const wchar_t* szSubgroupName, ESubgroupPeerUpdateType eUpdateType,
-            bool bEnableVideoUpdate, bool bUseDataSession, void* pUserData, ISubscribeSubgroupResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool UnsubscribeSubgroup(const char *szSubgroupName, void *pResultUserData, IUnsubscribeSubgroupResultHandler *pResultHandler);
+        virtual bool SubscribeSubgroup(const WString& strSubgroupName, ESubgroupPeerUpdateType eUpdateType,
+            bool bEnableVideoUpdate, bool bUseDataSession, void* pUserData = nullptr, SubscribeResult pCallback = nullptr) = 0;
 
         /**
          * Unsubscribes from a Subgroup.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
+         * @param strSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool UnsubscribeSubgroup(const wchar_t* szSubgroupName, void* pUserData, IUnsubscribeSubgroupResultHandler* pCallback) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use GetSubgroup and pass nullptr as szSubgroupName")
-        /**
-         * @deprecated This will not be supported in 4.4 or later.
-         * @see bool GetSubgroupManager
-         */
-        bool GetMainSubgroup(Subgroup** ppSubgroup);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use SubgroupOptional GetSubgroup(const char *szSubgroupName)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool GetSubgroup
-        */
-        bool GetSubgroup(const char *szSubgroupName, Subgroup** ppSubgroup);
+        virtual bool UnsubscribeSubgroup(const WString& strSubgroupName, void* pUserData = nullptr, UnsubscribeResult pCallback = nullptr) = 0;
 
         /**
          * Gets a Subgroup instance.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param strSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
          * @return 
          *  - Subgroup instance.<br>
          *  - You can get SubgroupOptional(nullPtr) when SubgroupManager can't find a subgroup with the given szSubgroupName.
          */
-        virtual SubgroupOptional GetSubgroup(const wchar_t* szSubgroupName) = 0;
+        virtual SubgroupOptional GetSubgroup(const WString& strSubgroupName) = 0;
 
         /**
          * Gets the main room subgroup instance.
@@ -428,13 +210,6 @@ namespace PlanetKit
          *  - Subgroup instance.<br>
          */
         virtual SubgroupPtr GetMainRoom() = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use SubgroupArray GetSubgroupList()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool GetSubgroupList
-        */
-        bool GetSubgroupList(Subgroup** pDstBuffer, size_t nBufferLength, size_t *pWrittenCount);
 
         /**
          * Gets the Subgroup list.
@@ -448,46 +223,14 @@ namespace PlanetKit
         */
         virtual size_t GetSubgroupListLength() = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-        * @deprecated This will not be supported in 5.1 or later.
-        * @see OnMyAudioDescriptionUpdated
-        */
-        const String& GetMyAudioSubgroupName();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-        * @deprecated This will not be supported in 5.1 or later.
-        * @see OnMyAudioDescriptionUpdated
-        */
-        const String& GetMyAudioTaggedSubgroupName();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool ChangeMyAudioSend()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool ChangeMyAudioSend
-        */
-        bool AudioSendChangeSubgroup(const char *szDstSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see Subgroup : ChangeMyAudioDestination
-        * @see Mainroom : ChangeMyAudioDestinationToMainRoom
-        */
-        bool ChangeMyAudioSend(const char *szDstSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
-
         /**
          * Changes the audio destination to the designated subgroup.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param strDestinationSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool ChangeMyAudioDestination(const wchar_t* szSubgroupName, void* pUserData, IResultHandler* pCallback) = 0;
+        virtual bool ChangeMyAudioDestination(const WString& strDestinationSubgroupName, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Changes the audio destination to the main room.
@@ -495,31 +238,16 @@ namespace PlanetKit
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool ChangeMyAudioDestinationToMainRoom(void* pUserData, IResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool TagMainRoomAudioSend()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool TagMainRoomAudioSend
-        */
-        bool AudioSendTagSubgroupOfMainRoom(const char *szTagSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool SetTagMyAudioOfMainRoom()")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see bool SetTagMyAudioOfMainRoom
-        */
-        bool TagMainRoomAudioSend(const char *szTagSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool ChangeMyAudioDestinationToMainRoom(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Tags the audio destination subgroup of the main room.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
+         * @param strTagSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SetTagMyAudioOfMainRoom(const wchar_t* szSubgroupName, void* pUserData, IResultHandler* pCallback) = 0;
+        virtual bool SetTagMyAudioOfMainRoom(const WString& strTagSubgroupName, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Clears the tag set by SetTagMyAudioOfMainRoom.
@@ -527,48 +255,17 @@ namespace PlanetKit
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool ClearTagMyAudioOfMainRoom(void* pUserData, IResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool silenceAudio()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool SilenceAudio
-        */
-        bool AudioRecvSilenceSubgroup(const char *szSubgroupName, bool bSilence, void *pResultUserData, IResultHandler *pResultHandler);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool SilencePeersAudio()")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see bool SilencePeersAudio
-        */
-        bool SilenceAudio(const char *szSubgroupName, bool bSilence, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool ClearTagMyAudioOfMainRoom(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Silences or unsilences the audio received from the designated Subgroup.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param strSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
          * @param bSilence The flag value of whether to silence or unsilence
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool SilencePeersAudio(const wchar_t* szSubgroupName, bool bSilence, void* pUserData, IResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool EnableAutoVolumeControl()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool EnableAutoVolumeControl
-        */
-        bool AudioRecvEnableAutoVolumeControl(const char **szFocusSubgroups, size_t nFocusSubgroupCnt,
-            void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool SetPeersAudioAutoVolumeControl()")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see bool SetPeersAudioAutoVolumeControl
-        */
-        bool EnableAutoVolumeControl(const char **szFocusSubgroups, size_t nFocusSubgroupCnt,
-            void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool SilencePeersAudio(const WStringOptional& strSubgroupName, bool bSilence, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Enables auto volume control for designated Subgroups.
@@ -577,100 +274,42 @@ namespace PlanetKit
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool SetPeersAudioAutoVolumeControl(const WStringArray& arrSubgroupNames, void* pUserData, IResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool DisableAutoVolumeControl()")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool DisableAutoVolumeControl
-        */
-        bool AudioRecvDisableAutoVolumeControl(void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool ClearPeersAudioAutoVolumeControl()")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see bool ClearPeersAudioAutoVolumeControl
-        */
-        bool DisableAutoVolumeControl(void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool SetPeersAudioAutoVolumeControl(const WStringArray& arrSubgroupNames, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Disables auto volume control.
-        * @param pResultUserData User's data that will be passed along when the callback function is called.
-        * @param pResultHandler A callback function to be called after the API worked.
-        * @return true on success
-        */
-        virtual bool ClearPeersAudioAutoVolumeControl(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool setPeerVolumeSetting")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see bool SetPeerVolumeSetting
-        */
-        bool AudioRecvSetPeerVolume(const char *szPeerId, const char *szPeerServiceId, 
-            bool bSetForAllSubgroups, const char *szSubgroupNameToApply, byte unTalkerVolume,
-            void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use SetPeerAudioVolumeLevelSetting")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see SetPeerAudioVolumeLevelSetting
+         * Disables auto volume control.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool SetPeerVolumeSetting(const char *szPeerId, const char *szPeerServiceId,
-            bool bSetForAllSubgroups, const char *szSubgroupNameToApply, unsigned char ucVolume,
-            void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool ClearPeersAudioAutoVolumeControl(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Sets the peer's volume.
          * @param pPeerId Peer ID.
          * @param bSetForAllSubgroups Whether to set the peer's volume for all subgroups. If false, provide the target subgroup name in szSubgroupName.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated. PlanetKitMainRoomName means 'main room'.
+         * @param strSubgroupNameToApply Subgroup name string which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
          * @param unTalkerVolume Range [0:110]
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool SetPeerAudioVolumeLevelSetting(
-            UserIdPtr pPeerId,
-            bool bSetForAllSubgroups,
-            const wchar_t* szSubgroupName,
-            unsigned char ucVolume,
-            void* pUserData,
-            IResultHandler* pCallback
-        ) = 0;
+        virtual bool SetPeerAudioVolumeLevelSetting(UserIdPtr pPeerId, bool bSetForAllSubgroups, const WStringOptional& strSubgroupNameToApply, unsigned char ucVolume, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Gets the local user's current video subgroup name.
-        * @return Video subgroup name in null terminated string
-        */
-        virtual const WString& GetMyVideoSubgroupName() = 0;
-
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        */
-        const String& GetMyVideoTaggedSubgroupName();
-
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see subgroup : ChangeMyVideoDestination
-        * @see mainroom : ChangeMyVideoDestinationToMainRoom
-        */
-        bool VideoSendChangeSubgroup(const char *szDstSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
-
+         * Gets the local user's current video subgroup name.
+         * @return WStringOptional Video subgroup name and it can have no value and it means PlanetKitMainRoomName.
+         */
+        virtual WStringOptional GetMyVideoSubgroupName() = 0;
 
         /**
          * Changes the video destination to the designated subgroup.
-         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
+         * @param strDestinationSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool ChangeMyVideoDestination(const wchar_t* szSubgroupName, void* pUserData, IResultHandler* pCallback) = 0;
+        virtual bool ChangeMyVideoDestination(const WString& strDestinationSubgroupName, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Changes the video destination to the main room.
@@ -678,12 +317,6 @@ namespace PlanetKit
          * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
-        virtual bool ChangeMyVideoDestinationToMainRoom(void* pUserData, IResultHandler* pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        */
-        bool VideoSendTagSubgroupOfMainRoom(const char *szTagSubgroupName, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool ChangeMyVideoDestinationToMainRoom(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 }

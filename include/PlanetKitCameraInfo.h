@@ -32,20 +32,6 @@ namespace PlanetKit {
         virtual const WString& GetDeviceUid() const = 0;
 
         /**
-         * Checks whether the camera is mirrored.
-         * @remark
-         *  - Default mirror state is false.
-         */
-        virtual bool IsMirrored() const = 0;
-
-        /**
-         * Sets the camera mirror state.
-         * @remark
-         *  - Default mirror state is false.
-         */
-        virtual void SetMirror(bool bMirror) = 0;
-
-        /**
          * Gets the rotation state.
          * @remark
          *  - Default rotation mode is PLNK_VIDEO_ROTATION_0.
@@ -107,7 +93,10 @@ namespace PlanetKit {
     };
 
     /// CameraInfo pointer as AutoPtr
+    template class PLANETKIT_API AutoPtr<CameraInfo>;
     typedef AutoPtr<CameraInfo> CameraInfoPtr;
+
     /// Array of CameraInfo
+    template class PLANETKIT_API Array<CameraInfoPtr>;
     typedef Array<CameraInfoPtr> CameraInfoArray;
 };

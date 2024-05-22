@@ -16,8 +16,7 @@
 
 #include "PlanetKit.h"
 #include "PlanetKitUserId.h"
-#include "PlanetKitContainer.hpp"
-#include "PlanetKitOptional.hpp"
+#include "PlanetKitTypes.h"
 
 namespace PlanetKit
 {
@@ -28,15 +27,29 @@ namespace PlanetKit
     class PLANETKIT_API StatisticsScreenShareRecv;
     class PLANETKIT_API StatisticsScreenShareSend;
 
+    template class PLANETKIT_API AutoPtr<Statistics>;
     typedef AutoPtr<Statistics> StatisticsPtr;
+
+    template class PLANETKIT_API Optional<StatisticsPtr>;
     typedef Optional<StatisticsPtr> StatisticsOptional;
 
+    template class PLANETKIT_API AutoPtr<StatisticsVideoRecv>;
     typedef AutoPtr<StatisticsVideoRecv> StatisticsVideoRecvPtr;
+
+    template class PLANETKIT_API Array<StatisticsVideoRecvPtr>;
     typedef Array<StatisticsVideoRecvPtr> StatisticsVideoRecvArray;
 
+
+    template class PLANETKIT_API Optional<StatisticsVideoSend*>;
     typedef Optional<StatisticsVideoSend*> StatisticsVideoSendOptional;
+
+    template class PLANETKIT_API AutoPtr<StatisticsScreenShareRecv>;
     typedef AutoPtr<StatisticsScreenShareRecv> StatisticsScreenShareRecvPtr;
+
+    template class PLANETKIT_API Array<StatisticsScreenShareRecvPtr>;
     typedef Array<StatisticsScreenShareRecvPtr> StatisticsScreenShareRecvArray;
+
+    template class PLANETKIT_API Optional<StatisticsScreenShareSend*>;
     typedef Optional<StatisticsScreenShareSend*> StatisticsScreenShareSendOptional;
 
 
@@ -49,20 +62,14 @@ namespace PlanetKit
     class PLANETKIT_API StatisticsNetwork
     {
     public :
-        /// Loss rate
-        virtual float LossRate() = 0;
-        /// Checks whether there is loss rate information.
-        virtual bool HasLossRate() = 0;
-        
+        /// Loss Rate
+        virtual FloatOptional LossRate() = 0;
+
         /// Jitter ms
-        virtual unsigned int JitterMS() = 0;
-        /// Checks whether there is jitter ms information.
-        virtual bool HasJitterMS() = 0;
+        virtual UIntOptional JitterMS() = 0;
 
         /// Latency ms
-        virtual unsigned int LatencyMS() = 0;
-        /// Checks whether there is latency ms information.
-        virtual bool HasLatency() = 0;
+        virtual UIntOptional LatencyMS() = 0;
 
         /// Bits per second
         virtual unsigned int BPS() = 0;
@@ -85,8 +92,7 @@ namespace PlanetKit
     /**
      * @brief Outgoing audio statistics information
      */
-    class PLANETKIT_API StatisticsAudioSend
-    {
+    class PLANETKIT_API StatisticsAudioSend {
     public :
         /// Network statistics information
         virtual StatisticsNetwork* Network() = 0;
@@ -119,52 +125,21 @@ namespace PlanetKit
      */
     class PLANETKIT_API StatisticsVideoRecv : public Base {
     public :
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use UserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const char* PeerId();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use UserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const char* PeerServiceId();
-
         /// Gets the peer's ID.
         virtual UserIdPtr GetPeerID() = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use const wchar_t* GetSubgroupName()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see const wchar_t* GetSubgroupName()
-         */
-        const char* SubgroupName();
 
         /**
          * Gets the subscribed subgroup name.
          * @return
          *  - The subgroup name string which is encoded in UTF-16 and null-terminated.<br>
-         *  - It also can be nullptr and it means 'main room'.
+         *  - It also can be NullOptional and it means 'main room'.
          */
-        virtual const wchar_t* GetSubgroupName() = 0;
+        virtual const WStringOptional& GetSubgroupName() = 0;
 
         /// Network statistics information
         virtual StatisticsNetwork* Network() = 0;
         /// Video statistics information
         virtual StatisticsVideo* Video() = 0;
-    };
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     * @see StatisticsScreenShareSend
-     */
-    class PLANETKIT_API StatisticsScreenSharingSend
-    {
     };
 
     /**
@@ -179,52 +154,21 @@ namespace PlanetKit
         virtual StatisticsVideo* Video() = 0;
     };
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-    /**
-     * @deprecated This will not be supported in 5.1 or later.
-     * @see StatisticsScreenShareRecv
-     */
-    class PLANETKIT_API StatisticsScreenSharingRecv
-    {
-    public:
-    };
-
     /**
      * @brief Incoming screen share statistics information
      */
     class PLANETKIT_API StatisticsScreenShareRecv : public Base {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use UserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const char* PeerId();
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use UserIdPtr GetPeerID()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see UserIdPtr GetPeerID()
-         */
-        const char* PeerServiceId();
-
-        /// Gets the peer's ID.
-        virtual UserIdPtr GetPeerID() = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use const wchar_t* GetSubgroupName()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see const wchar_t* GetSubgroupName()
-         */
-        const char* SubgroupName();
-
         /**
          * Gets the subscribed subgroup name.
          * @return
          *  - The subgroup name string which is encoded in UTF-16 and null-terminated.<br>
-         *  - It also can be nullptr and it means 'main room'.
+         *  - It also can be NullOptional and it means 'main room'.
          */
-        virtual const wchar_t* GetSubgroupName() = 0;
+        virtual const WStringOptional& GetSubgroupName() = 0;
+
+        /// Gets the peer's ID.
+        virtual UserIdPtr GetPeerID() = 0;
 
         /// Network statistics information
         virtual StatisticsNetwork* Network() = 0;
@@ -243,97 +187,23 @@ namespace PlanetKit
         /// Incoming audio statistics information
         virtual StatisticsAudioRecv* AudioRecv() = 0;
         
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use StatisticsVideoSendOptional GetVideoSend()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetVideoSend
-         */
-        StatisticsVideoSend* VideoSend();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use StatisticsVideoSendOptional GetVideoSend()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetVideoSend
-         */
-        bool HasVideoSend();
-
         /**
          * @brief Gets the outgoing video statistics information.
          *   You can get StatisticsVideoSend* on success.
-         *   Return value can be PlanetKit::nullOpt when this instance doesn't have statistic of video transmission.
+         *   Return value can be PlanetKit::NullOptional when this instance doesn't have statistic of video transmission.
          */
         virtual StatisticsVideoSendOptional GetVideoSend() = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use const StatisticsVideoRecvArray& GetVideoRecv()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetVideoRecv
-         */
-        StatisticsVideoRecv* VideoRecvAt(unsigned int nIdx);
-        
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use const StatisticsVideoRecvArray& GetVideoRecv()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetVideoRecv
-         */
-        unsigned int VideoRecvCount();
-
         /// Gets statistics of incoming video as an array.
         virtual const StatisticsVideoRecvArray& GetVideoRecv() = 0;
-        
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. StatisticsScreenSharingSendOptional GetScreenSharingSend()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetScreenSharingSend
-         */
-        StatisticsScreenSharingSend* ScreenSharingSend();
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. StatisticsScreenSharingSendOptional GetScreenSharingSend()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetScreenSharingSend
-         */
-        bool HasScreenSharingSend();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see GetScreenShareSend
-         */
-        StatisticsScreenSharingSendOptional GetScreenSharingSend();
 
         /**
          * @brief Gets the outgoing screen share statistics information.
          * @return
          *   You can get StatisticsScreenSharingSend* on success.
-         *   Return value can be PlanetKit::nullOpt when this instance doesn't have statistic of screen share Send.
+         *   Return value can be PlanetKit::NullOptional when this instance doesn't have statistic of screen share Send.
          */
         virtual StatisticsScreenShareSendOptional GetScreenShareSend() = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use const StatisticsScreenSharingRecvArray& GetScreenSharingRecv()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetVideoRecv
-         */
-        StatisticsScreenSharingRecv* ScreenSharingRecvAt(unsigned int nIdx);
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use const StatisticsScreenSharingRecvArray& GetScreenSharingRecv()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetScreenSharingRecv
-         */
-        unsigned int ScreenSharingRecvCount();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         * @see GetScreenShareRecv
-         */
-        StatisticsScreenSharingRecvArray GetScreenSharingRecv();
 
         /// Gets statistics of incoming screen share as an array.
         virtual const StatisticsScreenShareRecvArray& GetScreenShareRecv() = 0;

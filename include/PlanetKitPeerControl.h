@@ -16,8 +16,10 @@
 
 #include "PlanetKit.h"
 #include "PlanetKitTypes.h"
-#include "PlanetKitSubgroupInterface.h"
+#include "PlanetKitAudioCommon.h"
 #include "PlanetKitVideoCommon.h"
+
+#include "PlanetKitSubgroupInterface.h"
 #include "PlanetKitVideoController.h"
 
 namespace PlanetKit {
@@ -45,8 +47,8 @@ namespace PlanetKit {
          * Called when a peer holds.
          * @param strHoldReason Reason string that can be nullptr.
          */
-        virtual void OnHold(PeerControlPtr pPeerControl, const String& strHoldReason) = 0;
-        /// Called when a peer unholds.
+        virtual void OnHold(PeerControlPtr pPeerControl, const WString& strHoldReason) = 0;
+		/// Called when a peer unholds.
         virtual void OnUnHold(PeerControlPtr pPeerControl) = 0;
 
         /**
@@ -61,24 +63,6 @@ namespace PlanetKit {
 
         /// Called when a peer's average volume level is updated.
         virtual void OnPeerAudioDescriptionUpdated(PeerControlPtr pPeerControl, const PeerAudioDescription& sPeerAudioDescription) = 0;
-    };
-
-    /// Start/Stop video result callback API
-    class PLANETKIT_API IPeerVideoResultHandler {
-    public :
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see StartVideoResultCallback
-         */
-        virtual void OnResult(PeerControlPtr pPeerControl, SRequestMediaResultParam* pRequestMediaResult, void* pUserData) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see StartVideoResolutionCallback
-         */
-        virtual void OnRequestVideoResolutionResult(PeerControlPtr pPeerControl, SRequestVideoResolutionResultParam* pReqVidResResultParam, void* pUserData) = 0;
     };
 
     /**
@@ -116,15 +100,9 @@ namespace PlanetKit {
          */
         virtual void Unregister() = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool StartVideo(const char* szSubgroupName, EVideoResolution eVideoResolution, void* pUserData, IPeerVideoResultHandler* pResultHandler, void* pResolutionResultData, IPeerVideoResultHandler* pResolutionResultHandler);
-
         /**
          * Starts the peer's video.
-         * @param szSubgroupName Peer's subgroup name.
+         * @param strSubgroupName Peer's subgroup name.<br>This can be `NullOptional` that means `MainRoom`.
          * @param eVideoResolution Peer's video resolution.
          * @remark
          *  - You should set the VideoRender class or a custom class that inherits from IVideoReceiver for rendering the peer's video.<br>
@@ -134,11 +112,11 @@ namespace PlanetKit {
          *   - This API works asynchronously. If you want to get the result of API calls, then use the other two overloaded APIs.
 
          */
-        virtual bool StartVideo(const wchar_t* szSubgroupName, EVideoResolution eVideoResolution) = 0;
+        virtual bool StartVideo(const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution) = 0;
 
         /**
          * Starts the peer's video.
-         * @param szSubgroupName Peer's subgroup name.
+         * @param strSubgroupName Peer's subgroup name.<br>This can be `NullOptional` that means `MainRoom`.
          * @param eVideoResolution Peer's video resolution.
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
@@ -149,11 +127,11 @@ namespace PlanetKit {
          *  - So, you must select one method between PeerControl::SetRenderer and PeerControl::SetReceiver for rendering and may use both methods.<br>
          *  - This API works asynchronously. The callback function is called immediately after the API worked.
          */
-        virtual bool StartVideo(const wchar_t* szSubgroupName, EVideoResolution eVideoResolution, void* pUserData, StartVideoResultCallback pCallback) = 0;
+        virtual bool StartVideo(const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution, void* pUserData, StartVideoResultCallback pCallback) = 0;
 
         /**
          * Starts the peer's video.
-         * @param szSubgroupName Peer's subgroup name.
+         * @param strSubgroupName Peer's subgroup name.<br>This can be `NullOptional` that means `MainRoom`.
          * @param eVideoResolution Peer's video resolution.
          * @param pUserData User's data that will be passed along when the callback function is called.
          * @param pCallback A callback function to be called after the API worked.
@@ -164,13 +142,7 @@ namespace PlanetKit {
          *  - So, you must select one method between PeerControl::SetRenderer and PeerControl::SetReceiver for rendering and may use both methods.<br>
          *  - This API works asynchronously. The callback function is called when max resolution is reached after the API worked.
          */
-        virtual bool StartVideo(const wchar_t* szSubgroupName, EVideoResolution eVideoResolution, void* pUserData, StartVideoResolutionCallback pCallback) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool StopVideo(void* pUserData, IPeerVideoResultHandler* pResultHandler);
+        virtual bool StartVideo(const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution, void* pUserData, StartVideoResolutionCallback pCallback) = 0;
 
         /**
          * Stops the peer's video.
@@ -181,36 +153,21 @@ namespace PlanetKit {
          */
         virtual bool StopVideo(void* pUserData = nullptr, StoptVideoResultCallback pCallback = nullptr) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool StartScreenShare(const char* szSubgroupName, void* pUserData, IResultHandler* pResultHandler);
-
         /**
          * Starts rendering the peer's screen share.
-         * @param szSubgroupName Peer's subgroup name
-         * @param pUserData User custom data that can be a parameter when IResultHandler::OnResult API is called back after working.
-         * @param pResultHandler Call IResultHandler::OnResult callback API after working.
+         * @param strSubgroupName Peer's subgroup name.<br>This can be `NullOptional` that means `MainRoom`.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @remark
-         *   - You should set the VideoRender class or a custom class that inherits from IVideoReceiver for rendering the peer's screen share with calling SetScreenShareRenderer.
+         *   - You should set the VideoRender class or a custom class that inherits from IVideoReceiver for rendering the peer's screen share with calling SetScreenShareView or RegisterScreenShareReceiver.
          */
-        virtual bool StartScreenShare(const wchar_t* szSubgroupName, void* pUserData, IResultHandler* pResultHandler) = 0;
+        virtual bool StartScreenShare(const WStringOptional& strSubgroupName, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Stops rendering the peer's screen share.
-         * @param pUserData User custom data that can be a parameter when IResultHandler::OnResult API is called back after working.
-         * @param pResultHandler Call IResultHandler::OnResult callback API after working.
-         */
-        virtual bool StopScreenShare(void* pUserData, IResultHandler* pResultHandler) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use SetView")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see SetView
-         */
-        void SetRenderer(VideoRender* pVideoRender);
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.         */
+        virtual bool StopScreenShare(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Sets the video rendering window.
@@ -220,11 +177,25 @@ namespace PlanetKit {
         virtual void SetView(WindowHandle hWnd) = 0;
 
         /**
-         * Sets the video receiver.
-         * @remark
-         *  - Only one video receiver can be set for receiving VideoFrameData that can be used for rendering, writing files, etc.
+         * Clears the video rendering window.
          */
-        virtual void SetReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual void ClearView() = 0;
+
+        /**
+         * Registers video receiver.
+         * @remark
+         *  - You can set multiple video receivers for receiving VideoFrameData that can be used rendering, writing files, etc.
+         * @see DeregisterReceiver
+         */
+        virtual void RegisterReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Deregisters video receiver.
+         * @remark
+         *  - You should deregister video receiver before you registered.
+         * @see RegisterReceiver
+         */
+        virtual void DeregisterReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Sets the screen share video renderer.
@@ -232,5 +203,21 @@ namespace PlanetKit {
          *  - Only one video renderer can be set for rendering screen share.
          */
         virtual void SetScreenShareView(WindowHandle hWnd) = 0;
+
+        /**
+         * Registers screen share receiver.
+         * @remark
+         *  - You can set multiple video receivers for receiving VideoFrameData that can be used rendering, writing files, etc.
+         * @see DeregisterReceiver
+         */
+        virtual void RegisterScreenShareReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Deregisters screen share receiver.
+         * @remark
+         *  - You can deregister video receiver before you registered.
+         * @see RegisterReceiver
+         */
+        virtual void DeregisterScreenShareReceiver(IVideoReceiver* pReceiver) = 0;
     };
 };

@@ -20,11 +20,12 @@
 namespace PlanetKit
 {
     class PLANETKIT_API SendVoiceProcessor;
+
+    template class PLANETKIT_API AutoPtr<SendVoiceProcessor>;
     typedef AutoPtr<SendVoiceProcessor> SendVoiceProcessorPtr;
 
     /// Acoustic Echo Canceller value
-    typedef enum EPlanetKitAcousticEchoCanceller
-    {
+    typedef enum EPlanetKitAcousticEchoCanceller {
         /// Disabled
         PLNK_ACOUSTIC_ECHO_CANCELLER_DISABLED               = 0,
         /// The recommended value<br>Default
@@ -38,8 +39,7 @@ namespace PlanetKit
     }EPlanetKitAcousticEchoCanceller;
 
     /// Auto Gain Control value
-    typedef enum EPlanetKitAutoGainControl
-    {
+    typedef enum EPlanetKitAutoGainControl {
         /// Disabled
         PLNK_AUTO_GAIN_CONTROL_TYPE_DISABLED                = 0,
         /// Use AGC by using software
@@ -59,26 +59,23 @@ namespace PlanetKit
     /**
      * @brief Gets SendVoiceProcessor to control VQE (Voice Quality Enhancement). Use SendVoiceProcessor when you need to turn on or off the S/W VQE filter functionality depending on your environment.
      */
-    class PLANETKIT_API SendVoiceProcessor : public Base
-    {
+    class PLANETKIT_API SendVoiceProcessor : public Base {
     public:
-
         /**
          * Enables the Voice Processor.
-         * @param pUserData         UserData for IResultHandler
-         * @param pResultHandler    Completion Callback
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool Enable(void * pUserData, IResultHandler * pResultHandler) = 0;
+        virtual bool Enable(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Disables the Voice Processor.
-         * @param pUserData         UserData for IResultHandler
-         * @param pResultHandler    Completion Callback
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool Disable(void * pUserData, IResultHandler * pResultHandler) = 0;
-
+        virtual bool Disable(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Checks whether the Voice Processor is enabled.
@@ -88,12 +85,12 @@ namespace PlanetKit
 
         /**
          * Sets the Acoustic Echo Canceller mode.
-         * @param eAECMode          Acoustic Echo Canceller mode
-         * @param pUserData         UserData for IResultHandler
-         * @param pResultHandler    Completion Callback
+         * @param eAECMode Aucoustic Echo Canceller mode
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SetAcousticEchoCanceller(EPlanetKitAcousticEchoCanceller ePlanetKitAcousticEchoCancellerMode = EPlanetKitAcousticEchoCanceller::PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_RECOMMENDED, void * pUserData = nullptr, IResultHandler * pResultHandler = nullptr) = 0;
+        virtual bool SetAcousticEchoCanceller(EPlanetKitAcousticEchoCanceller ePlanetKitAcousticEchoCancellerMode = EPlanetKitAcousticEchoCanceller::PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_RECOMMENDED, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
         
         /**
          * Gets the Acoustic Echo Canceller mode.
@@ -103,12 +100,12 @@ namespace PlanetKit
 
         /**
          * Sets the Auto Gain Control mode.
-         * @param ePlanetKitAutoGainControl     Auto Gain Control mode
-         * @param pUserData                     UserData for IResultHandler
-         * @param pResultHandler                Completion Callback
+         * @param ePlanetKitAutoGainControl Auto Gain Control mode
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SetAutoGainControl(EPlanetKitAutoGainControl ePlanetKitAutoGainControl = EPlanetKitAutoGainControl::PLNK_AUTO_GAIN_CONTROL_TYPE_SOFTWARE, void * pUserData = nullptr, IResultHandler * pResultHandler = nullptr) = 0;
+        virtual bool SetAutoGainControl(EPlanetKitAutoGainControl ePlanetKitAutoGainControl = EPlanetKitAutoGainControl::PLNK_AUTO_GAIN_CONTROL_TYPE_SOFTWARE, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Gets the Auto Gain Control mode.
@@ -125,10 +122,10 @@ namespace PlanetKit
         /**
          * Sets the Noise Suppressor mode.
          * @param ePlanetkitNoiseSuppressorMode Noise Suppressor mode
-         * @param pUserData                     UserData for IResultHandler
-         * @param pResultHandler                Completion Callback
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SetNoiseSuppressor(EPlanetkitNoiseSuppressorMode ePlanetkitNoiseSuppressorMode = EPlanetkitNoiseSuppressorMode::PLNK_NOISE_SUPPRESSOR_MODE_ENABLE, void * pUserData = nullptr, IResultHandler * pResultHandler = nullptr) = 0;
+        virtual bool SetNoiseSuppressor(EPlanetkitNoiseSuppressorMode ePlanetkitNoiseSuppressorMode = EPlanetkitNoiseSuppressorMode::PLNK_NOISE_SUPPRESSOR_MODE_ENABLE, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 }

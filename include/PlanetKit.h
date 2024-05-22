@@ -17,16 +17,21 @@
 #include <Windows.h>
 #include <stdint.h>
 
-#include "PlanetKitAutoPtr.hpp"
-#include "PlanetKitOptional.hpp"
-#include "PlanetKitContainer.hpp"
-#include "PlanetKitString.hpp"
-
 #ifdef PLANETKIT_EXPORTS
 #define PLANETKIT_API __declspec(dllexport)
 #else
 #define PLANETKIT_API __declspec(dllimport)
 #endif
+
+#include "PlanetKitAutoPtr.hpp"
+#include "PlanetKitOptional.hpp"
+#include "PlanetKitContainer.hpp"
+#include "PlanetKitString.hpp"
+
+
+// CLASS1 inherits CLASS2::member via dominance
+#pragma warning(disable: 4250)
+
 
 #define PLNK_BUFFER_SIZE_256                    256
 #define PLNK_BUFFER_SIZE_512                    512
@@ -47,7 +52,6 @@
 #define PLNK_PEER_INFO_MAX_SUBGRP_NAME_LEGNTH   16
 
 #define NULLABLE 
-
 
 #if __cplusplus >= 201402L
     #define PLANETKIT_DEPRECATED(x) [[deprecated(x)]]
@@ -109,6 +113,8 @@ namespace PlanetKit
         PLNK_KIT_START_FAIL_REASON_INVALID_PARAM = 1005,
         /// Another PlanetKitConference instance already exists.
         PLNK_KIT_START_FAIL_REASON_OTHER_CONFERENCE_IS_ALREADY_EXIST = 1006,
+        /// Peer ID is empty when you MakeCall.
+        PLNK_KIT_START_FAIL_REASON_PEER_ID_IS_EMPTY = 1007,
 
         // Windows platform internal errors are reduced from value 1999.
         // If this error is returned, please contact the PlanetKit windows development team.
@@ -330,26 +336,16 @@ namespace PlanetKit
     typedef enum EMediaDisabledReason {
         /// None (Default value)
         PLNK_MEDIA_DISABLE_REASON_UNDEFINED = 0,
-
-        // Disabled by user: 1 ~ 100
         /// User has disabled their own video.
         PLNK_MEDIA_DISABLE_REASON_USER = 1,
         /// Media has been declined.
         PLNK_MEDIA_DISABLE_REASON_DECLINE = 2,
-
-        // Disabled by error: 201 ~ 300
-        /// Unable to get media source.
-        PLNK_MEDIA_DISABLE_REASON_NO_MEDIA_SRC = 201,
-        /// Unable to receive media.
-        PLNK_MEDIA_DISABLE_REASON_NO_RECV_MEDIA = 202,
-
     } EMediaDisabledReason;
 
     /**
      * @brief Current video state
      */
-    typedef enum EVideoState
-    {
+    typedef enum EVideoState {
         /// Video state is disabled.
         PLNK_VIDEO_STATE_DISABLED = 0,
         /// Video state is enabled.
@@ -361,8 +357,7 @@ namespace PlanetKit
     /**
      * @brief State of the peer's video activation
      */
-    typedef enum EPeerVideoState
-    {
+    typedef enum EPeerVideoState {
         /// Peer video is not activated (Default).
         PLNK_PEER_VIDEO_STATE_IDLE = 0,
         /// Peer video is ready to start.
@@ -395,8 +390,7 @@ namespace PlanetKit
     /**
      * @brief Peer's media type
      */
-    typedef enum EMediaType
-    {
+    typedef enum EMediaType {
         /// Unkown type
         PLNK_MEDIA_TYPE_UNKNOWN,
         /// Audio type only
@@ -414,8 +408,7 @@ namespace PlanetKit
      *   Whether to automatically enable the local user's video when a peer requests to change from an audio call to a video call<br>
      *   This value is set using CallParam
      */
-    typedef enum EResponseOnVideoEnable
-    {
+    typedef enum EResponseOnVideoEnable {
         /// Pauses the local user's video when a peer requests to change from an audio call to a video call.
         PAUSE,
         /// Sends the local user's video when a peer requests to change from an audio call to a video call.
@@ -426,8 +419,7 @@ namespace PlanetKit
      * @brief
      *   This is an enum value added to handle unknown errors that may occur due to functional differences between versions.
      */
-    typedef enum EConferenceExceptionType
-    {
+    typedef enum EConferenceExceptionType {
         /// None
         PLNK_CONF_EXCEPTION_TYPE_NONE = 0,
         /// This is an exception that determines and informs the server when another user in the room uses a feature that is not supported by the local user's client.
@@ -439,8 +431,7 @@ namespace PlanetKit
     /**
      * @brief State of screen share
      */
-    typedef enum EScreenShareState
-    {
+    typedef enum EScreenShareState {
         /// Disabled
         PLNK_SCREEN_SHARE_STATE_DISABLED = 0,
         /// Enabled
@@ -450,8 +441,7 @@ namespace PlanetKit
     /**
      * @brief Device definition of peer that can be utilized in statistics.
      */
-    typedef enum EUserEquipmentType
-    {
+    typedef enum EUserEquipmentType {
         /// None
         PLNK_UE_TYPE_NONE = 0,
         /// Android
@@ -471,22 +461,10 @@ namespace PlanetKit
         PLNK_UE_TYPE_SIP_TERMINAL = 100,
     }EUserEquipmentType;
 
-    PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later.")
-    /**
-     * @deprecated This will not be supported in 5.0 or later.
-     */
-    typedef struct SPeer
-    {
-        const char*                 szUserId;
-        const char*                 szServiceId;
-
-    } SPeer;
-
     /**
      * @brief Type of connection token for connecting to the PlanetKit cloud server.
      */
-    typedef enum EConnectToken
-    {
+    typedef enum EConnectToken {
         /// This feature will be deprecated soon. It is only a value temporarily maintained for backward compatibility.
         API_KEY,
         /// Default feature of the connect token.
@@ -496,8 +474,7 @@ namespace PlanetKit
     /**
      * @brief Reason for the failure of getting screen share state.
      */
-    typedef enum EPeerGetFailReason
-    {
+    typedef enum EPeerGetFailReason {
         /// None
         PLNK_PEER_GET_FAIL_REASON_NONE = 0,
         /// Peer is not in the subgroup.
@@ -506,113 +483,7 @@ namespace PlanetKit
         PLNK_PEER_GET_FAIL_REASON_DISCONNECTED = 2,
     } EPeerGetFailReason;
 
-    PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later.")
-    /**
-     * @deprecated This will not be supported in 4.3 or later.
-     */
-    typedef struct SPeerUpdatedParam
-    {
-        /// This will not be supported in 4.3 or later.
-        bool                        bPeerVidPaused;
-        /// This will not be supported in 4.3 or later.
-        EVideoPauseReason           eVideoPauseReason;
-        /// This will not be supported in 4.3 or later.
-        SPeer                       sId;
-    } SPeerUpdatedParam;
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     */
-    typedef struct SShortData
-    {
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use strType.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later. Use strType.
-        * @see strType
-        */
-        const char*     szType;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        String          strType;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        void *          pData;
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        int             nSize;
-    } SShortData;
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use ShortDataParam")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     * @see ShortDataParam
-     */
-    typedef struct SShortDataParam
-    {
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use strSrcId.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later. Use strSrcId.
-        * @see strSrcId
-        */
-        const char*                 szSrcId;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use strSrcServiceId.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later. Use strSrcServiceId.
-        * @see strSrcServiceId
-        */
-        const char*                 szSrcServiceId;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        String      strSrcId;
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        String      strSrcServiceId;
-    } SShortDataParam;
-
-    
-
-    PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-    /**
-    * @deprecated This will not be supported in 5.0 or later.
-    * @see ConnectParam
-    */
-    typedef struct SCommParam
-    {
-    } SCommParam;
-
-    /**
-     * @brief Audio description of a peer that can be obtained with IConferenceEvent::OnMyAudioDescriptionUpdated or IConferenceEvent::OnPeersAudioDescriptionUpdated
-     */
-    typedef struct PeerAudioDescription
-    {
-        /// Peer ID
-        String          strId;
-        /// Peer service ID
-        String          strServiceId;
-        /// Peer volume[0:100]
-        unsigned char   ucVolume;
-        /// Name of the subgroup from which this audio originated
-        String          strSentSubgroupName;
-        /// Name of the subgroup where this audio was tagged by the peer
-        String          strTaggedSubgroupName;
-    }PeerAudioDescription;
+    CONSTEXPR int PLNK_DISPLAY_NAME_MAX_SIZE_BYTES = 128;
 
     class EventManager;
     class PlanetKitManager;
@@ -626,7 +497,6 @@ namespace PlanetKit
     class PLANETKIT_API ContentShareInterface;
     class PLANETKIT_API SubgroupManager;
     class PLANETKIT_API AudioDevice;
-    class PLANETKIT_API VideoCapturer;
     class PLANETKIT_API VideoRender;
     class PLANETKIT_API Subgroup;
     class PLANETKIT_API Peer;
@@ -640,20 +510,21 @@ namespace PlanetKit
     class PLANETKIT_API CCParam;
     class PLANETKIT_API CommonSetSharedContent;
     class PLANETKIT_API ConnectParam;
-    class PLANETKIT_API CallParam;
     class PLANETKIT_API MakeCallParam;
     class PLANETKIT_API VerifyCallParam;
-    class PLANETKIT_API ConferenceJoinParam;
+    class PLANETKIT_API ConferenceParam;
     class PLANETKIT_API ConferencePeerUpdateParam;
     class PLANETKIT_API AudioDeviceInfo;
 
     class PLANETKIT_API ConferencePeers;
     class PLANETKIT_API IPeerControlEvent;
 
-    struct PLANETKIT_API VideoStatus;
-    struct PLANETKIT_API VideoStatusResult;
+    struct VideoStatus;
+    struct VideoStatusResult;
 
     class PLANETKIT_API SharedContentsData;
+
+    class PLANETKIT_API SharedContents;
 
     class PLANETKIT_API SendVoiceProcessor;
 
@@ -694,6 +565,10 @@ namespace PlanetKit
 
     class PLANETKIT_API SubgroupAttribute;
 
+    class PLANETKIT_API PlanetKitManager;
+
+    class PLANETKIT_API AudioManager;
+
     class Base {
     private :
         friend class EventManager;
@@ -717,7 +592,6 @@ namespace PlanetKit
         friend class AutoPtr<ContentShareInterface>;
         friend class AutoPtr<SubgroupManager>;
         friend class AutoPtr<AudioDevice>;
-        friend class AutoPtr<VideoCapturer>;
         friend class AutoPtr<VideoRender>;
         friend class AutoPtr<Subgroup>;
         friend class AutoPtr<OutboundDataSession>;
@@ -733,10 +607,9 @@ namespace PlanetKit
         friend class AutoPtr<PeerControl>;
         friend class AutoPtr<CommonSetSharedContent>;
         friend class AutoPtr<ConnectParam>;
-        friend class AutoPtr<CallParam>;
         friend class AutoPtr<MakeCallParam>;
         friend class AutoPtr<VerifyCallParam>;
-        friend class AutoPtr<ConferenceJoinParam>;
+        friend class AutoPtr<ConferenceParam>;
         friend class AutoPtr<ConferencePeerUpdateParam>;
         friend class AutoPtr<SendVoiceProcessor>;
         friend class AutoPtr<AudioDeviceInfo>;
@@ -761,6 +634,10 @@ namespace PlanetKit
         friend class AutoPtr<ScreenShareController>;
         friend class AutoPtr<ShortDataParam>;
         friend class AutoPtr<SubgroupAttribute>;
+        friend class AutoPtr<PlanetKitManager>;
+        friend class AutoPtr<AudioManager>;
+        friend class AutoPtr<SharedContents>;
+        friend class AutoPtr<SharedContentsData>;
     };
 
 }

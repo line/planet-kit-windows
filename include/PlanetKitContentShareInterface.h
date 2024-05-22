@@ -15,118 +15,31 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitOptional.hpp"
 #include "IPlanetKitResultHandler.h"
+
 #include "PlanetKitCommonSetSharedContent.h"
 
-#include "PlanetKitOptional.hpp"
-
-namespace PlanetKit
-{
+namespace PlanetKit {
     class PLANETKIT_API ContentShareInterface;
 
+    template class PLANETKIT_API AutoPtr<ContentShareInterface>;
     typedef AutoPtr<ContentShareInterface> ContentShareInterfacePtr;
+
+    template class PLANETKIT_API Optional<ContentShareInterfacePtr>;
     typedef Optional<ContentShareInterfacePtr> ContentShareInterfaceOptional;
 
-    class PLANETKIT_API IContentShareEvent
-    {
+    class PLANETKIT_API IContentShareEvent {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeerSetSharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeerSetSharedContents
-         */
-        void OnPeerSetSharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-                const char *szPeerServiceId, unsigned int nElapsedAfterSetMsec, const void *pData, unsigned int nDataSize);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeerUnsetSharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeerUnsetSharedContents
-         */
-        void OnPeerUnsetSharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-            const char *szPeerServiceId);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeerSetExclusivelySharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeerSetExclusivelySharedContents
-         */
-        void OnPeerSetExclusivelySharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-                const char *szPeerServiceId, unsigned int nElapsedAfterSetMsec, const void *pData, unsigned int nDataSize);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeerUnsetExclusivelySharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeerUnsetExclusivelySharedContents
-         */
-        void OnPeerUnsetExclusivelySharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-            const char *szPeerServiceId);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeersSetRoomSharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeersSetRoomSharedContents
-         */
-        void OnPeerSetRoomSharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-                const char *szPeerServiceId, unsigned int nElapsedAfterSetMsec, const void *pData, unsigned int nDataSize);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use OnPeersUnsetRoomSharedContents(PlanetKit::ContentShareInterface *pContentShareInterface, PlanetKit::CommonSetSharedContents * pCommonSetSharedContents)")
-        /**
-         * @deprecated This will not be supported in 4.3 or later.
-         * @see OnPeersUnsetRoomSharedContents
-         */
-        void OnPeerUnsetRoomSharedContents(ContentShareInterface *pContentShareInterface, const char *szPeerId,
-            const char *szPeerServiceId);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeersSetSharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContents * pConferenceSetSharedContents);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeersUnsetSharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContents * pConferenceSetSharedContents);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeerSetExclusivelySharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContent * pConferenceSetSharedContent);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeerUnsetExclusivelySharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContent * pConferenceSetSharedContent);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeerSetRoomSharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContent * pCommonSetSharedContent);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         */
-        void OnPeerUnsetRoomSharedContents(ContentShareInterface *pContentShareInterface, CommonSetSharedContent * pCommonSetSharedContent);
-
         /**
          * Called when peers set shared contents.
          * @remark
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
-         *    + CommonSetSharedContent::ServiceId()
-         *    + CommonSetSharedContent::GetPeer()
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()
-         *    + CommonSetSharedContent::Data()
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
+         *    + CommonSetSharedContent::ServiceId()<br>
+         *    + CommonSetSharedContent::GetPeer()<br>
+         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
+         *    + CommonSetSharedContent::Data()<br>
          *    + CommonSetSharedContent::DataSize()
          */
         virtual void OnPeersSetSharedContents(ContentShareInterfacePtr pContentShareInterface, const CommonSetSharedContentArray& arrSharedContent) = 0;
@@ -134,22 +47,22 @@ namespace PlanetKit
         /**
          * Called when peers unset shared contents.
          * @remark
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
-         *    + CommonSetSharedContent::ServiceId()
-         *    + CommonSetSharedContent::GetPeer()
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
+         *    + CommonSetSharedContent::ServiceId()<br>
+         *    + CommonSetSharedContent::GetPeer()<br>
          */
         virtual void OnPeersUnsetSharedContents(ContentShareInterfacePtr pContentShareInterface, const CommonSetSharedContentArray& arrSharedContent) = 0;
 
         /**
          * Called when peers set exclusively shared contents.
          * @remark
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
-         *    + CommonSetSharedContent::ServiceId()
-         *    + CommonSetSharedContent::GetPeer()
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()
-         *    + CommonSetSharedContent::Data()
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
+         *    + CommonSetSharedContent::ServiceId()<br>
+         *    + CommonSetSharedContent::GetPeer()<br>
+         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
+         *    + CommonSetSharedContent::Data()<br>
          *    + CommonSetSharedContent::DataSize()
          */
         virtual void OnPeerSetExclusivelySharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
@@ -157,9 +70,9 @@ namespace PlanetKit
         /**
          * Called when peers unset exclusively shared contents.
          * @remark
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
-         *    + CommonSetSharedContent::ServiceId()
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
+         *    + CommonSetSharedContent::ServiceId()<br>
          *    + CommonSetSharedContent::GetPeer()
          */
         virtual void OnPeerUnsetExclusivelySharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
@@ -167,12 +80,12 @@ namespace PlanetKit
         /**
          * Called when any participant of conference call set 'Room Shared Content'.
          * @remark
-         *  - Support only conference call.
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
-         *    + CommonSetSharedContent::ServiceId()
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()
-         *    + CommonSetSharedContent::Data()
+         *  - Support only conference call.<br>
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
+         *    + CommonSetSharedContent::ServiceId()<br>
+         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
+         *    + CommonSetSharedContent::Data()<br>
          *    + CommonSetSharedContent::DataSize()
         */
         virtual void OnPeerSetRoomSharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
@@ -180,25 +93,22 @@ namespace PlanetKit
         /**
          * Called when any participant of conference call unset 'Room Shared Content'.
          * @remark
-         *  - Support only conference call.
-         *  - You can use these APIs.
-         *    + CommonSetSharedContent::PeerId()
+         *  - Support only conference call.<br>
+         *  - You can use these APIs.<br>
+         *    + CommonSetSharedContent::PeerId()<br>
          *    + CommonSetSharedContent::ServiceId()
         */
         virtual void OnPeerUnsetRoomSharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
     };
 
 
-    class PLANETKIT_API ContentShareInterface : public Base
-    {
+    class PLANETKIT_API ContentShareInterface : public Base {
     public:
-
         /**
         * Sets the event handler for shared content.
         * @return true on success.
         */
         virtual bool SetContentShareEvent(IContentShareEvent *pEvent) = 0;
-
 
         /**
         * Removes the event handler for shared content.
@@ -206,64 +116,63 @@ namespace PlanetKit
         */
         virtual bool RemoveContentShareEvent() = 0;
 
-
         /**
-        * Sets the shared contents.
-        * @param pShareContents Shared contents
-        * @param nShareContentsSize Size of the shared contents
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IContentShareEvent::OnSetSharedContentsResult() to check the request result.
-        */
-        virtual bool SetSharedContents(const void *pShareContents, int nShareContentsSize, NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
-
-
-        /**
-        * Unsets the shared contents.
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IContentShareEvent::OnUnsetSharedContentsResult() to check the request result.
-        */
-        virtual bool UnsetSharedContents(NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
+         * Sets the shared contents.
+         * @param pShareContents Shared contents that you want to share.
+         * @param nShareContentsSize Size of pShareContents
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool SetSharedContents(const void* pShareContents, int nShareContentsSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
 
         /**
-        * Sets the exclusively shared contents.
-        * @param pShareContents Shared contents
-        * @param nShareContentsSize Size of the shared contents
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IContentShareEvent::OnSetExclusivelySharedContentsResult() to check the request result.
-        */
-        virtual bool SetExclusivelySharedContents(const void *pShareContents, int nShareContentsSize, NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
+         * Unsets the shared contents.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool UnsetSharedContents(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
 
         /**
-        * Unsets the exclusively shared contents.
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IContentShareEvent::OnUnsetExclusivelySharedContentsResult() to check the request result.
-        */
-        virtual bool UnsetExclusivelySharedContents(NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
+         * Sets the exclusively shared contents.
+         * @param pShareContents Shared contents
+         * @param nShareContentsSize Size of the shared contents
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool SetExclusivelySharedContents(const void* pShareContents, int nShareContentsSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+
 
         /**
-        * Sets the room shared contents on a conference call.
-        * This method is supported only in conference calls.
-        * @param pShareContents Shared contents
-        * @param nShareContentsSize Size of the shared contents
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IResultHandler::OnResult() to check the request result.
-        */
-        virtual bool SetRoomSharedContents(const void *pShareContents, int nShareContentsSize, NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
+         * Unsets the exclusively shared contents.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool UnsetExclusivelySharedContents(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Unsets the shared contents on a conference call.
-        * This method is supported only in conference calls.
-        * @param pUserData User data to be passed when pResultHandler is called
-        * @param pResultHandler Result handler to be called after executing the method
-        * @return true on successful function call. Wait for IResultHandler::OnResult() to check the request result.
-        */
-        virtual bool UnsetRoomSharedContents(NULLABLE void * pUserData, NULLABLE IResultHandler *pResultHandler) = 0;
+         * Sets the room shared contents on a conference call.<br>
+         * This method is supported only in conference calls.
+         * @param pShareContents Shared contents
+         * @param nShareContentsSize Size of the shared contents
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool SetRoomSharedContents(const void* pShareContents, int nShareContentsSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+
+        /**
+         * Unsets the shared contents on a conference call.<br>
+         * This method is supported only in conference calls.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool UnsetRoomSharedContents(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 }

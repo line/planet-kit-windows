@@ -16,20 +16,11 @@
 
 #include "PlanetKit.h"
 
-namespace PlanetKit
-{
-    /// @brief Event callback API
+namespace PlanetKit {
     /**
-     * PlanetKit calls this API for the result after the user calls PlanetKit's asynchronous APIs.
+     * The result handler will be called upon completion of the PlanetKit API. Pass a user-managed data pointer along with this handler.
+     * @param pUserData User-managed data pointer.
+     * @param bSuccess Result of the function call.
      */
-    class PLANETKIT_API IResultHandler
-    {
-    public:
-        /**
-        * The result handler will be called upon completion of the PlanetKit API. Pass a user-managed data pointer along with this handler.
-        * @param pUserData User-managed data pointer.
-        * @param bSuccess Result of the function call.
-        */
-        virtual void OnResult(void * pUserData, bool bSuccess) = 0;
-    };
+    using ResultCallback = void(*)(void* pUserData, bool bSuccess);
 }

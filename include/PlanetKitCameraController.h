@@ -39,11 +39,13 @@ namespace PlanetKit
         virtual EVideoControlResult SelectCamera(CameraInfoPtr pCameraInfo) = 0;
 
         /**
-         * Updates the current devices.
+         * Get selected camera information.
          * @return
-         *  - Returns true if successful.
+         *  - The result of selected camera information class.
+         * @remark
+         *  - This API may return nullptr if no camera is selected.
          */
-        virtual bool UpdateCameraList() = 0;
+        virtual CameraInfoPtr GetSelectedCamera() = 0;
 
         /**
          * Starts the capture.
@@ -64,18 +66,22 @@ namespace PlanetKit
         /**        
          * Registers a delegate to handle device change events.
          * @param pDelegate The delegate to handle device change events.
-         * @return
-         *  - Returns true if successful.
          */
-        virtual bool RegisterDeviceEvent(IVideoCaptureDeviceEvent* pDelegate) = 0;
+        virtual void RegisterDeviceEvent(IVideoCaptureDeviceEvent* pDelegate) = 0;
 
         /**
          * Deregisters a delegate to handle device change events.
-         * @return
-         *  - Returns true if successful.
+         * @param pDelegate The delegate that you want to deregister.
          */
-        virtual bool DeregisterDeviceEvent() = 0;
+        virtual void DeregisterDeviceEvent(IVideoCaptureDeviceEvent* pDelegate) = 0;
+
+        /**
+         * Checks camera is running.
+         * @return true on camera is running.
+         */
+        virtual bool IsRunning() = 0;
     };
 
+    template class PLANETKIT_API AutoPtr<CameraController>;
     typedef AutoPtr<CameraController> CameraControllerPtr;
 }

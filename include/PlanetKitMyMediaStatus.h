@@ -23,6 +23,8 @@
 namespace PlanetKit
 {
     class MyMediaStatus;
+
+    template class PLANETKIT_API AutoPtr<MyMediaStatus>;
     typedef AutoPtr<MyMediaStatus> MyMediaStatusPtr;
 
     /**
@@ -46,6 +48,14 @@ namespace PlanetKit
         virtual void OnUnmuted(MyMediaStatusPtr pMyStatus) = 0;
         /// Called when the local user's audio subgroup is updated.
         virtual void OnAudioSubgroup(MyMediaStatusPtr pMyStatus, const WString& strDestinationSubgroup, const WString& strTaggedSubgroup) = 0;
+
+        /**
+         * Called at each interval registered during the initialization of the call or the conference, providing the local user's volume value.
+         * @param pMyStatus MyMediaStatus instance that the event was registered to.
+         * @param sMyAudioDescription The local user's audio description.
+         * @remark If the interval is 0, it does not occur.
+         */
+        virtual void OnMyAudioDescriptionUpdated(MyMediaStatusPtr pMyStatus, const MyAudioDescription& sMyAudioDescription) = 0;
     };
 
     /**
@@ -63,7 +73,7 @@ namespace PlanetKit
         /**
          * Gets the local user's video subgroup name.
          * @remark
-         *  - Returns String class if the local user's video is being sent to a subgroup, or Optional::nullOpt if not sending the local user's video to a subgroup.
+         *  - Returns String class if the local user's video is being sent to a subgroup, or NullOptional if not sending the local user's video to a subgroup.
          */
         virtual WStringOptional GetVideoSubgroupName() = 0;
 
@@ -73,7 +83,7 @@ namespace PlanetKit
         /**
          * Gets the local user's screen share subgroup name.
          * @remark
-         *  - Returns String class if the local user's screen share is being sent to a subgroup, or Optional::nullOpt if not sending the local user's screen share to a subgroup.
+         *  - Returns String class if the local user's screen share is being sent to a subgroup, or NullOptional if not sending the local user's screen share to a subgroup.
          */
         virtual WStringOptional GetScreenShareSubgroupName() = 0;
 

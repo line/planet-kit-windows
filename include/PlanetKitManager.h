@@ -18,7 +18,6 @@
 #include "PlanetKitCall.h"
 #include "PlanetKitConference.h"
 #include "PlanetKitAudioManager.h"
-#include "PlanetKitLogStorageInterface.h"
 #include "PlanetKitCcParam.h"
 
 #include "PlanetKitCameraController.h"
@@ -28,56 +27,10 @@
 
 namespace PlanetKit 
 {
-    typedef struct SManagerInitParam
-    {
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        char    szBasePath[PLNK_BUFFER_SIZE_256] = { 0, }; 
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        char    szDbPath[PLNK_BUFFER_SIZE_256] = { 0, }; 
+    typedef AutoPtr<PlanetKitManager> PlanetKitManagerPtr;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        int     nLogLevel = 0; 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         */
-        bool    bEnableLog = false;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        bool    bEnableFileLog; 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        bool    bEnableStdOutLog;
-    }SManagerInitParam;
-
-
-    class PLANETKIT_API PlanetKitManager 
-    {
+    class PLANETKIT_API PlanetKitManager : public Base {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool Initialize(ConfigurationPtr pConfiguration).")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see bool Initialize(ConfigurationPtr pConfiguration)
-         */
-        bool Initialize(const SManagerInitParam *pManagerInitParam);
-
         /**
          * Initializes PlanetKit SDK.<br>This must be called before your application can use the PlanetKit library.<br>
          * @param pConfiguration This parameter contains configuration values.
@@ -91,69 +44,25 @@ namespace PlanetKit
         * Checks whether PlanetKit is initialized.
         * @return Returns true if PlanetKit is initialized.
         */
-        static bool                 IsInitialized();
+        static bool IsInitialized();
 
         /**
         * Gets the PlanetKitManager instance.
         * @return Reference to PlanetKitManager singleton instance. Returns nullptr on failure.
         */
-        static PlanetKitManager *   GetInstance();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use SStartResult MakeCall(CallParam *pParam, PlanetKitCallPtr& pPlanetKitCall)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see MakeCall
-        */
-        SStartResult MakeCall(CallInitParam *pParam, PlanetKitCall** ppPlanetKitCall);
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use SStartResult VerifyCall(CallParam *pParam, PlanetKitCallPtr& pPlanetKitCall)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see VerifyCall
-        */
-        SStartResult VerifyCall(CallInitParam *pParam, PlanetKitCall** ppPlanetKitCall);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use SStartResult JoinConference(ConferenceJoinParam *pParam, PlanetKitConferencePtr& pPlanetKitConference)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see JoinConference
-        */
-        SStartResult JoinConference(ConferenceJoinParam *pParam, PlanetKitConference **ppPlanetKitConference);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        */
-        LogStorageInterface* CreateLogStorage(ELogStorageType eType, size_t nMaxSize);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use SStartResult MakeCall(MakeCallParamPtr & pParam, PlanetKitCallPtr& pPlanetKitCall)")
-        /**
-        * @deprecated This will not be supported in 5.1 or later.
-        * @see MakeCall
-        */
-        SStartResult MakeCall(CallParamPtr & pParam, PlanetKitCallPtr& pPlanetKitCall);
+        static PlanetKitManagerPtr  GetInstance();
 
         /**
         * Makes a call.
-        * @param pParam CallParam that is created by CallParam::CreateMakeCallParamWithAccessToken
+        * @param pParam CallParam that is created by MakeCallParam::CreateWithAccessToken
         * @param pPlanetKitCall Assigns a PlanetKitCall instance on success.
         * @return SStartResult
         */
         virtual SStartResult MakeCall(MakeCallParamPtr pParam, PlanetKitCallPtr* pPlanetKitCall) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later. Use SStartResult VerifyCall(VerifyCallParamPtr *pParam, PlanetKitCallPtr& pPlanetKitCall)")
-        /**
-        * @deprecated This will not be supported in 5.1 or later.
-        * @see VerifyCall
-        */
-        SStartResult VerifyCall(CallParamPtr & pParam, PlanetKitCallPtr& pPlanetKitCall);
-
         /**
         * Verifies a call.
-        * @param pParam CallParam that is created by CallParam::CreateVerifyCallParam
+        * @param pParam CallParam that is created by VerifyCallParam::Create
         * @param pPlanetKitCall  Assigns a PlanetKitCall instance on success.
         * @return SStartResult
         */
@@ -161,11 +70,11 @@ namespace PlanetKit
 
         /**
         * Joins a conference.
-        * @param pJoinConferenceParam Setting values for a conference.
+        * @param pConferenceParam Setting values for a conference.
         * @param pPlanetKitConference Assigns a PlanetKitConference instance on success.
         * @return SStartResult
         */
-        virtual SStartResult JoinConference(ConferenceJoinParamPtr pJoinConferenceParam, PlanetKitConferencePtr& pPlanetKitConference) = 0;
+        virtual SStartResult JoinConference(ConferenceParamPtr pConferenceParam, PlanetKitConferencePtr& pPlanetKitConference) = 0;
 
         /**
          * Gets the connected conference instance.
@@ -178,17 +87,7 @@ namespace PlanetKit
         * Gets the AudioManager instance.
         * @return Reference to AudioManager singleton instance. Returns nullptr on failure.
         */
-        AudioManager* GetAudioManager();
-
-        typedef void* VideoCaptureManager;
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see GetCameraController, GetScreenShareController
-         * @remark
-         * - 
-         */
-        VideoCaptureManager *GetVideoCaptureManager();
+        AudioManagerPtr GetAudioManager();
 
         /**
          * Gets the CameraController instance.
@@ -202,28 +101,14 @@ namespace PlanetKit
          */
         ScreenShareControllerPtr GetScreenShareController();
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool UpdateServerUrl(const wchar_t* szServerUrl)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see bool UpdateServerUrl(const wchar_t* szServerUrl)
-         */
-        bool UpdateServerUrl(const char* szServerUrl);
-
         /**
          * Updates the VoIP server URL.
-         * @param szServerUrl URL string which is encoded in UTF-16 and null-terminated.
+         * @param strServerUrl URL string which is encoded in UTF-16 and null-terminated.
          * @return true on success
          * @remark
          *  - The maximum number of bytes for szServerUrl is 2048.
          */
-        bool UpdateServerUrl(const wchar_t* szServerUrl);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. const WString& GetServerUrl()")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see const WString& GetServerUrl()
-         */
-        bool GetServerUrl(char * szServerUrl, size_t nBufferSize);
+        bool UpdateServerUrl(const WString& strServerUrl);
 
         /**
          * Gets the current VoIP server URL.
@@ -231,13 +116,19 @@ namespace PlanetKit
          * @remark
          *  - This API can return nullptr when the URL string is empty.
          */
-        const wchar_t* GetServerUrl();
+        const WString& GetServerUrl();
 
         /**
         * Gets the PlanetKit version. 
         * @return Reference to null-terminated PlanetKit version string. Reference is valid for the lifetime of PlanetKitManager.
         */
-        const wchar_t* PlanetKitVersion();
+        const WString& PlanetKitVersion();
+
+        /**
+         * Gets user agent string. It includes `PlanetKit Version` and `Engine Version`.
+         * @return Reference to null-terminated string. Reference is valid for the lifetime of PlanetKitManager.
+         */
+        const WString& UserAgentString();
 
         /**
         * Gets the default video transmission capability for the current system. 

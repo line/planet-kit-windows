@@ -24,8 +24,7 @@
 
 namespace PlanetKit
 {
-    struct Nullopt
-    {
+    struct Nullopt {
         struct _NullTag {};
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
@@ -38,7 +37,7 @@ namespace PlanetKit
     /**
      * This value means nullptr in Optional class.
      */
-    CONSTEXPR Nullopt nullOpt(Nullopt::_NullTag{});
+    CONSTEXPR Nullopt NullOptional(Nullopt::_NullTag{});
 
     /**
      * PlanetKit Optional class.
@@ -52,7 +51,7 @@ namespace PlanetKit
             m_bHasValue = true;
         };
 
-        Optional(const Nullopt& src) {
+        Optional(const Nullopt&) {
             m_bHasValue = false;
         };
 
@@ -69,48 +68,48 @@ namespace PlanetKit
         };
 
         /**
-         * Check has value.
+         * Checks has value.
          * @return true as having value.
          */
-        bool HasValue() {
+        bool HasValue() const {
             return m_bHasValue;
         }
 
         /**
-         * Get optional value if it has value.
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         const T* operator->() const {
             return &m_value;
         }
 
         /**
-         * Get optional value if it has value.
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         T* operator->() {
             return &m_value;
         }
 
         /**
-         * Get optional value if it has value.
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         const T& operator*() const {
             return m_value;
         }
 
         /**
-         * Get optional value if it has value.
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         T& operator*() {
             return m_value;
@@ -121,29 +120,37 @@ namespace PlanetKit
          */
         Optional<T>& operator=(const Optional<T>& src) {
             m_bHasValue = src.m_bHasValue;
-            if (m_bHasValue)
-            {
+            if (m_bHasValue) {
                 m_value = src.m_value;
             }
             return *this;
         }
-        
 
         /**
-         * Get optional value if it has value.
+         * Sets optional value.
+         */
+        Optional<T>& operator=(const T& src) {
+            m_bHasValue = true;
+            m_value = src;
+
+            return *this;
+        }
+
+        /**
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         T& Value() {
             return m_value;
         }
 
         /**
-         * Get optional value if it has value.
+         * Gets optional value if it has value.
          * @remark
-         *   You should call HasValue() or operator bool() before using this method.
-         *   This method returns nullOpt if HasValue() or operator bool() returns false.
+         *   You should call HasValue() or operator bool() before using this method.<br>
+         *   This method returns NullOptional if HasValue() or operator bool() returns false.
          */
         const T& Value() const {
             return m_value;
@@ -158,6 +165,6 @@ namespace PlanetKit
 
         T m_value;
 
-        };
+    };
 };
 

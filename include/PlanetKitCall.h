@@ -15,23 +15,19 @@
 #pragma once
 
 #include "PlanetKit.h"
-
-#include "PlanetKitMakeCallParam.h"
-#include "PlanetKitVerifyCallParam.h"
 #include "PlanetKitAudioDevice.h"
-
-#include "IPlanetKitCallEvent.h"
-#include "IPlanetKitVideoCapturerChange.h"
-
+#include "PlanetKitVideoCommon.h"
 #include "IPlanetKitResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
-#include "PlanetKitContentShareInterface.h"
-
 #include "PlanetKitStatistics.h"
 #include "PlanetKitSendVoiceProcessor.h"
 
+#include "PlanetKitContentShareInterface.h"
+#include "PlanetKitMakeCallParam.h"
+#include "PlanetKitVerifyCallParam.h"
+#include "IPlanetKitCallEvent.h"
 #include "PlanetKitVideoStatus.h"
-#include "PlanetKitVideoCommon.h"
+#include "PlanetKitMyMediaStatus.h"
 
 
 namespace PlanetKit
@@ -71,44 +67,9 @@ namespace PlanetKit
         virtual void OnAudio(const SAudioData * pAudioData) = 0;
     };
 
-    PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use IVideoReceiver class.")
-    /**
-     * @deprecated This will not be supported in 5.2 or later.
-     * @see IVideoReceiver
-     */
-    class PLANETKIT_API ICallVideoReceiver
-    {
-    };
-
-
     
-    class PLANETKIT_API PlanetKitCall :
-        public Base,
-        public IVideoCapturerChange 
-    {
+    class PLANETKIT_API PlanetKitCall : public Base {
     public:
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later.")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see AcceptCall
-        */
-        SStartResult AcceptCall();
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later.")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see AcceptCall
-        */
-        void AcceptCall(EMediaType eMediaType, SCallInitData *pCallInitData);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see AcceptCall
-        */
-        void AcceptCall(SCallInitData *pCallInitData);
 
         /**
          * Accepts an incoming call.
@@ -121,46 +82,26 @@ namespace PlanetKit
          */
         virtual void AcceptCall(bool bPreparation, CallStartMessagePtr pCallStartMessage = CallStartMessagePtr(nullptr), bool bRecordOnCloud = false) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-        * @deprecated This will not be supported in 5.1 or later.
-        * @see EndCall
-        */
-        void EndCall(EDisconnectReason eCallEndReason);
 
         /**
         * Ends an active/verified call.
         */
         virtual void EndCall() = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
+
         /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see void EndCall(const wchar_t* szUserReleaseCode)
+         * Ends an active/verified call.
+         * @param strUserReleaseCode The user-specific reason for ending a call. The string can be up to 128 bytes including the null-termination character.
+         * @remark Call this function if you perform EndCall with a reason without any special errors.
          */
-        void EndCallWithNormalUserCode(const char *szUserReleaseCode);
+        virtual void EndCall(const WString& strUserReleaseCode) = 0;
 
         /**
         * Ends an active/verified call.
-        * @param szUserReleaseCode The user-specific reason for ending a call. The string can be up to 128 bytes including the null-termination character.
-        * @remark Call this function if you perform EndCall with a reason without any special errors.
-        */
-        virtual void EndCall(const wchar_t* szUserReleaseCode) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see EndCallWithError(const wchar_t* szUserReleaseCode)
-        */
-        void EndCallWithErrorUserCode(const char *strUserCode);
-
-        /**
-        * Ends an active/verified call.
-        * @param szUserReleaseCode The user-specific reason for ending a call. The string can be up to 128 bytes including the null-termination character.
+        * @param strUserReleaseCode The user-specific reason for ending a call. The string can be up to 128 bytes including the null-termination character.
         * @remark Call this function if you perform EndCall with a reason if an error occurs.
         */
-        virtual void EndCallWithError(const wchar_t* szUserReleaseCode) = 0;
-            
+        virtual void EndCallWithError(const WString& strUserReleaseCode) = 0;
 
         /**
         * Finishes call preparation.
@@ -175,45 +116,14 @@ namespace PlanetKit
         */
         virtual ECallState GetCallState() = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use MuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler)")
         /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see MuteMyAudio
-        */
-        bool MuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler,
-            void *pShareResultUserData, IResultHandler *pShareResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use MuteMyAudio(bool bMute, void *pMuteResultUserData, IResultHandler *pMuteResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see MuteMyAudio
+         * Mutes or unmutes the local user's audio in the call.
+         * @param bMute Whether to mute or unmute
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool MuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler);
-
-        /**
-        * Mutes or unmutes the local user's audio in the call.
-        * @param bMute Whether to mute or unmute
-        * @return true on success
-        */
-        virtual bool MuteMyAudio(bool bMute, void *pMuteResultUserData, IResultHandler *pMuteResultHandler) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use UnmuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler)")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see UnmuteMyAudio
-        */
-        bool UnmuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler,
-            void *pShareResultUserData, IResultHandler *pShareResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use MuteMyAudio(bool bMute, void *pMuteResultUserData, IResultHandler *pMuteResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see MuteMyAudio
-         */
-        bool UnmuteMyAudio(void *pMuteResultUserData, IResultHandler *pMuteResultHandler);
-
+        virtual bool MuteMyAudio(bool bMute, void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Checks whether the local user's audio is muted.
@@ -221,48 +131,27 @@ namespace PlanetKit
         */
         virtual bool IsMyAudioMuted() = 0;
 
-        
         /**
         * Checks whether the peer's audio is muted.
         * @return true if muted
         */
         virtual bool IsPeerMuted() = 0;
 
-
         /**
-        * Pauses the local user's video in the call.
-        * @return true on success
-        */
-        virtual bool PauseMyVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        /**
-        * Resumes the local user's video in the call.
-        * @return true on success
-        */
-        virtual bool ResumeMyVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool ResumeMyVideo(VideoCapturerPtr pVideoCapture, void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see ResumeMyVideo
-        */
-        bool ResumeMyVideo(VideoCapturer *pVideoCapture, void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool ResumeMyVideo(void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ResumeMyVideo
-         * - If you wish to change the camera device, you can do so by calling the VideoController::SelectCamera method.
+         * Pauses the local user's video in the call.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool ResumeMyVideo(VideoCapturerPtr pVideoCapture, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool PauseMyVideo(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use GetMyVideoStatus")
         /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see GetMyVideoStatus
-        */
-        bool IsMyVideoPaused();
+         * Resumes the local user's video in the call.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool ResumeMyVideo(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Checks whether the local user's video is paused.
@@ -278,28 +167,12 @@ namespace PlanetKit
         */
         virtual bool RegisterCallEvent(ICallEvent *pCallEvent) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool SetAudioInputDevice(AudioDevicePtr pDevice)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see SetAudioInputDevice
-        */
-        bool SetAudioInputDevice(AudioDevice *pDevice);
-
         /**
         * Set audio input device used in the call. Pass nullptr to remove audio device from call.
         * @param pDevice Audio input device.
         * @return true on success
         */
         virtual bool SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool SetAudioOutputDevice(AudioDevicePtr pDevice)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see SetAudioOutputDevice
-        */
-        bool SetAudioOutputDevice(AudioDevice *pDevice);
-
 
         /**
         * Set audio output device used in the call. Pass nullptr to remove audio device from call.
@@ -308,171 +181,36 @@ namespace PlanetKit
         */
         virtual bool SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool AddPeerRender(VideoRenderPtr pVideoRender)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see AddPeerRender
-        */
-        bool AddPeerRender(VideoRender *pVideoRender);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see VideoController::AddPeerView
-         * @remark
-         * - If you wish to add a Peer View, you can use the AddPeerView method of the VideoController.
-         */
-        bool AddPeerRender(VideoRenderPtr pVideoRender);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool RemovePeerRender(VideoRenderPtr pVideoRender)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see RemovePeerRender
-        */
-        bool RemovePeerRender(VideoRender *pVideoRender);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see 
-         * - VideoController::RemovePeerView 
-         * - VideoController::ClearPeerView 
-         * @remark
-         * - If you wish to remove a Peer View, you can use the RemovePeerView or ClearPeerView method of the VideoController.
-         */
-        bool RemovePeerRender(VideoRenderPtr pVideoRender);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see VideoController::RegisterMyVideoReceiver
-         * @remark
-         * - Video-related controls are available via the VideoController from version 5.2 onward.
-         */
-        bool RegisterMyVideoReceiver(ICallVideoReceiver *pReceiver);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see VideoController::RegisterPeersVideoReceiver
-         * @remark
-         * - Video-related controls are available via the VideoController from version 5.2 onward.
-         */
-        bool RegisterPeersVideoReceiver(ICallVideoReceiver *pReceiver);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ScreenShareController::RegisterPeerScreenShareVideoReceiver
-         * @remark
-         * - Screen share related controls are available via the ScreenShareController from version 5.2 onward.
-         */
-        bool RegisterPeerScreenShareVideoReceiver(ICallVideoReceiver *pReceiver);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see VideoController::DeregisterMyVideoReceiver
-         * @remark
-         * - Video-related controls are available via the VideoController from version 5.2 onward.
-         */
-        bool DeregisterMyVideoReceiver(ICallVideoReceiver *pReceiver);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see VideoController::DeregisterPeersVideoReceiver
-         * @remark
-         * - Video-related controls are available via the VideoController from version 5.2 onward.
-         */
-        bool DeregisterPeersVideoReceiver(ICallVideoReceiver *pReceiver);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ScreenShareController::DeregisterPeerScreenShareVideoReceiver
-         * @remark
-         * - Screen share related controls are available via the ScreenShareController from version 5.2 onward.
-         */
-        bool DeregisterPeerScreenShareVideoReceiver();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool SendShortData(const wchar_t* szType, void* pData, unsigned int nSize, void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see bool SendShortData(const wchar_t* szType, void* pData, unsigned int nSize, void *pResultUserData, IResultHandler *pResultHandler)
-         */
-        bool SendShortData(const SShortData *pShortData, void *pResultUserData, IResultHandler *pResultHandler);
-
         /**
          * Sends short data to the peer.<br>
          * This API returns false when the szType or pData exceeds the size limit or when szType or pData are nullptr.
-         * @param szType After being converted to UTF-8, it must not exceed 100 bytes including the null-termination character.
+         * @param strType After being converted to UTF-8, it must not exceed 100 bytes including the null-termination character.
          * @param pData The maximum size of pData is 800 bytes.
          * @param nSize The size of pData.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SendShortData(const wchar_t* szType, void* pData, unsigned int nSize, void *pResultUserData, IResultHandler *pResultHandler) = 0;
+        virtual bool SendShortData(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool EnableVideo(VideoCapturerPtr pVideoCapture, void *pResultUserData, IResultHandler *pResultHandler)")
         /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see EnableVideo
-        */
-        bool EnableVideoSend(VideoCapturer *pVideoCapturer, void *pResultUserData, IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use bool EnableVideo(void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see EnableVideo
+         * Enables video transmission. 
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          * @remark
-         * - If you wish to change the Camera, please use the SelectCamera API of the VideoController.
+         * - Switches to a video call.
          */
-        bool EnableVideo(VideoCapturerPtr pVideoCapture, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool EnableVideo(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Enables video transmission. 
-        * @return true on success
-        * @remark
-        * - Switches to a video call.
-        */
-        virtual bool EnableVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool DisableVideo(void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see DisableVideo
-        */
-        bool DisableVideoSend(void *pResultUserData, IResultHandler *pResultHandler);
-
-        /**
-        * Disables video transmission.
-        * @param eReason
-        * @return true on success
-        */
-        virtual bool DisableVideo(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use ICallEvent.onMyVolumeUpdated")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see onMyVolumeUpdated
-        */
-        unsigned unsigned char GetMyAudioLevel();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use ICallEvent.OnPeerAudioDescriptionUpdated")
-        /**
-        * @deprecated This will not be supported in 5.0 or later.
-        * @see OnPeerAudioDescriptionUpdated
-        */
-        unsigned char GetPeerAudioLevel();
-
-
+         * Disables video transmission.
+         * @param eDisableReason Reason for disabling video.<br>The default value is PLNK_MEDIA_DISABLE_REASON_USER.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool DisableVideo(EMediaDisabledReason eDisableReason = PLNK_MEDIA_DISABLE_REASON_USER, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Gets the call duration.
@@ -480,57 +218,33 @@ namespace PlanetKit
         */
         virtual int GetCallDuration() = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use Hold(const char *szHoldReason, bool bPauseReceive, void *pResultUserData, IResultHandler *pResultHandler)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see Hold(const char *szHoldReason, bool bPauseReceive, void *pResultUserData, IResultHandler *pResultHandler)
-         */
-        bool Hold(const char *szHoldReason, bool bPauseReceive, void *pResultUserData, IResultHandler *pResultHandler);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see RequestPeerMute
-         */
-        bool Hold(const char *szHoldReason, void *pResultUserData, IResultHandler *pResultHandler);
-
         /**
          * Holds the call.
-         * @param szHoldReason Hold reason string, which is encoded in UTF-16 and null-terminated.<br>The string can be up to 256 bytes.<br>If the string exceeds the size, content beyond the limit is truncated.
+         * @param strHoldReason Hold reason string, which is encoded in UTF-16 and null-terminated.<br>The string can be up to 256 bytes.<br>If the string exceeds the size, content beyond the limit is truncated.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
          * @param pResultUSerData User data returned when pResultHandler is called.
          * @param pResultHandler Pointer to a listener class that notifies the result of this API.
          * @return true on success
          */
-        virtual bool Hold(const wchar_t* szHoldReason, void* pResultUserData, IResultHandler* pResultHandler) = 0;
+        virtual bool Hold(const WStringOptional& strHoldReason = NullOptional, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Unholds the call.
-        * @return true on success
-        */
-        virtual bool Unhold(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use RequestPeerMute")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see RequestPeerMute
+         * Unholds the call.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool RequestMutePeerAudioSend(bool bMute, void *pResultUserData, IResultHandler *pResultHandler);
+        virtual bool Unhold(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Sends a request to the peer to mute or unmute their audio. bMute will be sent to sId.    
-        * @param bMute
-        * @return true on success
-        */
-        virtual bool RequestPeerMute(bool bMute, void *pResultUserData, IResultHandler *pResultHandler) = 0;
-        
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.4 or later. Use GetPeerVideoStatus")
-        /**
-        * @deprecated This will not be supported in 4.4 or later.
-        * @see GetPeerVideoPauseState
-        */
-        bool GetPeerVideoPauseState(bool  *bIsPaused, EVideoPauseReason *pReason);
+         * Sends a request to the peer to mute or unmute their audio. bMute will be sent to sId.    
+         * @param bMute
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool RequestPeerMute(bool bMute, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Gets the peer's video pause state.
@@ -539,14 +253,14 @@ namespace PlanetKit
         */            
         virtual VideoStatus GetPeerVideoStatus() = 0;
 
-
         /**
-        * Silences the peer's audio.
-        * @param bSilence Set true to silence peer audio. Set false to unsilence.
-        * @return true on success
-        */
-        virtual bool SilencePeerAudio(bool bSilence, void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
+         * Silences the peer's audio.
+         * @param bSilence Set true to silence peer audio. Set false to unsilence.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
+         */
+        virtual bool SilencePeerAudio(bool bSilence, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Gets the silence state for peer audio.
@@ -554,86 +268,30 @@ namespace PlanetKit
         */
         virtual bool IsPeerAudioSilenced() = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use StartMyScreenShare(ScreenShareInfoPtr pScreenShareInfo, void *pResultUserData, IResultHandler *pResultHandler)")
         /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see StartMyScreenShare(ScreenShareInfoPtr pScreenShareInfo, void *pResultUserData, IResultHandler *pResultHandler)
+         * Starts the local user's screen share. If the result is true, add a screen share capturer.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool StartMyScreenShare(void *pResultUserData, IResultHandler *pResultHandler);
-
-
-        /**
-        * Starts the local user's screen share. If the result is true, add a screen share capturer.
-        * @return true on success
-        */
-        virtual bool StartMyScreenShare(ScreenShareInfoPtr pScreenShareInfo, void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-
+        virtual bool StartMyScreenShare(ScreenShareInfoPtr pScreenShareInfo, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Stops the local user's screen share. If the result is true, remove the screen share capturer.
-        * @return true on success
-        */
-        virtual bool StopMyScreenShare(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        /**
-        * Stops the local user's screen share with a reason. If the result is true, remove the screen share capturer.
-        * @param nUserReason Value must be between 0 and 39.
-        * @return true on success
-        */
-        virtual bool StopMyScreenShare(int nUserReason, void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool SetMyScreenShareCapturer(VideoCapturerPtr pCapturer)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see SetMyScreenShareCapturer
+         * Stops the local user's screen share. If the result is true, remove the screen share capturer.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool SetMyScreenShareCapturer(VideoCapturer *pCapturer);
-        
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
+        virtual bool StopMyScreenShare(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+
         /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ScreenShareController
-         * @remark
-         * - Direct usage of Capturer is no longer supported. Please select the window or screen you wish to capture using ScreenShareController.
+         * Stops the local user's screen share with a reason. If the result is true, remove the screen share capturer.
+         * @param nUserReason Value must be between 0 and 39.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         * @return true on success
          */
-        bool SetMyScreenShareCapturer(VideoCapturerPtr pCapturer);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use bool AddPeerScreenShareRender(VideoRenderPtr pRender)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see AddPeerScreenShareRender
-         */
-        bool AddPeerScreenShareRender(VideoRender *pRender);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ScreenShareController::AddScreenShareView
-         * @remark
-         * - If you wish to add a window to be rendered, please use the ScreenShareController::AddScreenShareView API.
-         */
-        bool AddPeerScreenShareRender(VideoRenderPtr pRender);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see ScreenShareController::RemoveScreenShareView
-         * @remark
-         * - If you wish to add a window to be rendered, please use the ScreenShareController::RemoveScreenShareView API.
-         */
-        bool RemovePeerScreenShareRender();
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use ContentShareInterfaceOptional GetContentShareInterface()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetContentShareInterface
-         */
-        bool GetContentShareInterface(ContentShareInterface** ppContentShareInterface);
+        virtual bool StopMyScreenShare(int nUserReason, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Gets the content share interface.<br>
@@ -641,25 +299,9 @@ namespace PlanetKit
         * @return
         *   ContentShareInterfacePtr on success.<br>
         *   ContentShareInterfacePtr with nullptr means API worked well but there is no ContentShareInterface.<br>
-        *   If API fails, then you can get PlanetKit::nullOpt.
+        *   If API fails, then you can get PlanetKit::NullOptional.
         */
         virtual ContentShareInterfaceOptional GetContentShareInterface() = 0;
-
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 4.3 or later. Use GetSendVoiceProcessor")
-        /**
-        * @deprecated This will not be supported in 4.3 or later.
-        * @see GetSendVoiceProcessor
-        */
-        bool SetNoiseSuppressor(bool bEnable, NULLABLE void *pResultUserData, NULLABLE IResultHandler *pResultHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see PutUserAcousticEchoCancellerReference
-        */
-       int PutAECReferenceData(const SAudioData* pAudioData);
 
         /**
         * Puts reference audio data for acoustic echo cancellation.
@@ -669,74 +311,23 @@ namespace PlanetKit
         */
         virtual int PutUserAcousticEchoCancellerReference(const SAudioData* pAudioData) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
         /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see StartUserAcousticEchoCancellerReference
-        */
-        bool StartAECReferenceData(void *pResultUserData, IResultHandler *pResultHandler);
-
-        /**
-        * Starts AEC reference data.
-        * @param pResultUserData Callback parameter to be passed after executing the method.
-        * @param pResultHandler Result handler to be called after executing the method.
-        */
-        virtual bool StartUserAcousticEchoCancellerReference(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see StartUserAcousticEchoCancellerReference
-        */
-        bool StopAECReferenceData(void *pResultUserData, IResultHandler *pResultHandler);
+         * Starts AEC reference data.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         */
+        virtual bool StartUserAcousticEchoCancellerReference(void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-        * Stops AEC reference data.
-        * @param pResultUserData Callback parameter to be passed after executing the method.
-        * @param pResultHandler Result handler to be called after executing the method.
-        */
-        virtual bool StopUserAcousticEchoCancellerReference(void *pResultUserData, IResultHandler *pResultHandler) = 0;
-
-
+         * Stops AEC reference data.
+         * @param pUserData User data to be passed when pCallback is called.
+         * @param pCallback This is a callback function that can receive the result.
+         */
+        virtual bool StopUserAcousticEchoCancellerReference(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         // For debug purposes.
         // Internal use only.
         virtual int DebugMonitoringInfo(char *szBuffer, size_t nBufferSize) = 0;
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see IDataSessionHandler::OnError(void* pUserData, EDataSessionFailReason eFailReason) 
-        * @see EDataSessionFailReason = PLNK_DATA_SESS_FAIL_REASON_UNSUPPORTED
-        */
-        bool IsUsingDataSession(bool* pIsSupported);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-        */
-        bool MakeSendDataSession(int nStreamId, EDataSessionType eType,
-            NULLABLE void *pResultUserData, NULLABLE IDataSessionHandler* pResultHandler,
-            void *pExceptionUserData, IDataSessionExceptionHandler *pExceptionHandler
-        );
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1 or later.")
-        /**
-         * @deprecated This will not be supported in 5.1 or later.
-         */
-        bool MakeRecvDataSession(int nStreamId, IDataSessionReceiver* pIDataSessionReceiver,
-            NULLABLE void* pResultUserData, NULLABLE IDataSessionHandler* pResultHandler,
-            void* pExceptionUserData, IDataSessionExceptionHandler* pExceptionHandler);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see MakeOutboundDataSession
-        */
-        bool MakeSendDataSession(int nStreamId, EDataSessionType eType,
-            NULLABLE void* pResultUserData, ISendDataSessionHandler* pSendDataSessionHandler
-        );
 
         /**
          * Makes an outbound data session.
@@ -750,14 +341,6 @@ namespace PlanetKit
             NULLABLE void* pResultUserData, IOutboundDataSessionHandler* pDataSessionHandler
             ) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see MakeInboundDataSession
-        */
-        bool MakeReceiveDataSession(int nStreamId, NULLABLE void* pResultUserData, IReceiveDataSessionHandler* pReceiveDataSessionHandler);
-
         /**
          * Makes an inbound data session.
          * @param nStreamId Stream ID from 100 to 999
@@ -766,20 +349,6 @@ namespace PlanetKit
          * @return true on successful function call. Must check the result.
          */
         virtual bool MakeInboundDataSession(int nStreamId, NULLABLE void* pResultUserData, IInboundDataSessionHandler* pDataSessionHandler) = 0;
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use GetDataSession")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see GetOutboundDataSession
-         */
-        bool GetSendDataSession(int nStreamId, SendDataSessionInterfacePtr* pResult);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use GetDataSession")
-        /**
-         * @deprecated This will not be supported in 5.2 or later.
-         * @see GetInboundDataSession
-         */
-        bool GetReceiveDataSession(int nStreamId, ReceiveDataSessionInterfacePtr* pResult);
 
         /**
          * Gets the existing outbound data session.
@@ -797,14 +366,6 @@ namespace PlanetKit
          */
         virtual bool GetInboundDataSession(int nStreamId, InboundDataSessionPtr* pResult) = 0;
 
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later.")
-        /**
-        * @deprecated This will not be supported in 5.2 or later.
-        * @see UnsupportInboundDataSession
-        */
-        bool UnsupportRecvDataSession(DataSessionStreamIdT nStreamId);
-
         /**
         * Call this API when you do not want to support a specific StreamID.
         * @param nStreamId
@@ -813,34 +374,11 @@ namespace PlanetKit
         */
         virtual bool UnsupportInboundDataSession(DataSessionStreamIdT nStreamId) = 0;
 
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use void SetMyVideoCapture(VideoCapturerPtr pCapturer)")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see SetMyVideoCapture
-         */
-        void SetMyVideoCapture(VideoCapturer *pCapturer);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.2 or later. Use VideoController::SelectCamera")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see VideoController::SelectCamera
-         * - If you wish to change the camera device, you can do so by calling the VideoController::SelectCamera method.
-         */
-        void SetMyVideoCapture(VideoCapturerPtr pCapturer);
-
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.0 or later. Use StatisticsOptional GetStatistics()")
-        /**
-         * @deprecated This will not be supported in 5.0 or later.
-         * @see GetStatistics
-         */
-        bool GetStatistics(Statistics** pOutResultStatistics);
-
         /**
          * Gets statistics information.
          * @return
          *  You can get Statistics* on success.
-         *  Return value can be PlanetKit::nullOpt when this instance doesn't have statistics information.
+         *  Return value can be PlanetKit::NullOptional when this instance doesn't have statistics information.
          */
         virtual StatisticsOptional GetStatistics() = 0;
 
@@ -890,5 +428,10 @@ namespace PlanetKit
         * @return true on success
         */
         virtual bool DeregisterPeerAudioReceiver(ICallAudioReceiver *pReceiver) = 0;
+
+        /**
+         * Gets an instance of MyMediaStatus.
+         */
+        virtual MyMediaStatusPtr GetMyMediaStatus() = 0;
     };
 }

@@ -15,15 +15,17 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitCommonTypes.h"
 
 namespace PlanetKit {
     /**
-     * Bytes of call start message string.
+     * Bytes of call start message string, which must not exceed 200 bytes including the null-termination character after being converted to UTF-8.
      */
-    constexpr int CALL_INIT_DATA_LENGTH = 200;
+    constexpr int CallStartMessageLength = 200;
 
     class PLANETKIT_API CallStartMessage;
 
+    template class PLANETKIT_API AutoPtr<CallStartMessage>;
     typedef AutoPtr<CallStartMessage> CallStartMessagePtr;
 
     /**
@@ -33,17 +35,17 @@ namespace PlanetKit {
     public :
         /**
          * Creates the call start message.
-         * @param szMessage Message data that you want to transfer to the peer, which must not exceed 200 bytes including the null-termination character after being converted to UTF-8.
+         * @param strMessage Message data that you want to transfer to the peer, which must not exceed 200 bytes including the null-termination character after being converted to UTF-8.
          * @return CallStartMessagePtr
          * @remark
          *  - This API will return nullptr if szMessage is nullptr or if it exceeds 200 bytes after being converted to UTF-8. 
          */
-        static CallStartMessagePtr Create(const wchar_t* szMessage);
+        static CallStartMessagePtr Create(const WString& strMessage);
 
         /**
          * Gets the call start message.
-         * @return String message that is encoded in UTF-16 and null-terminated.
+         * @return String message that is encoded in UTF-16 and null-terminated.<br>It can be NullOptional.
          */
-        virtual const wchar_t* GetMessage() = 0;
+        virtual const WStringOptional& GetMessage() = 0;
     };
 };

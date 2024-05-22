@@ -18,25 +18,26 @@
 namespace PlanetKit
 {
     class PLANETKIT_API CCParam;
+
+    template class PLANETKIT_API AutoPtr<CCParam>;
     typedef AutoPtr<CCParam> CCParamPtr;
 
     /**
      * @details Gets peer data from CCParam.
      */
-    class CCParam : public Base
-    {
+    class CCParam : public Base {
     public:
         /**
         * Gets the peer ID from CCParam.
         * @return Peer ID
         */
-        virtual const wchar_t* GetPeerID() = 0;
+        virtual const WString& GetPeerID() = 0;
 
         /**
         * Gets the peer service ID from CCParam.
         * @return Peer service ID
         */
-        virtual const wchar_t* GetPeerServiceID() = 0;
+        virtual const WString& GetPeerServiceID() = 0;
 
         /**
         * Gets the peer media type from CCParam.

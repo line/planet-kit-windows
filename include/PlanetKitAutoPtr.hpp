@@ -95,7 +95,7 @@ namespace PlanetKit
          */
         AutoPtr<T>& operator=(T* src) {
             if (this->m_pData == src) {
-                return *this;
+                // do nothing
             }
             else {
                 Release();
@@ -105,6 +105,8 @@ namespace PlanetKit
                     this->m_pData->AddRef();
                 }
             }
+
+            return *this;
         }
 
         /**

@@ -17,11 +17,10 @@
 
 namespace PlanetKit
 {
-    struct HoldStatus
-    {
+    struct HoldStatus {
         /// Checks the hold status.
         bool bIsOnHold;
         /// Gets the hold reason string that can be nullptr.
-        String strHoldReason;
+        WString strHoldReason;
     };
 }

@@ -15,18 +15,21 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitUserId.h"
 #include "PlanetKitVideoCommon.h"
-#include "PlanetKitCameraInfo.h"
 #include "PlanetKitScreenShareInfo.h"
 #include "PlanetKitVideoRender.h"
-#include "PlanetKitUserId.h"
+#include "PlanetKitCameraInfo.h"
 
 namespace PlanetKit
 {
     class VideoSource;
     class PLANETKIT_API VideoRender;
+
+    template class PLANETKIT_API AutoPtr<VideoRender>;
     typedef AutoPtr<VideoRender> VideoRenderPtr;
 
+    template class PLANETKIT_API AutoPtr<VideoController>;
     typedef AutoPtr<VideoController> VideoControllerPtr;
 
     typedef HWND WindowHandle;
@@ -77,20 +80,6 @@ namespace PlanetKit
     /// The interface for receiving a callback when there are changes to the capture device.
     class PLANETKIT_API IVideoCaptureDeviceEvent  {
     public:
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1.19 or later. Use void OnDeviceAdded(CameraInfoPtr pInfo)")
-            /**
-             * @deprecated This will not be supported in 5.1.19 or later.
-             * @see void OnDeviceAdded(CameraInfoPtr pInfo)
-             */
-            void onDeviceAdded(const SCameraInfo* pInfo);
-
-        PLANETKIT_DEPRECATED("This will not be supported in 5.1.19 or later. Use void OnDeviceRemoved(CameraInfoPtr pInfo)")
-            /**
-             * @deprecated This will not be supported in 5.1.19 or later.
-             * @see void OnDeviceRemoved(CameraInfoPtr pInfo)
-             */
-            void onDeviceRemoved(const SCameraInfo* pInfo);
-
         /**
          * This callback method is called when a camera device is added.
          * @param pInfo Information of the added camera device.
@@ -181,21 +170,6 @@ namespace PlanetKit
         virtual bool RemovePeerView(WindowHandle hWind) = 0;
 
         /**
-         * Sets the video mirror attribute to the video capturer.
-         * @param bMirror
-         * @return
-         *  - If it successfully set the mirror mode, it returns true.
-         */
-        virtual bool SetMirrorMode(bool bMirror) = 0;
-
-        /**
-         * Gets the video mirror attribute of the video capturer.
-         * @return
-         *  - Returns true if mirrored
-         */
-        virtual bool IsVideoMirrored() = 0;
-
-        /**
          * Gets the current media type.
          * @return
          *  - If successful, it returns the media type.
@@ -209,21 +183,6 @@ namespace PlanetKit
          *  - Unlike GetCapturerMediaType, GetCapturerType obtains the current capture target.
          */
         virtual EVideoCapturerType GetCapturerType() = 0;
-
-        /**
-         * Gets the rotation state.
-         * @return
-         *  - Rotation state
-         * @see EVideoRotation
-         */
-        virtual EVideoRotation GetRotation() = 0;
-
-        /**
-         * Sets the rotation state.
-         * @param eRotation  Rotation state
-         * @see EVideoRotation
-         */
-        virtual void SetRotation(EVideoRotation eRotation) = 0;
 
         /**
          * Gets camera information.
