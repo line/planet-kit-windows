@@ -200,6 +200,19 @@ namespace PlanetKit
 
         /// Gets the audio description information.
         virtual AudioDescriptionInfo GetAudioDescriptionInfo() = 0;
+
+        /**
+         * Sets whether the end tone should be played regardless of the call state.
+         * @remark
+         *  - When set to `true`, this function allows the end tone to be played regardless of the call state.<br>
+         *  - The default value is `false`.
+         */
+        virtual void PlayEndtoneRegardlessOfCallState(bool bPlayEndtone) = 0;
+
+        /**
+         * Gets whether the end tone should be played regardless of the call state.
+         */
+        virtual bool IsPlayEndtoneRegardlessOfCallState() = 0;
     };
 
     template class PLANETKIT_API AutoPtr<VerifyCallParam>;

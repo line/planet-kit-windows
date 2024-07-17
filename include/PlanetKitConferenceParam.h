@@ -237,6 +237,19 @@ namespace PlanetKit
         /// Gets the audio description information.
         virtual AudioDescriptionInfo GetAudioDescriptionInfo() = 0;
 
+        /**
+         * Sets whether the end tone should be played regardless of the conference state.
+         * @remark
+         *  - When set to `true`, this function allows the end tone to be played regardless of the conference state.<br>
+         *  - The default value is `false`.
+         */
+        virtual void PlayEndtoneRegardlessOfConferenceState(bool bPlayEndtone) = 0;
+
+        /**
+         * Gets whether the end tone should be played regardless of the conference state.
+         */
+        virtual bool IsPlayEndtoneRegardlessOfConferenceState() = 0;
+
     protected:
         ConferenceParam() {}
         virtual ~ConferenceParam() {}
