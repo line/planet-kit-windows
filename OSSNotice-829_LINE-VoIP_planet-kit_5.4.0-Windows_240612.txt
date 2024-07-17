@@ -3,37 +3,30 @@
 This product from LINE Plus Corporation contains the open source software detailed below. Please refer to the indicated open source licenses (as are included following this notice) for the terms and conditions of their use.
 
 
-Please be informed that  LINE Plus Corporation   product may contain open source software listed in to tables below.
+Please be informed that  LINE Plus Corporation   product may contain open source software listed in the tables below.
 
 abseil-cpp  (Apache-2.0)
 Copyright 2020 The Abseil Authors.
-
-aggresss/libwebrtc  (BSD-3-Clause)
-• The WebRTC project authors (2016-2016)
 
 awawa-dev/libjpeg-turbo  (BSD-3-Clause,IJG,Zlib)
 Copyright (C)2009-2022 D. R. Commander. All Rights Reserved.
 Copyright (C)2015 Viktor Szathmáry. All Rights Reserved.
 
-cctz  (Apache-2.0)
-Copyright 2016 Google Inc.
-
 curl/curl  (curl)
 Copyright (c) 1996 - 2022, Daniel Stenberg, <daniel@haxx.se>, and many
 contributors, see the THANKS file.
 
-dlg  (BSL-1.0)
- Copyright (c) 2019 nyorain
-
-dotzlib  (BSL-1.0)
-Copyright Henrik Ravn 2004
+freetype-bdf  (MIT)
+• Francesco Zappa Nardelli (2001-2014)
 
 freetype/freetype  (FTL)
-Copyright (C) 2006-2023 by
-David Turner, Robert Wilhelm, and Werner Lemberg.
+• David Turner Robert Wilhelm and Werner Lemberg (1996-2022)
 
 googletest  (BSD-3-Clause)
 Copyright 2008, Google Inc.
+
+gradle  (Apache-2.0)
+Copyright (C) Gradle, Inc.
 
 jansson  (MIT)
 Copyright (c) 2009-2020 Petri Lehtinen <petri@digip.org>
@@ -44,12 +37,8 @@ Copyright 2013-2018 The Distro Tracker Developers
 libblocksruntime  (MIT)
 Copyright 2008-2010 Apple
 
-libdispatch  (Apache-2.0)
-Copyright (c) 2008-2013 Apple Inc.
-
-libkqueue  (BSD-2-Clause,ISC)
-Copyright (c) 2009 Mark Heily <mark@heily.com>
-Copyright (c) 1999,2000,2001 Jonathan Lemon <jlemon@FreeBSD.org>
+libkqueue  (ISC)
+Copyright (c) 2009-2011 Mark Heily <mark@heily.com>
 
 libpthread_workqueue  (BSD-2-Clause)
 Copyright (c) 2010, Mark Heily <mark@heily.com>
@@ -60,7 +49,8 @@ libsrtp  (BSD-3-Clause)
 Copyright (c) 2001-2017 Cisco Systems, Inc.
 
 libvpx  (BSD-3-Clause)
-Copyright (c) 2010, The WebM Project authors. 
+• The WebM Project authors (2010-2010)
+• The WebM Project authors (2014-2014)
 
 libwebm  (BSD-3-Clause)
 • The WebM project authors (2012-2012)
@@ -70,6 +60,9 @@ libyuv  (BSD-3-Clause)
 
 micro-ecc  (BSD-2-Clause)
 Copyright (c) 2014, Kenneth MacKay
+
+Microsoft/cppwinrt  (MIT)
+Copyright (c) Microsoft Corporation.
 
 MNN  (Apache-2.0)
 • ©, Alibaba Group Holding Limited (2018-2018)
@@ -81,8 +74,8 @@ Newtonsoft.Json  (MIT)
 Copyright (c) 2007 James Newton-King
 
 openssl/openssl  (OpenSSL)
-Copyright (c) 1998-2019 The OpenSSL Project.
 Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+Copyright (c) 1998-2011 The OpenSSL Project.
 
 opus  (BSD-3-Clause)
 Copyright 2001-2011 Xiph.Org, Skype Limited, Octasic,
@@ -104,6 +97,12 @@ Copyright 1993, 2002, 2006 David Rowe
 Copyright 2003 		EpicGames
 Copyright 1992-1994	Jutta Degener, Carsten Bormann
 
+swift-corelibs-libdispatch  (Apache-2.0)
+• Apple Inc. (2008-2012)
+
+tanersener/libuuid  (BSD-3-Clause)
+• Theodore Ts o (1996-1997)
+
 webrtc  (BSD-3-Clause)
 Copyright (c) 2011, The WebRTC project authors. All rights reserved.
 
@@ -114,11 +113,9 @@ Copyright (C)2015 Viktor Szathmáry.
 xdispatch  (Apache-2.0)
 Copyright (c) 2008-2012 Marius Zwicker
 
-xmake-mirror/libuuid  (BSD-3-Clause)
-Copyright (C) 1996, 1997 Theodore Ts'o.
-
 zlib  (Zlib)
-Copyright (C) 1995-2022 Jean-loup Gailly and Mark Adler
+Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler
+Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler
 
 		
 _________________________________________________________________________________________________________________________
@@ -246,21 +243,6 @@ Redistribution and use in source and binary forms, with or without modification,
 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-
-
-_________________________________________________________________________________________________________________________
-
-
-BSL-1.0
-
-
-Boost Software License - Version 1.0 - August 17th, 2003
-
-Permission is hereby granted, free of charge, to any person or organization obtaining a copy of the software and accompanying documentation covered by this license (the "Software") to use, reproduce, display, distribute, execute, and transmit the Software, and to prepare derivative works of the Software, and to permit third-parties to whom the Software is furnished to do so, all subject to the following:
-
-The copyright notices in the Software and this entire statement, including the above license grant, this restriction and the following disclaimer, must be included in all copies of the Software, in whole or in part, and all derivative works of the Software, unless such copies or derivative works are solely in the form of machine-executable object code generated by a source language processor.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 _________________________________________________________________________________________________________________________
