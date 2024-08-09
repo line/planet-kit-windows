@@ -230,6 +230,8 @@ namespace PlanetKit
         PLNK_DISCONNECT_REASON_MULTIDEV_ANSWER = 1206,
         /// [1:1][CloudServer] A responder using the same ID pair (user-id and service-id) declined the call in another device.
         PLNK_DISCONNECT_REASON_MULTIDEV_DECLINE = 1207,
+        ///< [Both][CloudServer] Maximum call time has been reached
+        PLNK_DISCONNECT_REASON_MAX_CALL_TIME_EXCEEDED = 1208, 
 
         // ERROR REASON (1301 ~ 1400)
         /// [Both][Caller, Callee, Participant, CloudServer] Network is unavailable to keep a call.
@@ -310,6 +312,8 @@ namespace PlanetKit
         PLNK_DISCONNECT_REASON_SERVICE_HTTP_INVALID_URL = 1510,
         /// [Both][CloudServer] The current PlanetKit version is deprecated. Need to upgrade.
         PLNK_DISCONNECT_REASON_SERVICE_INCOMPATIBLE_PLANETKIT_VER = 1511,
+        ///< [Both][CloudServer] Too many call connection attempts in a short period of time
+        PLNK_DISCONNECT_REASON_SERVICE_TOO_MANY_REQUESTS = 1512,      
 
     /* Deprecated disconnect reason */
         // PLNK_DISCONNECT_REASON_AUDIO_TX_NO_SRC_BY_LOCAL    = 1101,
