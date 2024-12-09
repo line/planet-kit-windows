@@ -63,6 +63,8 @@
 
 namespace PlanetKit 
 {
+
+    typedef const char PlanetKitByte;
     /**
      * @brief Fail reasons related to start
      */
@@ -258,7 +260,9 @@ namespace PlanetKit
         /// [Both][Caller, Callee, Participant] The call is not connected because the maximum transmission unit (MTU) is exceeded.
         PLNK_DISCONNECT_REASON_MTU_EXCEEDED = 1312,
         ///< [Both][CloudServer] The Planet Cloud server failed to deliver app server data to the AppServer.
-        PLNK_DISCONNECT_REASON_APP_SERVER_DATA_ERROR = 1313,
+        PLNK_DISCONNECT_REASON_APP_SERVER_DATA_ERROR = 1313, 
+        ///< [Both][Caller, Callee, Participant] Desktop screen is locked
+        PLNK_DISCONNECT_REASON_DESKTOP_SCREEN_LOCKED = 1314,
 
         // ERROR REASON GroupCall Only (1401 ~ 1500)
         /// [Group][CloudServer] The number of participants in this room reached the limit.
@@ -526,6 +530,8 @@ namespace PlanetKit
     struct VideoStatus;
     struct VideoStatusResult;
 
+    class PLANETKIT_API PlanetKitHookedAudio;
+
     class PLANETKIT_API SharedContentsData;
 
     class PLANETKIT_API SharedContents;
@@ -543,7 +549,6 @@ namespace PlanetKit
 
     class PLANETKIT_API CreateVideoCapturerResult;
 
-    class PLANETKIT_API VideoController;
     class PLANETKIT_API CameraController;
     class PLANETKIT_API ScreenShareController;
     class PLANETKIT_API Configuration;
@@ -572,6 +577,8 @@ namespace PlanetKit
     class PLANETKIT_API PlanetKitManager;
 
     class PLANETKIT_API AudioManager;
+
+    class PLANETKIT_API Image;
 
     class Base {
     private :
@@ -623,7 +630,6 @@ namespace PlanetKit
         friend class AutoPtr<CameraInfo>;
         friend class AutoPtr<ScreenShareInfo>;
         friend class AutoPtr<CreateVideoCapturerResult>;
-        friend class AutoPtr<VideoController>;
         friend class AutoPtr<Configuration>;
         friend class AutoPtr<UserId>;
         friend class AutoPtr<RecordOnCloud>;
@@ -641,7 +647,9 @@ namespace PlanetKit
         friend class AutoPtr<PlanetKitManager>;
         friend class AutoPtr<AudioManager>;
         friend class AutoPtr<SharedContents>;
+        friend class AutoPtr<PlanetKitHookedAudio>;
         friend class AutoPtr<SharedContentsData>;
+        friend class AutoPtr<Image>;
     };
 
 }

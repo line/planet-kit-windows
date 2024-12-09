@@ -288,6 +288,16 @@ namespace PlanetKit
          * Gets whether the end tone should be played regardless of the call state.
          */
         virtual bool IsPlayEndtoneRegardlessOfCallState() = 0;
+
+        /**
+         * Retrieves the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after making the call.
+         */
+        virtual EInitialMyVideoState GetInitialMyVideoState() = 0;
+
+        /**
+         * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after making the call.
+         */
+        virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
     };
 
     template class PLANETKIT_API AutoPtr<MakeCallParam>;

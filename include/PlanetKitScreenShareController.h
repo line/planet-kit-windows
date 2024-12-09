@@ -15,12 +15,13 @@
 
 #pragma once
 
-#include "PlanetKitVideoController.h"
+#include "PlanetKitScreenShareInfo.h"
+#include "PlanetKitVideoRender.h"
 
 namespace PlanetKit
 {
     /// The class for capturing with a screen share.
-    class PLANETKIT_API ScreenShareController : virtual public VideoController {
+    class PLANETKIT_API ScreenShareController : virtual public Base {
     public:
         /**
          * Gets the information of the targets for screen share.
@@ -67,6 +68,61 @@ namespace PlanetKit
          *  - Returns true if successful.
          */
         virtual bool DeregisterCapturerEvent() = 0;
+
+        /**
+         * Gets the current capturer type.
+         * @return
+         *  - If successful, it returns the capturer type.
+         *  - Unlike GetCapturerMediaType, GetCapturerType obtains the current capture target.
+         */
+        virtual EVideoCapturerType GetCapturerType() = 0;
+
+        /**
+         * Registers the video interceptor.
+         * @param pInterceptor The video interceptor to register.
+         * @return
+         *  - Returns true if successful.
+         * @remark
+         *  - This intercepts the frame captured through the camera before delivering it to the counterpart.
+         *  - If necessary, you can change the frame to be delivered to the counterpart.
+         */
+        virtual bool RegisterVideoInterceptor(IVideoInterceptor* pInterceptor) = 0;
+
+        /**
+         * Deregisters the video interceptor.
+         * @return
+         *  - Returns true if successful.
+         */
+        virtual bool DeregisterVideoInterceptor() = 0;
+
+        /**
+         * Obtains the renderer currently rendering the Window.
+         * @param hWnd The window for which you want to obtain the currently rendering renderer.
+         * @return
+         *  - The renderer that is currently rendering.
+         * @remark
+         *  - You can change options of the window currently being rendered by calling this API.
+         */
+        virtual VideoRenderPtr GetRender(WindowHandle hWnd) = 0;
+
+        /**
+         * Sends frame data to the counterpart.
+         * @param sVideoFrame The frame to send to the counterpart.
+         * @return
+         *  - Returns true if successful.
+         */
+        virtual bool WriteFrameData(SVideoFrame& sVideoFrame) = 0;
+
+        /**
+         * Checks whether it is currently possible to deliver frames to the counterpart.
+         * @param ull64tick The tick count of the current frame.
+         * @return
+         *  - Returns true if it is possible to send frames to the counterpart.
+         * @remark
+         *  - In case there is a current FPS limit, you need to check the speed of the current frame through the tick count value .
+         *  - You verify whether the current frame can be delivered at an appropriate FPS by checking the speed of this frame.
+         */
+        virtual bool IsPostingFrameAvailable(UINT64 ull64tick) = 0;
     };
 
     template class PLANETKIT_API AutoPtr<ScreenShareController>;

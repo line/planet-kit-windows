@@ -20,7 +20,8 @@
 #include "PlanetKitVideoCommon.h"
 
 #include "PlanetKitSubgroupInterface.h"
-#include "PlanetKitVideoController.h"
+#include "PlanetKitCameraController.h"
+#include "PlanetKitScreenShareController.h"
 
 namespace PlanetKit {
     /// Callback APIs for a peer's status
@@ -203,6 +204,11 @@ namespace PlanetKit {
          *  - Only one video renderer can be set for rendering screen share.
          */
         virtual void SetScreenShareView(WindowHandle hWnd) = 0;
+
+        /**
+         * Clears the screen share rendering window.
+         */
+        virtual void ClearScreenShareView() = 0;
 
         /**
          * Registers screen share receiver.

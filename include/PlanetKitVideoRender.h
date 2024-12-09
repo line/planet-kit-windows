@@ -22,6 +22,11 @@
 namespace PlanetKit 
 {
     class IVideoRenderEvent;
+    class PLANETKIT_API VideoRender;
+
+    template class PLANETKIT_API AutoPtr<VideoRender>;
+    typedef AutoPtr<VideoRender> VideoRenderPtr;
+
 
     class PLANETKIT_API VideoRender : public Base {
     public:

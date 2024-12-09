@@ -250,6 +250,15 @@ namespace PlanetKit
          */
         virtual bool IsPlayEndtoneRegardlessOfConferenceState() = 0;
 
+        /**
+         * Retrieves the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
+         */
+        virtual EInitialMyVideoState GetInitialMyVideoState() = 0;
+
+        /**
+         * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
+         */
+        virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
     protected:
         ConferenceParam() {}
         virtual ~ConferenceParam() {}

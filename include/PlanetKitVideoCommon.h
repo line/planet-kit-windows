@@ -20,7 +20,9 @@
 
 namespace PlanetKit 
 {
-    class PLANETKIT_API VideoRender;
+    class PLANETKIT_API VideoSource;
+
+    typedef HWND WindowHandle;
 
     /**
      * Enumeration for the result of capturer APIs
@@ -53,8 +55,7 @@ namespace PlanetKit
     /**
      * Enumeration for the result of capturer APIs
      */
-    enum EVideoControlResult
-    {
+    enum EVideoControlResult {
         /// Successfully started the capturer.
         EVideoControlResult_Success = 0,
         /// An unknown error occurred.
@@ -90,6 +91,33 @@ namespace PlanetKit
          * The video controller is not initialized yet.
          */
         EVideoControlResult_VideoControllerNotInitialized,
+        /**
+         * The preview already exists.
+         */
+        EVideoControlResult_PreviewAlreadyExist,
+        /**
+         * Failed to create video render.
+         */
+        EVideoControlResult_CreateRenderFail,
+        /**
+         * The camera is being used by another application.
+         */
+        EVideoControlResult_CameraIsAlreadyInUseByAnotherApplication,
+        /**
+         * The preview handle is invalid. 
+         * If you want to use StartPreview, then the handle must be valid.
+         */
+        EVideoControlResult_PreviewHandleIsInvalid,
+        /**
+         * The preview receiver is invalid.
+         * If you want to use StartPreview, then the receiver must be valid.
+         */
+        EVideoControlResult_PreviewReceiverIsInvalid,
+        /**
+         * Failed because no camera is currently selected. 
+         * Please call CameraController::SelectCamera() to select a camera first.
+         */
+        EVideoControlResult_CameraIsNotSelected,
         /// Not used.
         EVideoControlResult_Max
     };
@@ -216,6 +244,126 @@ namespace PlanetKit
         PLNK_CAPTURER_TYPE_MJPEG,
         /// BGRA
         PLNK_CAPTURER_TYPE_BGRA,
+        /// RGB32
+        PLNK_CAPTURER_TYPE_RGB32,
+        /// RGB555
+        PLNK_CAPTURER_TYPE_RGB555,
+        /// RGB8
+        PLNK_CAPTURER_TYPE_RGB8,
+        /// L8
+        PLNK_CAPTURER_TYPE_L8,
+        /// L16
+        PLNK_CAPTURER_TYPE_L16,
+        /// D16
+        PLNK_CAPTURER_TYPE_D16,
+        /// AI44
+        PLNK_CAPTURER_TYPE_AI44,
+        /// AYUV
+        PLNK_CAPTURER_TYPE_AYUV,
+        /// YVYU
+        PLNK_CAPTURER_TYPE_YVYU,
+        /// YVU9
+        PLNK_CAPTURER_TYPE_YVU9,
+        /// NV11
+        PLNK_CAPTURER_TYPE_NV11,
+        /// NV12
+        PLNK_CAPTURER_TYPE_NV12,
+        /// Y210
+        PLNK_CAPTURER_TYPE_Y210,
+        /// Y216
+        PLNK_CAPTURER_TYPE_Y216,
+        /// Y410
+        PLNK_CAPTURER_TYPE_Y410,
+        /// Y416
+        PLNK_CAPTURER_TYPE_Y416,
+        /// Y41P
+        PLNK_CAPTURER_TYPE_Y41P,
+        /// Y41T
+        PLNK_CAPTURER_TYPE_Y41T,
+        /// Y42T
+        PLNK_CAPTURER_TYPE_Y42T,
+        /// P210
+        PLNK_CAPTURER_TYPE_P210,
+        /// P216
+        PLNK_CAPTURER_TYPE_P216,
+        /// P010
+        PLNK_CAPTURER_TYPE_P010,
+        /// P016
+        PLNK_CAPTURER_TYPE_P016,
+        /// v210
+        PLNK_CAPTURER_TYPE_v210,
+        /// v216
+        PLNK_CAPTURER_TYPE_v216,
+        /// v410
+        PLNK_CAPTURER_TYPE_v410,
+        /// MP43
+        PLNK_CAPTURER_TYPE_MP43,
+        /// MP4S
+        PLNK_CAPTURER_TYPE_MP4S,
+        /// M4S2
+        PLNK_CAPTURER_TYPE_M4S2,
+        /// MP4V
+        PLNK_CAPTURER_TYPE_MP4V,
+        /// WMV1
+        PLNK_CAPTURER_TYPE_WMV1,
+        /// WMV2
+        PLNK_CAPTURER_TYPE_WMV2,
+        /// WMV3
+        PLNK_CAPTURER_TYPE_WMV3,
+        /// WVC1
+        PLNK_CAPTURER_TYPE_WVC1,
+        /// MSS1
+        PLNK_CAPTURER_TYPE_MSS1,
+        /// MSS2
+        PLNK_CAPTURER_TYPE_MSS2,
+        /// MPG1
+        PLNK_CAPTURER_TYPE_MPG1,
+        /// DVSL
+        PLNK_CAPTURER_TYPE_DVSL,
+        /// DVSD
+        PLNK_CAPTURER_TYPE_DVSD,
+        /// DVHD
+        PLNK_CAPTURER_TYPE_DVHD,
+        /// DV25
+        PLNK_CAPTURER_TYPE_DV25,
+        /// DV50
+        PLNK_CAPTURER_TYPE_DV50,
+        /// DVH1
+        PLNK_CAPTURER_TYPE_DVH1,
+        /// DVC
+        PLNK_CAPTURER_TYPE_DVC,
+        /// H264
+        PLNK_CAPTURER_TYPE_H264,
+        /// H265
+        PLNK_CAPTURER_TYPE_H265,
+        /// 420O
+        PLNK_CAPTURER_TYPE_420O,
+        /// HEVC
+        PLNK_CAPTURER_TYPE_HEVC,
+        /// HEVC_ES
+        PLNK_CAPTURER_TYPE_HEVC_ES,
+        /// VP80
+        PLNK_CAPTURER_TYPE_VP80,
+        /// VP90
+        PLNK_CAPTURER_TYPE_VP90,
+        /// ORAW
+        PLNK_CAPTURER_TYPE_ORAW,
+        /// H263
+        PLNK_CAPTURER_TYPE_H263,
+        /// A2R10G10B10
+        PLNK_CAPTURER_TYPE_A2R10G10B10,
+        /// A16B16G16R16F
+        PLNK_CAPTURER_TYPE_A16B16G16R16F,
+        /// H264_ES
+        PLNK_CAPTURER_TYPE_H264_ES,
+        /// MPEG2
+        PLNK_CAPTURER_TYPE_MPEG2,
+        /// H264_HDCP
+        PLNK_CAPTURER_TYPE_H264_HDCP,
+        /// HEVC_HDCP
+        PLNK_CAPTURER_TYPE_HEVC_HDCP,
+        /// Base_HDCP
+        PLNK_CAPTURER_TYPE_Base_HDCP,
     }ECapturerMediaType;
 
     /**
@@ -303,6 +451,12 @@ namespace PlanetKit
         /// Capturer is not found.
         PLNK_VID_CAPTURER_NO_CAPTURER,
     } EVideoCapturerType;
+
+    typedef enum EInitialMyVideoState
+    {
+        PLNK_INITIAL_MY_VIDEO_STATE_RESUME = 0,
+        PLNK_INITIAL_MY_VIDEO_STATE_PAUSE,
+    }EInitialMyVideoState;
 
     /**
      * Result for PlanetKitConference::StopPeerVideo and PlanetKitConference::RequestPeerVideo, which is delivered by the callback API.
@@ -421,4 +575,41 @@ namespace PlanetKit
     {
         return (T)(witdh * height * 1.5);
     }
+
+    /// The interface for receiving a callback when frame processing is finished.
+    class PLANETKIT_API IVideoInterceptorDelegate {
+    public:
+        /**
+         * A callback that occurs when a capture is finished.
+         * @param pVideoFrame The frame being captured.
+         * @return
+         *  - Returns true if successful.
+         */
+        virtual bool onProcessFinished(SVideoFrame* pVideoFrame) = 0;
+    };
+
+    /// The interface for receiving a callback when the status of the window in screen share changes.
+    class PLANETKIT_API IVideoInterceptor {
+    public:
+        /**
+        * Returns SVideoFrame* if a video frame is processed synchronously
+        */
+        virtual SVideoFrame* ProcessVideoFrame(SVideoFrame* pVideoFrame) = 0;
+
+        /**
+         * Registers the frame processing completion callback.
+         * @param pDelegate A callback that occurs when a capture is finished.
+         * @return
+         *  - Returns true if successful.
+         */
+        virtual bool RegisterDelegate(IVideoInterceptorDelegate* pDelegate) = 0;
+
+        /**
+         * Deregisters the frame processing completion callback.
+         * @return
+         *  - Returns true if successful.
+         */
+        virtual bool DeregisterDelegate() = 0;
+    };
+
 }
