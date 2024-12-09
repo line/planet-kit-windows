@@ -18,7 +18,7 @@
 #include "PlanetKitCommonTypes.h"
 
 namespace PlanetKit {
-    class SharedContents : public Base {
+    class PLANETKIT_API SharedContents : public Base {
     public :
         /**
          * Gets contents data.

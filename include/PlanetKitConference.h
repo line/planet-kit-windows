@@ -19,7 +19,8 @@
 #include "IPlanetKitResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitAudioDevice.h"
-#include "PlanetKitVideoController.h"
+#include "PlanetKitCameraController.h"
+#include "PlanetKitScreenShareController.h"
 #include "IPlanetKitConferenceEvent.h"
 #include "PlanetKitStatistics.h"
 #include "PlanetKitSendVoiceProcessor.h"
@@ -249,14 +250,15 @@ namespace PlanetKit
         virtual bool SendShortDataToAllPeers(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
-         * Enables video transmission.
+         * Enables video transmission. 
+         * @param eInitialMyVideoState Determines the initial video state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state, and you will need to call ResumeMyVideo to send the video to the peer. 
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          * @remark
          * - Switches to a video call.
          */
-        virtual bool EnableVideo(void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool EnableVideo(EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME, void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Disables video transmission.
@@ -490,5 +492,173 @@ namespace PlanetKit
          * Gets an instance of MyMediaStatus.
          */
         virtual MyMediaStatusPtr GetMyMediaStatus() = 0;
+
+        /**
+         * Adds a window handle to render the local user's video view.
+         * @param hWind The window handle to render the local user's video view.
+         * @return
+         *  - Returns true if the local user's video view is successfully added.<br>
+         *  - Returns false if the local user's video view is already added or if it fails to add the view.
+         */
+        virtual bool AddMyVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Adds a receiver to receive the local user's video frames.
+         * @param pReceiver The receiver that will receive the local user's video frames.
+         * @return
+         *  - Returns true if the local user's video frame receiver is successfully added.<br>
+         *  - Returns false if the local user's video frame receiver is already added or if it fails to add the frame receiver.
+         */
+        virtual bool AddMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Clears all of the local user's video views and video frame receivers that are currently stored.
+         */
+        virtual void RemoveAllMyVideoViewAndReceiver() = 0;
+
+        /**
+         * Removes a window handle to render the local user's video view.
+         * @param hWind The window handle to render the local user's video view.
+         * @return
+         *  - Returns true if the local user's video view is successfully removed.<br>
+         *  - Returns false if the local user's video view does not exist or if it fails to remove the view.
+         */
+        virtual bool RemoveMyVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Removes a receiver to receive the local user's video frames.
+         * @param pReceiver The receiver that will receive the local user's video frames.
+         * @return
+         *  - Returns true if the local user's video frame receiver is successfully removed.<br>
+         *  - Returns false if the local user's video frame receiver does not exist or if it fails to remove the frame receiver.
+         */
+        virtual bool RemoveMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Adds a window handle to render a peer's video view.
+         * @param pPeerID Information on the Peer to be rendered.
+         * @param hWind The window handle to render a peer's video view.
+         * @return
+         *  - Returns true if the peer's video view is successfully added.<br>
+         *  - Returns false if the peer's video view is already added or if it fails to add the view.
+         */
+        virtual bool AddPeerVideoView(UserIdPtr pPeerID, WindowHandle hWind) = 0;
+
+        /**
+         * Adds a receiver to receive the peer's video frames.
+         * @param pPeerID Information on the peer to be received.
+         * @param pReceiver The receiver that will receive the peer's video frames.
+         * @return
+         *  - Returns true if the peer's video frame receiver is successfully added.<br>
+         *  - Returns false if the peer's video frame receiver is already added or if it fails to add the frame receiver.
+         */
+        virtual bool AddPeerVideoReceiver(UserIdPtr pPeerID, IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Clears all of the peer's video views and video frame receivers that are currently stored.
+         */
+        virtual void RemoveAllPeerVideoViewAndReceiver() = 0;
+
+        /**
+         * Removes a window handle to render a peer's video view.
+         * @param hWind The window handle to render a peer's video view.
+         * @return
+         *  - Returns true if the peer's video view is successfully removed.<br>
+         *  - Returns false if the peer's video view does not exist or if it fails to remove the view.
+         */
+        virtual bool RemovePeerVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Removes a receiver Handle to receive a peer's video frames.
+         * @param pReceiver The receiver that will receive the peer's video frames.
+         * @return
+         *  - If the peer's video frame receiver is successfully removed, it returns true.<br>
+         *  - Returns false if the peer's video frame receiver does not exist or if it fails to remove the frame receiver.
+         */
+        virtual bool RemovePeerVideoReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Adds a window handle to render the local user's screen share view.
+         * @param hWind The window handle to render the local user's screen share view.
+         * @return
+         *  - Returns true if the local user's screen share view is successfully added.<br>
+         *  - Returns false if the local user's screen share view is already added or if it fails to add the view.
+         */
+        virtual bool AddMyScreenShareVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Adds a receiver to receive the local user's screen share frames.
+         * @param pReceiver The receiver that will receive the peer's screen share frames.
+         * @return
+         *  - Returns true if the local user's screen share frame receiver is successfully added.<br>
+         *  - Returns false if the local user's screen share frame receiver is already added or if it fails to add the frame receiver.
+         */
+        virtual bool AddMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Clears all of the local user's screen share views and screen share frame receivers that are currently stored.
+         */
+        virtual void RemoveAllMyScreenShareVideoViewAndReceiver() = 0;
+
+        /**
+         * Removes a window handle to render the local user's screen share view.
+         * @param hWind The window handle to render the local user's screen share view.
+         * @return
+         *  - Returns true if the local user's screen share view is successfully removed.<br>
+         *  - Returns false if the local user's screen share view does not exist or if it fails to remove the view.
+         */
+        virtual bool RemoveMyScreenShareVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Removes a receiver to receive the local user's screen share frames.
+         * @param pReceiver The receiver that will receive the peer's screen share frames.
+         * @return
+         *  - Returns true if the local user's screen share frame receiver is successfully removed.<br>
+         *  - Returns false if the local user's screen share frame receiver does not exist or if it fails to remove the frame receiver.
+         */
+        virtual bool RemoveMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Adds a window handle to render a peer's screen share view.
+         * @param pPeerID Information on the Peer to be rendered.
+         * @param hWind The window handle to render a peer's screen share view.
+         * @return
+         *  - Returns true if the peer's screen share view is successfully added.<br>
+         *  - Returns false if the peer's screen share view is already added or if it fails to add the view.
+         */
+        virtual bool AddPeerScreenShareVideoView(UserIdPtr pPeerID, WindowHandle hWind) = 0;
+
+        /**
+         * Adds a receiver to receive the peer's screen share frames.
+         * @param pPeerID Information on the peer to be received.
+         * @param pReceiver The receiver that will receive the peer's screen share frames.
+         * @return
+         *  - Returns true if the peer's screen share frame receiver is successfully added.<br>
+         *  - Returns false if the peer's screen share frame receiver is already added or if it fails to add the frame receiver.
+         */
+        virtual bool AddPeerScreenShareVideoReceiver(UserIdPtr pPeerID, IVideoReceiver* pReceiver) = 0;
+
+        /**
+         * Clears all of the peer's screen share views and screen share frame receivers that are currently stored.
+         */
+        virtual void RemoveAllPeerScreenShareVideoViewAndReceiver() = 0;
+
+        /**
+         * Removes a window handle to render a peer's screen share view.
+         * @param hWind The window handle to render a peer's screen share view.
+         * @return
+         *  - Returns true if the peer's screen share view is successfully removed.<br>
+         *  - Returns false if the peer's screen share view does not exist or if it fails to remove the view.
+         */
+        virtual bool RemovePeerScreenShareVideoView(WindowHandle hWind) = 0;
+
+        /**
+         * Removes a receiver to receive the peer's screen share frames.
+         * @param pReceiver The receiver that will receive the peer's screen share frames.
+         * @return
+         *  - Returns true if the peer's screen share frame receiver view is successfully removed.<br>
+         *  - Returns false if the peer's screen share frame receiver does not exist or if it fails to remove the frame receiver.
+         */
+        virtual bool RemovePeerScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
     };
 }

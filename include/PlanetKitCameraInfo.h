@@ -18,6 +18,19 @@
 #include "PlanetKitVideoCommon.h"
 
 namespace PlanetKit {
+    /**
+     * Result of camera control
+     */
+    enum ECameraControlResult {
+        /// NONE
+        PLNK_CAMERA_CONTROL_RESULT_NONE = 0,
+        /// Failed to create the camera device selected by the local user.
+        PLNK_CAMERA_CONTROL_RESULT_FAILED_TO_CREATE_CAMERA_DEVICE,
+        /// Selected camera device is removed.
+        PLNK_CAMERA_CONTROL_RESULT_SELECTED_CAMERA_IS_REMOVED,
+        /// No camera is selected.
+        PLNK_CAMERA_CONTROL_RESULT_NO_CAMERA_SELECTED
+    };
 
     /**
      * Camera device information
@@ -95,8 +108,31 @@ namespace PlanetKit {
     /// CameraInfo pointer as AutoPtr
     template class PLANETKIT_API AutoPtr<CameraInfo>;
     typedef AutoPtr<CameraInfo> CameraInfoPtr;
+    typedef Optional<CameraInfoPtr> CameraInfoOptional;
 
     /// Array of CameraInfo
     template class PLANETKIT_API Array<CameraInfoPtr>;
     typedef Array<CameraInfoPtr> CameraInfoArray;
+
+    /// The interface for receiving a callback when there are changes to the capture device.
+    class PLANETKIT_API IVideoCaptureDeviceEvent {
+    public:
+        /**
+         * This callback method is called when a camera device is added.
+         * @param pInfo Information of the added camera device.
+         */
+        virtual void OnDeviceAdded(CameraInfoPtr pInfo) = 0;
+
+        /**
+         * This callback method is called when a camera device is removed.
+         * @param pInfo Information of the removed camera device.
+         */
+        virtual void OnDeviceRemoved(CameraInfoPtr pInfo) = 0;
+
+        /**
+         * This callback method is called when any camera control fails.
+         * @param eCameraControlResult Reason of failure.
+         */
+        virtual void OnCameraError(ECameraControlResult eCameraControlResult) = 0;
+    };
 };

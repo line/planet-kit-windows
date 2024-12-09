@@ -82,4 +82,11 @@ namespace PlanetKit {
         EWindowState newState;
     } SWindowStateChangeParam;
 
+    /// The interface for receiving a callback when frame processing is finished.
+    class PLANETKIT_API IVideoCapturerEvent {
+    public:
+        // A callback for VideoCaptureType::VIDEO_CAPTURE_WINDOW
+        virtual void OnCaptureWindowStateChanged(const SWindowStateChangeParam* pParam) = 0;
+    };
+
 }

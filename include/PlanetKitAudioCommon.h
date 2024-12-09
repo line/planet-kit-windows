@@ -97,14 +97,14 @@ namespace PlanetKit
     /**
      * Audio data sample format
      */
-    typedef enum EAudioDataSampleFormat
+    typedef enum EAudioDataSampleType
     {
         /// Sample format float
-        PLNK_AUDIO_DATA_SAMPLE_FORMAT_FLOAT_32,
+        PLNK_AUDIO_DATA_SAMPLE_TYPE_FLOAT_32,
         /// Sample format short
-        PLNK_AUDIO_DATA_SAMPLE_FORMAT_SHORT
+        PLNK_AUDIO_DATA_SAMPLE_TYPE_SHORT16
 
-    } EAudioDataSampleFormat;
+    } EAudioDataSampleType;
 
     /**
      * Audio device sampling rate
@@ -132,7 +132,7 @@ namespace PlanetKit
         /// Sample count
         unsigned int            unAudioDataSampleCount;
         /// Sample format
-        EAudioDataSampleFormat  eAudioDataSampleFormat;
+        EAudioDataSampleType  eAudioDataSampleFormat;
         /// Audio data buffer
         unsigned char           *ucBuffer;
         /// Size of buffer

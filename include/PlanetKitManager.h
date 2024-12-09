@@ -153,12 +153,6 @@ namespace PlanetKit
          */
         CCParamPtr CreateCCParam(const char* strCCParam);
 
-        /**
-         * Tests the camera device.
-         */
-        bool TestVideoDevice(PlanetKit::CameraInfoPtr pCamInfo, HWND hwnd);
-
-        void StopTestVideoDevice();
         
     protected:
         PlanetKitManager();
