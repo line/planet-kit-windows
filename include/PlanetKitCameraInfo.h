@@ -29,7 +29,11 @@ namespace PlanetKit {
         /// Selected camera device is removed.
         PLNK_CAMERA_CONTROL_RESULT_SELECTED_CAMERA_IS_REMOVED,
         /// No camera is selected.
-        PLNK_CAMERA_CONTROL_RESULT_NO_CAMERA_SELECTED
+        PLNK_CAMERA_CONTROL_RESULT_NO_CAMERA_SELECTED,
+        /// Camera is already used by another application.
+        PLNK_CAMERA_CONTROL_RESULT_CAMERA_IS_ALREADY_USED_BY_ANOTHER_APPLICATION,
+        /// Failed to start the camera.
+        PLNK_CAMERA_CONTROL_RESULT_START_CAMERA_FAIL,
     };
 
     /**
