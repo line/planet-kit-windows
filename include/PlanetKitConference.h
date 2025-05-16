@@ -15,10 +15,8 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitTypes.h"
 #include "IPlanetKitResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
-#include "PlanetKitAudioDevice.h"
 #include "PlanetKitCameraController.h"
 #include "PlanetKitScreenShareController.h"
 #include "IPlanetKitConferenceEvent.h"
@@ -31,38 +29,17 @@
 #include "PlanetKitConferenceParam.h"
 #include "PlanetKitPeer.h"
 
+#include "PlanetKitConferenceDefine.h"
+#include "IPlanetKitConferenceAudioReceiver.h"
+#include "IPlanetKitVideoReceiver.h"
 
-namespace PlanetKit 
-{
+
+namespace PlanetKit  {
     /* Forward declaration */
     class PLANETKIT_API IConferenceEvent;
 
     class PLANETKIT_API PlanetKitConference;
-
-    template class PLANETKIT_API AutoPtr<PlanetKitConference>;
     typedef AutoPtr<PlanetKitConference> PlanetKitConferencePtr;
-
-    class PLANETKIT_API IConferenceAudioReceiver {
-    public:
-        virtual void OnAudio(const SAudioData * pAudioData) = 0;
-    };
-
-    enum ERequestPeerVideoType {
-        PLNK_REQUEST_PEER_VIDEO_CALLBACK_RESULT = 0,
-        PLNK_REQUEST_PEER_VIDEO_CALLBACK_RESULT_AFTER_RESOLUTION
-    };
-
-    /**
-     * Prototype of the callback function to receive the result of RequestPeerVideo
-     */
-    using RequestPeerVideoResultCallback = void(*)(PlanetKitConferencePtr pPlanetKitConference, SRequestMediaResultParam* pRequestMediaResult, void* pUserData);
-
-    /**
-     * Prototype of the callback function to receive the result of RequestPeerVideo
-     */
-    using RequestPeerVideoResolutionCallback = void(*)(PlanetKitConferencePtr pPlanetKitConference, SRequestVideoResolutionResultParam* pReqVidResResultParam, void* pUserData);
-    
-
 
     class PLANETKIT_API PlanetKitConference : public Base {
     public:
@@ -77,7 +54,7 @@ namespace PlanetKit
         * @param pEvent
         * @return true on success
         */
-        virtual bool RegisterConferenceEvent(IConferenceEvent *pEvent) = 0;
+        virtual bool RegisterConferenceEvent(IConferenceEventPtr pEvent) = 0;
 
         /**
          * Mutes the local user's audio in the conference.
@@ -86,7 +63,7 @@ namespace PlanetKit
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool MuteMyAudio(bool bMute, void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool MuteMyAudio(bool bMute, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /// Gets whether the local user's audio is muted.
         virtual bool IsMyAudioMuted() = 0;
@@ -111,46 +88,32 @@ namespace PlanetKit
         virtual VideoStatus GetMyVideoStatus() = 0;
 
         /**
-        * Sets the audio input device used in the conference. Pass nullptr to remove the audio device from the conference.
-        * @param pDevice Audio input device.
-        * @return true on success
-        */
-        virtual bool SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
-
-        /**
-        * Sets the audio output device used in the conference. Pass nullptr to remove the audio device from the conference.
-        * @param pDevice Audio output device.
-        * @return true on success
-        */
-        virtual bool SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
-
-        /**
         * Registers the local user's audio receiver to the conference.
         * @param pReceiver Audio receiver to register.
         * @return true on success
         */
-        virtual bool RegisterMyAudioReceiver(IConferenceAudioReceiver *pReceiver) = 0;
+        virtual bool RegisterMyAudioReceiver(IConferenceAudioReceiverPtr pReceiver) = 0;
 
         /**
         * Registers the peer's audio receiver to the conference.
         * @param pReceiver Audio receiver to register.
         * @return true on success
         */
-        virtual bool RegisterPeersAudioReceiver(IConferenceAudioReceiver *pReceiver) = 0;
+        virtual bool RegisterPeersAudioReceiver(IConferenceAudioReceiverPtr pReceiver) = 0;
 
         /**
         * Deregisters the local user's audio receiver from the conference.
         * @param pReceiver Audio receiver to deregister.
         * @return true on success
         */
-        virtual bool DeregisterMyAudioReceiver(IConferenceAudioReceiver *pReceiver) = 0;
+        virtual bool DeregisterMyAudioReceiver(IConferenceAudioReceiverPtr pReceiver) = 0;
 
         /**
         * Deregisters the peer's audio receiver from the conference.
         * @param pReceiver Audio receiver to deregister.
         * @return true on success
         */
-        virtual bool DeregisterPeersAudioReceiver(IConferenceAudioReceiver *pReceiver) = 0;
+        virtual bool DeregisterPeersAudioReceiver(IConferenceAudioReceiverPtr pReceiver) = 0;
 
         /**
          * Requests a subgroup member's video from the server.<br>
@@ -415,10 +378,10 @@ namespace PlanetKit
         /**
          * Puts reference audio data for automatic echo cancellation.
          * If PlanetKitConference::StartUserAcousticEchoCancellerReference() is called, the user must provide reference audio data for the AEC feature using this method.
-         * @param pAudioData Reference audio data
+         * @param sAudioData Reference audio data
          * @return Size of audio reference data in bytes
          */
-        virtual int PutUserAcousticEchoCancellerReference(const SAudioData* pAudioData) = 0;
+        virtual int PutUserAcousticEchoCancellerReference(const SAudioData& sAudioData) = 0;
 
         /**
          * Starts AEC reference data.
@@ -437,7 +400,7 @@ namespace PlanetKit
 
         // For debug purposes.
         // Internal use only.
-        virtual int DebugMonitoringInfo(char *szBuffer, size_t nBufferSize) = 0;
+        virtual int DebugMonitoringInfo(char* szBuffer, size_t nBufferSize) = 0;
 
         /// Gets the local user's equipment type.
         virtual EUserEquipmentType MyUserEquipmentType() = 0;
@@ -509,7 +472,7 @@ namespace PlanetKit
          *  - Returns true if the local user's video frame receiver is successfully added.<br>
          *  - Returns false if the local user's video frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool AddMyVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the local user's video views and video frame receivers that are currently stored.
@@ -532,7 +495,7 @@ namespace PlanetKit
          *  - Returns true if the local user's video frame receiver is successfully removed.<br>
          *  - Returns false if the local user's video frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemoveMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool RemoveMyVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Adds a window handle to render a peer's video view.
@@ -552,7 +515,7 @@ namespace PlanetKit
          *  - Returns true if the peer's video frame receiver is successfully added.<br>
          *  - Returns false if the peer's video frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerVideoReceiver(UserIdPtr pPeerID, IVideoReceiver* pReceiver) = 0;
+        virtual bool AddPeerVideoReceiver(UserIdPtr pPeerID, IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the peer's video views and video frame receivers that are currently stored.
@@ -575,7 +538,7 @@ namespace PlanetKit
          *  - If the peer's video frame receiver is successfully removed, it returns true.<br>
          *  - Returns false if the peer's video frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemovePeerVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool RemovePeerVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Adds a window handle to render the local user's screen share view.
@@ -593,7 +556,7 @@ namespace PlanetKit
          *  - Returns true if the local user's screen share frame receiver is successfully added.<br>
          *  - Returns false if the local user's screen share frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool AddMyScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the local user's screen share views and screen share frame receivers that are currently stored.
@@ -616,7 +579,7 @@ namespace PlanetKit
          *  - Returns true if the local user's screen share frame receiver is successfully removed.<br>
          *  - Returns false if the local user's screen share frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemoveMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool RemoveMyScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Adds a window handle to render a peer's screen share view.
@@ -636,7 +599,7 @@ namespace PlanetKit
          *  - Returns true if the peer's screen share frame receiver is successfully added.<br>
          *  - Returns false if the peer's screen share frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerScreenShareVideoReceiver(UserIdPtr pPeerID, IVideoReceiver* pReceiver) = 0;
+        virtual bool AddPeerScreenShareVideoReceiver(UserIdPtr pPeerID, IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the peer's screen share views and screen share frame receivers that are currently stored.
@@ -659,6 +622,6 @@ namespace PlanetKit
          *  - Returns true if the peer's screen share frame receiver view is successfully removed.<br>
          *  - Returns false if the peer's screen share frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemovePeerScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual bool RemovePeerScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
     };
 }

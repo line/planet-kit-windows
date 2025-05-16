@@ -14,16 +14,9 @@
 
 #pragma once
 
-#include <Windows.h>
-#include <stdint.h>
-
-#ifdef PLANETKIT_EXPORTS
-#define PLANETKIT_API __declspec(dllexport)
-#else
-#define PLANETKIT_API __declspec(dllimport)
-#endif
-
+#include "PlanetKitPredefine.h"
 #include "PlanetKitAutoPtr.hpp"
+#include "PlanetKitSharedPtr.hpp"
 #include "PlanetKitOptional.hpp"
 #include "PlanetKitContainer.hpp"
 #include "PlanetKitString.hpp"
@@ -54,14 +47,14 @@
 #define NULLABLE 
 
 #if __cplusplus >= 201402L
-    #define PLANETKIT_DEPRECATED(x) [[deprecated(x)]]
+#define PLANETKIT_DEPRECATED(x) [[deprecated(x)]]
 #elif (defined(_MSC_VER) && _MSC_VER >= 1900)
-    #define PLANETKIT_DEPRECATED(x) __declspec(deprecated(x)) 
+#define PLANETKIT_DEPRECATED(x) __declspec(deprecated(x)) 
 #else
-    #define PLANETKIT_DEPRECATED(x)
+#define PLANETKIT_DEPRECATED(x)
 #endif
 
-namespace PlanetKit 
+namespace PlanetKit
 {
 
     typedef const char PlanetKitByte;
@@ -120,7 +113,7 @@ namespace PlanetKit
 
         // Windows platform internal errors are reduced from value 1999.
         // If this error is returned, please contact the PlanetKit windows development team.
-        
+
         // iOS / macOS fail reason code range 2000 ~2999
 
         // Android fail reason code range 3000 ~ 3999
@@ -202,7 +195,7 @@ namespace PlanetKit
         /// [Both][Caller, Callee, Participant, CloudServer] Disconnected by an internal error.
         PLNK_DISCONNECT_REASON_INTERNAL_ERROR = 1109,
 
-        /** 
+        /**
          * [Both][Caller, Callee, AppServer] <br>
          * Application defined error. user_rel_code is accompanied <br>
          * - 1-to-1 call: user_rel_code is defined by the call peer. <br>
@@ -233,7 +226,7 @@ namespace PlanetKit
         /// [1:1][CloudServer] A responder using the same ID pair (user-id and service-id) declined the call in another device.
         PLNK_DISCONNECT_REASON_MULTIDEV_DECLINE = 1207,
         ///< [Both][CloudServer] Maximum call time has been reached
-        PLNK_DISCONNECT_REASON_MAX_CALL_TIME_EXCEEDED = 1208, 
+        PLNK_DISCONNECT_REASON_MAX_CALL_TIME_EXCEEDED = 1208,
 
         // ERROR REASON (1301 ~ 1400)
         /// [Both][Caller, Callee, Participant, CloudServer] Network is unavailable to keep a call.
@@ -260,7 +253,7 @@ namespace PlanetKit
         /// [Both][Caller, Callee, Participant] The call is not connected because the maximum transmission unit (MTU) is exceeded.
         PLNK_DISCONNECT_REASON_MTU_EXCEEDED = 1312,
         ///< [Both][CloudServer] The Planet Cloud server failed to deliver app server data to the AppServer.
-        PLNK_DISCONNECT_REASON_APP_SERVER_DATA_ERROR = 1313, 
+        PLNK_DISCONNECT_REASON_APP_SERVER_DATA_ERROR = 1313,
         ///< [Both][Caller, Callee, Participant] Desktop screen is locked
         PLNK_DISCONNECT_REASON_DESKTOP_SCREEN_LOCKED = 1314,
 
@@ -282,7 +275,7 @@ namespace PlanetKit
          * [Both][CloudServer] An unacceptable character is used in service-id or user-id. <br>
          */
         PLNK_DISCONNECT_REASON_SERVICE_INVALID_ID = 1502,
-                                                                            
+
         /// [Both][CloudServer] Under maintenance
         PLNK_DISCONNECT_REASON_SERVICE_MAINTENANCE = 1503,
         /// [Both][CloudServer] LINE Planet Gateway is busy for now.
@@ -317,9 +310,9 @@ namespace PlanetKit
         /// [Both][CloudServer] The current PlanetKit version is deprecated. Need to upgrade.
         PLNK_DISCONNECT_REASON_SERVICE_INCOMPATIBLE_PLANETKIT_VER = 1511,
         ///< [Both][CloudServer] Too many call connection attempts in a short period of time
-        PLNK_DISCONNECT_REASON_SERVICE_TOO_MANY_REQUESTS = 1512,      
+        PLNK_DISCONNECT_REASON_SERVICE_TOO_MANY_REQUESTS = 1512,
 
-    /* Deprecated disconnect reason */
+        /* Deprecated disconnect reason */
         // PLNK_DISCONNECT_REASON_AUDIO_TX_NO_SRC_BY_LOCAL    = 1101,
         // PLNK_DISCONNECT_REASON_AUDIO_TX_NO_SRC_BY_REMOTE   = 1102,
         // PLNK_DISCONNECT_REASON_INTERNAL_ERROR_BY_LOCAL     = 1103,
@@ -336,7 +329,7 @@ namespace PlanetKit
 
     } EDisconnectReason;
 
-    
+
 
     /**
      * @brief Reason for disabled media
@@ -387,7 +380,7 @@ namespace PlanetKit
         PLNK_VIDEO_PAUSE_REASON_UNDEFINED,
         /// Internal error
         PLNK_VIDEO_PAUSE_REASON_INTERNAL,
-        /// Paused when a user has set EResponseOnVideoEnable to PAUSE and the peer requests enabling of a video call.
+        /// Paused when the peer requests enabling of a video call.
         PLNK_VIDEO_PAUSE_REASON_ENABLE_VIDEO_RESPONSE,
         /// Camera has become inactive.
         PLNK_VIDEO_PAUSE_REASON_CAMERA_INACTIVE,
@@ -410,18 +403,6 @@ namespace PlanetKit
         /// Max count (do not use)
         PLNK_MEDIA_TYPE_COUNT
     }EMediaType;
-
-    /**
-     * @brief
-     *   Whether to automatically enable the local user's video when a peer requests to change from an audio call to a video call<br>
-     *   This value is set using CallParam
-     */
-    typedef enum EResponseOnVideoEnable {
-        /// Pauses the local user's video when a peer requests to change from an audio call to a video call.
-        PAUSE,
-        /// Sends the local user's video when a peer requests to change from an audio call to a video call.
-        SEND
-    }EResponseOnVideoEnable;
 
     /**
      * @brief
@@ -491,7 +472,7 @@ namespace PlanetKit
         PLNK_PEER_GET_FAIL_REASON_DISCONNECTED = 2,
     } EPeerGetFailReason;
 
-    CONSTEXPR int PLNK_DISPLAY_NAME_MAX_SIZE_BYTES = 128;
+    constexpr int PLNK_DISPLAY_NAME_MAX_SIZE_BYTES = 128;
 
     class EventManager;
     class PlanetKitManager;
@@ -499,30 +480,17 @@ namespace PlanetKit
     typedef Array<String> StringArray;
     typedef Array<WString> WStringArray;
 
-    class PLANETKIT_API Statistics;
-    class PLANETKIT_API StatisticsVideoRecv;
-    class PLANETKIT_API StatisticsScreenShareRecv;
     class PLANETKIT_API ContentShareInterface;
     class PLANETKIT_API SubgroupManager;
-    class PLANETKIT_API AudioDevice;
     class PLANETKIT_API VideoRender;
     class PLANETKIT_API Subgroup;
     class PLANETKIT_API Peer;
     class PLANETKIT_API PlanetKitCall;
     class PLANETKIT_API PeerControl;
     class PLANETKIT_API PlanetKitConference;
-    class PLANETKIT_API ConferenceException;
     class PLANETKIT_API PeerVideoStatus;
-    class PLANETKIT_API ConferenceSubgroupUpdatePeer;
     class PLANETKIT_API PeerHold;
-    class PLANETKIT_API CCParam;
-    class PLANETKIT_API CommonSetSharedContent;
     class PLANETKIT_API ConnectParam;
-    class PLANETKIT_API MakeCallParam;
-    class PLANETKIT_API VerifyCallParam;
-    class PLANETKIT_API ConferenceParam;
-    class PLANETKIT_API ConferencePeerUpdateParam;
-    class PLANETKIT_API AudioDeviceInfo;
 
     class PLANETKIT_API ConferencePeers;
     class PLANETKIT_API IPeerControlEvent;
@@ -530,11 +498,7 @@ namespace PlanetKit
     struct VideoStatus;
     struct VideoStatusResult;
 
-    class PLANETKIT_API PlanetKitHookedAudio;
-
-    class PLANETKIT_API SharedContentsData;
-
-    class PLANETKIT_API SharedContents;
+    class PLANETKIT_API HookedAudio;
 
     class PLANETKIT_API SendVoiceProcessor;
 
@@ -544,35 +508,12 @@ namespace PlanetKit
 
     class PLANETKIT_API MyMediaStatus;
 
-    class PLANETKIT_API CameraInfo;
-    class PLANETKIT_API ScreenShareInfo;
-
     class PLANETKIT_API CreateVideoCapturerResult;
 
-    class PLANETKIT_API CameraController;
-    class PLANETKIT_API ScreenShareController;
     class PLANETKIT_API Configuration;
-    class PLANETKIT_API UserId;
-    class PLANETKIT_API RecordOnCloud;
-
-    class PLANETKIT_API DataSessionFrame;
-
-    class PLANETKIT_API CallStartMessage;
-
-    class PLANETKIT_API CallConnectedParam;
-    class PLANETKIT_API CallVerifiedParam;
-
-    class PLANETKIT_API CallDisconnectedParam;
-
-    class PLANETKIT_API ConferenceConnectedParam;
-
-    class PLANETKIT_API ConferenceDisconnectedParam;
 
     class PLANETKIT_API OutboundDataSession;
     class PLANETKIT_API InboundDataSession;
-    class PLANETKIT_API ShortDataParam;
-
-    class PLANETKIT_API SubgroupAttribute;
 
     class PLANETKIT_API PlanetKitManager;
 
@@ -580,8 +521,12 @@ namespace PlanetKit
 
     class PLANETKIT_API Image;
 
+    class PLANETKIT_API Mic;
+    class PLANETKIT_API Speaker;
+
+
     class Base {
-    private :
+    private:
         friend class EventManager;
         friend class PlanetKitManagerImpl;
 
@@ -597,12 +542,8 @@ namespace PlanetKit
         */
         virtual ULONG Release() = 0;
 
-        friend class AutoPtr<Statistics>;
-        friend class AutoPtr<StatisticsVideoRecv>;
-        friend class AutoPtr<StatisticsScreenShareRecv>;
         friend class AutoPtr<ContentShareInterface>;
         friend class AutoPtr<SubgroupManager>;
-        friend class AutoPtr<AudioDevice>;
         friend class AutoPtr<VideoRender>;
         friend class AutoPtr<Subgroup>;
         friend class AutoPtr<OutboundDataSession>;
@@ -610,46 +551,23 @@ namespace PlanetKit
         friend class AutoPtr<Peer>;
         friend class AutoPtr<PlanetKitCall>;
         friend class AutoPtr<PlanetKitConference>;
-        friend class AutoPtr<ConferenceException>;
         friend class AutoPtr<PeerVideoStatus>;
-        friend class AutoPtr<ConferenceSubgroupUpdatePeer>;
         friend class AutoPtr<PeerHold>;
-        friend class AutoPtr<CCParam>;
         friend class AutoPtr<PeerControl>;
-        friend class AutoPtr<CommonSetSharedContent>;
         friend class AutoPtr<ConnectParam>;
-        friend class AutoPtr<MakeCallParam>;
-        friend class AutoPtr<VerifyCallParam>;
-        friend class AutoPtr<ConferenceParam>;
-        friend class AutoPtr<ConferencePeerUpdateParam>;
         friend class AutoPtr<SendVoiceProcessor>;
-        friend class AutoPtr<AudioDeviceInfo>;
         friend class AutoPtr<VideoFrame>;
         friend class AutoPtr<CallInitData>;
         friend class AutoPtr<MyMediaStatus>;
-        friend class AutoPtr<CameraInfo>;
-        friend class AutoPtr<ScreenShareInfo>;
         friend class AutoPtr<CreateVideoCapturerResult>;
         friend class AutoPtr<Configuration>;
-        friend class AutoPtr<UserId>;
-        friend class AutoPtr<RecordOnCloud>;
-        friend class AutoPtr<DataSessionFrame>;
-        friend class AutoPtr<CallStartMessage>;
-        friend class AutoPtr<CallConnectedParam>;
-        friend class AutoPtr<CallVerifiedParam>;
-        friend class AutoPtr<CallDisconnectedParam>;
-        friend class AutoPtr<ConferenceConnectedParam>;
-        friend class AutoPtr<ConferenceDisconnectedParam>;
-        friend class AutoPtr<CameraController>;
-        friend class AutoPtr<ScreenShareController>;
-        friend class AutoPtr<ShortDataParam>;
-        friend class AutoPtr<SubgroupAttribute>;
         friend class AutoPtr<PlanetKitManager>;
         friend class AutoPtr<AudioManager>;
-        friend class AutoPtr<SharedContents>;
-        friend class AutoPtr<PlanetKitHookedAudio>;
-        friend class AutoPtr<SharedContentsData>;
+        friend class AutoPtr<HookedAudio>;
         friend class AutoPtr<Image>;
+
+        friend class AutoPtr<Mic>;
+        friend class AutoPtr<Speaker>;
     };
 
 }

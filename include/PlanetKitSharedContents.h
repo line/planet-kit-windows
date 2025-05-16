@@ -18,8 +18,9 @@
 #include "PlanetKitCommonTypes.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API SharedContents : public Base {
+    class PLANETKIT_API SharedContents {
     public :
+        virtual ~SharedContents() {}
         /**
          * Gets contents data.
          */
@@ -30,4 +31,7 @@ namespace PlanetKit {
          */
         virtual unsigned int GetElapsedSeconds() = 0;
     };
+
+    typedef SharedPtr<SharedContents> SharedContentsPtr;
+    typedef Optional<SharedContentsPtr> SharedContentsOptional;
 };
