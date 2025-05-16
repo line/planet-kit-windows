@@ -17,13 +17,14 @@
 #include "PlanetKitUserId.h"
 
 namespace PlanetKit {
-
     /**
      * An instance of short data.<br>
      * Parameter used in ICallEvent::OnReceivedShortData or IConferenceEvent::OnReceivedShortData.
      */
-    class PLANETKIT_API ShortDataParam : public Base {
+    class PLANETKIT_API ShortDataParam {
     public:
+        virtual ~ShortDataParam() { }
+
         /**
          * Gets the ID of the peer that sent data.
          */
@@ -45,6 +46,5 @@ namespace PlanetKit {
         virtual unsigned int GetSize() = 0;
     };
 
-    template class PLANETKIT_API AutoPtr<ShortDataParam>;
-    typedef AutoPtr<ShortDataParam> ShortDataParamPtr;
+    typedef SharedPtr<ShortDataParam> ShortDataParamPtr;
 };

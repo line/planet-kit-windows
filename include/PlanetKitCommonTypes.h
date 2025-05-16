@@ -15,6 +15,7 @@
 #pragma once
 
 #include "PlanetKitAutoPtr.hpp"
+#include "PlanetKitSharedPtr.hpp"
 #include "PlanetKitContainer.hpp"
 #include "PlanetKitOptional.hpp"
 #include "PlanetKitString.hpp"

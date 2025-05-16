@@ -18,97 +18,16 @@
 #include "PlanetKitOptional.hpp"
 #include "IPlanetKitResultHandler.h"
 
-#include "PlanetKitCommonSetSharedContent.h"
+#include "IPlanetKitContentShareEvent.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API ContentShareInterface;
-
-    template class PLANETKIT_API AutoPtr<ContentShareInterface>;
-    typedef AutoPtr<ContentShareInterface> ContentShareInterfacePtr;
-
-    template class PLANETKIT_API Optional<ContentShareInterfacePtr>;
-    typedef Optional<ContentShareInterfacePtr> ContentShareInterfaceOptional;
-
-    class PLANETKIT_API IContentShareEvent {
-    public:
-        /**
-         * Called when peers set shared contents.
-         * @remark
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()<br>
-         *    + CommonSetSharedContent::GetPeer()<br>
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
-         *    + CommonSetSharedContent::Data()<br>
-         *    + CommonSetSharedContent::DataSize()
-         */
-        virtual void OnPeersSetSharedContents(ContentShareInterfacePtr pContentShareInterface, const CommonSetSharedContentArray& arrSharedContent) = 0;
-
-        /**
-         * Called when peers unset shared contents.
-         * @remark
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()<br>
-         *    + CommonSetSharedContent::GetPeer()<br>
-         */
-        virtual void OnPeersUnsetSharedContents(ContentShareInterfacePtr pContentShareInterface, const CommonSetSharedContentArray& arrSharedContent) = 0;
-
-        /**
-         * Called when peers set exclusively shared contents.
-         * @remark
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()<br>
-         *    + CommonSetSharedContent::GetPeer()<br>
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
-         *    + CommonSetSharedContent::Data()<br>
-         *    + CommonSetSharedContent::DataSize()
-         */
-        virtual void OnPeerSetExclusivelySharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
-
-        /**
-         * Called when peers unset exclusively shared contents.
-         * @remark
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()<br>
-         *    + CommonSetSharedContent::GetPeer()
-         */
-        virtual void OnPeerUnsetExclusivelySharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
-
-        /**
-         * Called when any participant of conference call set 'Room Shared Content'.
-         * @remark
-         *  - Support only conference call.<br>
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()<br>
-         *    + CommonSetSharedContent::ElapsedAfterSetMsec()<br>
-         *    + CommonSetSharedContent::Data()<br>
-         *    + CommonSetSharedContent::DataSize()
-        */
-        virtual void OnPeerSetRoomSharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
-
-        /**
-         * Called when any participant of conference call unset 'Room Shared Content'.
-         * @remark
-         *  - Support only conference call.<br>
-         *  - You can use these APIs.<br>
-         *    + CommonSetSharedContent::PeerId()<br>
-         *    + CommonSetSharedContent::ServiceId()
-        */
-        virtual void OnPeerUnsetRoomSharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
-    };
-
-
     class PLANETKIT_API ContentShareInterface : public Base {
     public:
         /**
         * Sets the event handler for shared content.
         * @return true on success.
         */
-        virtual bool SetContentShareEvent(IContentShareEvent *pEvent) = 0;
+        virtual bool SetContentShareEvent(IContentShareEventPtr pEvent) = 0;
 
         /**
         * Removes the event handler for shared content.

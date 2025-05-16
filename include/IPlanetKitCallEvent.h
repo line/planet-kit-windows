@@ -18,154 +18,19 @@
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitVideoStatus.h"
 
-//"This will not be supported in 4.4 or later. Use PlanetKitVideoStatus.h"
 #include "PlanetKitCommonVideoStatus.h"
 
-#include "PlanetKitCallEventParam.h"
-
+#include "PlanetKitShortDataParam.h"
+#include "PlanetKitRecordOnCloud.h"
 #include "PlanetKitCallStartMessage.h"
 
+#include "PlanetKitCallConnectedParam.h"
+#include "PlanetKitCallVerifiedParam.h"
+#include "PlanetKitCallDisconnectedParam.h"
 
-namespace PlanetKit
-{
-    /* Forward declaration */
+namespace PlanetKit {
     class PLANETKIT_API PlanetKitCall;
-
-    //template class PLANETKIT_API AutoPtr<PlanetKitCall>;
     typedef AutoPtr<PlanetKitCall> PlanetKitCallPtr;
-
-    /**
-     * Parameter used in ICallEvent::OnConnected.
-     */
-    class PLANETKIT_API CallConnectedParam : public Base {
-    public :
-        /**
-         * Gets the peer's call start message.
-         * @see [CallStartMessage guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/call-start-message )
-         */
-        virtual CallStartMessagePtr GetPeerStartMessage() = 0;
-
-        /**
-         * Returns whether you can delay connection until you call PlanetKitCall::FinishPreparation() API.
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status )
-         */
-        virtual bool ShouldFinishPreparation() = 0;
-
-        /** 
-         * Returns whether you are in the preparation stage.<br>
-         * You must check the return value of ShouldFinishPreparation() and do one of the following:<br>
-         * If the return value of ShouldFinishPreparation() is true, you need to call PlanetKitCall::FinishPreparation().<br>
-         * If the return value of ShouldFinishPreparation() is false, you must wait until the peer calls PlanetKitCall::FinishPreparation().
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status ) 
-         */
-        virtual bool IsInPreparation() = 0;
-
-        /**
-         * Returns whether the sending video feature is using hardware codec.
-         */
-        virtual bool IsVideoSendHardwareCodecEnabled() = 0;
-
-        /**
-         * Returns whether this call can support data session or not.
-         */
-        virtual bool IsSupportDataSession() = 0;
-
-        /**
-         * Returns whether the screen share feature can support video share mode.
-         * @see
-         *  - PlanetKitCall::SetMyScreenShareVideoShareMode<br>
-         *  - PlanetKitCall::IsMyScreenShareVideoShareModeEnabled
-         */
-        virtual bool IsSupportVideoShareMode() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<CallConnectedParam>;
-    typedef AutoPtr<CallConnectedParam> CallConnectedParamPtr;
-
-    /**
-     * Parameter used in ICallEvent::OnVerified.
-     */
-    class PLANETKIT_API CallVerifiedParam : public Base {
-    public :
-        /**
-         * Gets the peer's call start message.
-         * @see [CallStartMessage guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/call-start-message )
-         */
-        virtual CallStartMessagePtr GetPeerStartMessage() = 0;
-
-        /**
-         * Returns whether the peer set the preparation flag.
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status )
-         */
-        virtual bool IsPeerUsePreparation() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<CallVerifiedParam>;
-    typedef AutoPtr<CallVerifiedParam> CallVerifiedParamPtr;
-
-    /**
-     * Parameter used in ICallEvent::OnDisconnected.
-     */
-    class PLANETKIT_API CallDisconnectedParam : public Base {
-    public :
-        /**
-         * Returns whether this call has been disconnected by the remote subject.
-         */
-        virtual bool IsDisconnectedByRemote() = 0;
-
-        /**
-         * Gets the reason for disconnection.
-         */
-        virtual EDisconnectReason GetReason() = 0;
-
-        /**
-         * Subject who performed disconnection.
-         */
-        virtual EDisconnectSource GetDisconnectSource() = 0;
-
-        /**
-         * Gets the reason string that is encoded in UTF-16 and null-terminated.
-         * @remark
-         *  - The return value can be nullptr.
-         */
-        virtual const WString& GetUserReleaseCode() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<CallDisconnectedParam>;
-    typedef AutoPtr<CallDisconnectedParam> CallDisconnectedParamPtr;
-
-    /**
-     * Reason code for deactivating recording on the cloud.
-     */
-    enum ERecordOnCloudDeactivateReason {
-        /// Internal error. 
-        PLNK_RECORD_ON_CLOUD_DEACTIVATE_REASON_INTERNAL = 0,
-        /// Recording failed on the cloud.
-        PLNK_RECORD_ON_CLOUD_DEACTIVATE_REASON_ACTIVATION_FAILED = 1,
-    };
-
-    typedef Optional<ERecordOnCloudDeactivateReason> DeactivateReasonOptional;
-
-    /**
-     * This is a class related to the state of recording on the cloud.
-     */
-    class PLANETKIT_API RecordOnCloud : public Base {
-    public :
-        /**
-         * Gets the state of recording on the cloud.
-         */
-        virtual bool IsActivated() = 0;
-
-        /**
-         * Gets the reason for deactivating recording on the cloud.
-         * @remark
-         *  - Return value can be nullptr when the return value of IsActivated() is true.
-         */
-        virtual DeactivateReasonOptional GetDeactivatedReason() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<RecordOnCloud>;
-    typedef AutoPtr<RecordOnCloud> RecordOnCloudPtr;
 
     /// @brief Event callback APIs for 1-to-1 calls
     /**
@@ -173,6 +38,8 @@ namespace PlanetKit
      */
     class PLANETKIT_API ICallEvent {
     public:
+        virtual ~ICallEvent() { }
+
         /**
          * Called when the call state is changed to connected.
          * @param pPlanetKitCall Call instance that the event was registered to.
@@ -226,13 +93,11 @@ namespace PlanetKit
          */
         virtual void OnReceivedShortData(PlanetKitCallPtr pPlanetKitCall, ShortDataParamPtr pShortDataParam) = 0;
 
-
         /**
          * Called when video is enabled by the peer.
          * @param pPlanetKitCall Call instance that the event was registered to.
-         * @param bIsSendingMyVideo This indicates whether the local user's video is being sent to the peer. If this value is false, the local user's video is in a paused state.
          */
-        virtual void OnVideoEnabledByPeer(PlanetKitCallPtr pPlanetKitCall, bool bIsSendingMyVideo) = 0;
+        virtual void OnVideoEnabledByPeerAndMyVideoPaused(PlanetKitCallPtr pPlanetKitCall) = 0;
 
         /**
          * Called when video is disabled by the peer.
@@ -341,4 +206,6 @@ namespace PlanetKit
          */
         virtual void OnRecordOnCloudUpdated(PlanetKitCallPtr pPlanetKitCall, RecordOnCloudPtr pRecordOnCloud) = 0;
     };
+
+    typedef SharedPtr<ICallEvent> ICallEventPtr;
 }

@@ -14,37 +14,25 @@
 
 #pragma once
 
-#ifndef CONSTEXPR
-    #if __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
-        #define CONSTEXPR constexpr
-    #else
-        #define CONSTEXPR
-    #endif
-#endif
+#include "PlanetKitPredefine.h"
 
-namespace PlanetKit
-{
-    struct Nullopt {
+namespace PlanetKit {
+    struct PLANETKIT_API Nullopt {
         struct _NullTag {};
-
-#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
-        CONSTEXPR explicit Nullopt(_NullTag) {}
-#else
-        CONSTEXPR Nullopt(_NullTag) {}
-#endif
+        constexpr explicit Nullopt(_NullTag) {}
     };
 
     /**
      * This value means nullptr in Optional class.
      */
-    CONSTEXPR Nullopt NullOptional(Nullopt::_NullTag{});
+    constexpr Nullopt NullOptional(Nullopt::_NullTag{});
 
     /**
      * PlanetKit Optional class.
      * @remark Use like std::optional in C++17
      */
     template <typename T>
-    class Optional {
+    class PLANETKIT_API Optional {
     public:
         Optional(const T& src) {
             m_value = src;
@@ -59,11 +47,7 @@ namespace PlanetKit
             m_bHasValue = false;
         };
 
-#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
-        CONSTEXPR explicit operator bool() const {
-#else
-        CONSTEXPR operator bool() const {
-#endif
+        constexpr explicit operator bool() const {
             return m_bHasValue;
         };
 
@@ -157,12 +141,7 @@ namespace PlanetKit
         }
 
     private:
-#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
         bool m_bHasValue = false;
-#else
-        bool m_bHasValue;
-#endif
-
         T m_value;
 
     };
