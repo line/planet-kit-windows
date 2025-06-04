@@ -16,6 +16,7 @@
 
 #include "PlanetKitControlBlock.hpp"
 #include <windows.h>
+#include <assert.h>
 
 namespace PlanetKit {
     template <typename T>
@@ -23,8 +24,6 @@ namespace PlanetKit {
     public:
         SharedPtr() : control_block_(nullptr) {}
         SharedPtr(std::nullptr_t) : control_block_(nullptr) {}
-
-        explicit SharedPtr(T* ptr) : control_block_(new ControlBlock<T>(ptr)) {}
 
         SharedPtr(const SharedPtr& other) {
             copy(other);
@@ -99,6 +98,13 @@ namespace PlanetKit {
     private:
         ControlBlock<T>* control_block_;
 
+        explicit SharedPtr(T* ptr) : control_block_(new ControlBlock<T>(ptr)) {
+            // Do not use:
+            //  - This constructor is prohibited to prevent creating a `PlanetKit::SharedPtr` from a raw pointer directly.
+            //  - To avoid ownership issues with raw pointers, use a factory function or a safer alternative.
+            //  - Please use the `PlanetKit::MakeAutoPtr` function instead: template <typename T, typename... Args> friend SharedPtr<T> PlanetKit::MakeAutoPtr(Args&&... args);
+        }
+
         void release() {
             if (control_block_) {
                 control_block_->release();
@@ -118,6 +124,9 @@ namespace PlanetKit {
 
         template <typename U>
         friend class SharedPtr;
+
+        template <typename T, typename... Args>
+        friend SharedPtr<T> MakeAutoPtr(Args&&... args);
     };
 
     template <typename T, typename... Args>
