@@ -14,18 +14,14 @@
 
 #pragma once
 
-#include "PlanetKitSharedPtr.hpp"
+#include "PlanetKitCameraInfo.h"
 #include "PlanetKitVideoRender.h"
-#include "PlanetKitImage.h"
 
-#include "IPlanetKitVideoCaptureDeviceEvent.h"
-#include "IPlanetKitVideoReceiver.h"
-
-namespace PlanetKit {
+namespace PlanetKit
+{
     /// The class for capturing with a camera.
-    class PLANETKIT_API CameraController {
+    class PLANETKIT_API CameraController : virtual public Base {
     public:
-        virtual ~CameraController() { }
 
         /**
          * Get a list of camera devices.
@@ -41,7 +37,7 @@ namespace PlanetKit {
          * @remark
          *  - If you want to use a specific device when starting capture, you can set it first with this function and then start.
          */
-        virtual EVideoControlResult ChangeCamera(CameraInfoPtr pCameraInfo) = 0;
+        virtual EVideoControlResult SelectCamera(CameraInfoPtr pCameraInfo) = 0;
 
         /**
          * Get selected camera information.
@@ -56,13 +52,13 @@ namespace PlanetKit {
          * Registers a delegate to handle device change events.
          * @param pDelegate The delegate to handle device change events.
          */
-        virtual void RegisterDeviceEvent(IVideoCaptureDeviceEventPtr pDelegate) = 0;
+        virtual void RegisterDeviceEvent(IVideoCaptureDeviceEvent* pDelegate) = 0;
 
         /**
          * Deregisters a delegate to handle device change events.
          * @param pDelegate The delegate that you want to deregister.
          */
-        virtual void DeregisterDeviceEvent(IVideoCaptureDeviceEventPtr pDelegate) = 0;
+        virtual void DeregisterDeviceEvent(IVideoCaptureDeviceEvent* pDelegate) = 0;
 
         /**
          * Checks camera is running.
@@ -70,36 +66,6 @@ namespace PlanetKit {
          */
         virtual bool IsRunning() = 0;
 
-        /**
-         * Applies a blur effect to the background.
-         * @param fBlurRadius   The radius for the Gaussian blur applied to the virtual background. <br>
-                                The larger the radius, the blurrier the result.
-         * @return
-         *  - The result of virtual background setting.
-         * @remark
-         *  - Default intensity is 15.
-         */
-        virtual bool SetVirtualBackgroundWithBlur(float fBlurRadius) = 0;
-
-        /**
-         * Replaces the background with an image.
-         * @param pImage A pointer to an instance of PlanetKit::Image.
-         * @return
-         *  - The result of virtual background setting.
-         */
-        virtual bool SetVirtualBackgroundWithImage(ImagePtr pImage) = 0;
-
-        /**
-         * Disables the configured virtual background.
-         */
-        virtual void ClearVirtualBackground() = 0;
-
-        /**
-         * Gets the current type of virtual background.
-         * @return
-         *  - Current virtual background type
-         */
-        virtual EVirtualBackgroundType GetCurrentVirtualBackgroundType() = 0;
         /**
          * Starts a window handle to render a local user's preview.
          * @param hWind The window handle to render a local user's preview.
@@ -126,7 +92,7 @@ namespace PlanetKit {
          *  - Added in PlanetKit 5.5, StartPreview() provides a different functionality than StartCapture(). StartPreview() can be used independently of call connection status, making it possible to preview the local user's video before a call, or before switching from an audio call to a video call.<br>
          *  - From PlanetKit 5.5, if video is enabled for a call or conference, the camera will automatically turn on when the call is connected.
          */
-        virtual bool StartPreview(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool StartPreview(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Stops the preview for the handle that was started.
@@ -142,7 +108,7 @@ namespace PlanetKit {
          * @return
          *  - If the preview frame receiver is successfully removed, it returns true.
          */
-        virtual bool StopPreview(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool StopPreview(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Gets the current media type.
@@ -175,7 +141,7 @@ namespace PlanetKit {
          *  - This intercepts the frame captured through the camera before delivering it to the counterpart.
          *  - If necessary, you can change the frame to be delivered to the counterpart.
          */
-        virtual bool RegisterVideoInterceptor(IVideoInterceptorPtr pInterceptor) = 0;
+        virtual bool RegisterVideoInterceptor(IVideoInterceptor* pInterceptor) = 0;
 
         /**
          * Deregisters the video interceptor.
@@ -214,5 +180,6 @@ namespace PlanetKit {
         virtual bool IsPostingFrameAvailable(UINT64 ull64tick) = 0;
     };
 
-    typedef SharedPtr<CameraController> CameraControllerPtr;
+    template class PLANETKIT_API AutoPtr<CameraController>;
+    typedef AutoPtr<CameraController> CameraControllerPtr;
 }

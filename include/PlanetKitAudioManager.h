@@ -14,136 +14,89 @@
 
 #pragma once
 
-#include "PlanetKitSharedPtr.hpp"
 #include "PlanetKit.h"
 #include "PlanetKitAudioCommon.h"
-#include "PlanetkitCustomSpeaker.h"
-#include "planetkitCustomMic.h"
-#include "IPlanetKitMicExceptionEvent.h"
-#include "IPlanetKitMicPreviewEvent.h"
-#include "PlanetKitAudioDeviceInfo.h"
-#include "IPlanetKitAudioVolumeLevelChangedEvent.h"
-
-#include "IPlanetKitAudioDeviceEvent.h"
+#include "PlanetKitAudioDevice.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API AudioManager {
+    class PLANETKIT_API AudioManager;
+    typedef AutoPtr<AudioManager> AudioManagerPtr;
+
+    /**
+     * Event listeners to notify you of audio device changes
+     */
+    class PLANETKIT_API IAudioDeviceEvent {
     public:
-        virtual ~AudioManager() { }
+        /// Called when the default audio device is changed.
+        virtual void OnDefaultAudioDeviceChanged(AudioDeviceInfoPtr pAudioDeviceInfo) = 0;
+        /// Called when an audio device is added.
+        virtual void OnAudioDeviceAdded(AudioDeviceInfoPtr pAudioDeviceInfo) = 0;
+        /// Called when an audio device is removed.
+        virtual void OnAudioDeviceRemoved(AudioDeviceInfoPtr pAudioDeviceInfo) = 0;
+
+    };
+
+
+    class PLANETKIT_API AudioManager : public Base {
+    public:
+        /**
+         * Creates an audio device.
+         * @param pInfo
+         * @return Created audio device object
+         */
+        virtual AudioDevicePtr CreateAudioDevice(AudioDeviceInfoPtr pInfo) = 0;
 
         /**
-         * Retrieves the list of currently available microphones.
-         * @param audioDeviceInfoArray List of currently available microphones.
+         * Creates the default input device.
+         * @return Created input device object
+         */
+        virtual AudioDevicePtr CreateDefaultInputDevice() = 0;
+
+        /**
+         * Creates the default output device.
+         * @return Created output device object
+         */
+        virtual AudioDevicePtr CreateDefaultOutputDevice( ) = 0;
+
+        /**
+         * Gets the available audio input device list.
+         * @param pResultArray Array of SAudioDeviceInfo.
          * @return true on success
          */
-        virtual bool GetMicList(AudioDeviceInfoArray& audioDeviceInfoArray) = 0;
+        virtual bool GetAudioInputDeviceList(AudioDeviceInfoArray* pResultArray) = 0;
 
         /**
-         * Retrieves the list of currently available speakers.
-         * @param audioDeviceInfoArray List of currently available speakers.
+         * Gets the available audio output device list.
+         * @param pResultArray Array of SAudioDeviceInfo.
          * @return true on success
          */
-        virtual bool GetSpeakerList(AudioDeviceInfoArray& audioDeviceInfoArray) = 0;
+        virtual bool GetAudioOutputDeviceList(AudioDeviceInfoArray* pResultArray) = 0;
 
         /**
-         * Changes the currently active microphone.
-         * @param pInfo Information about the device to be changed.
-         * @return The changed device is returned.
-         * @remark Setting the microphone to nullptr indicates "No microphone in use."
-         *         If you pass the device returned after setting the microphone to nullptr to a call or a conference, it will be connected in a state with no microphone in use.
+         * Gets the default audio input device.
+         * @param pAudioDeviceInfo Buffer to store default audio input device information. Must not be NULL.
+         * @return true on success
          */
-        virtual MicOptional ChangeMic(AudioDeviceInfoPtr pInfo = nullptr) = 0;
+        virtual bool GetDefaultAudioInputDeviceInfo(AudioDeviceInfoPtr* pAudioDeviceInfo) = 0;
 
         /**
-         * Switches to use a custom microphone.
-         * @param pCustomMic Custom microphone.
-         * @return The selected custom device is returned.
+         * Gets the default audio output device.
+         * @param pAudioDeviceInfo Buffer to store default audio output device information. Must not be NULL.
+         * @return true on success
          */
-        virtual MicOptional ChangeMic(CustomMicPtr pCustomMic) = 0;
+        virtual bool GetDefaultAudioOutputDeviceInfo(AudioDeviceInfoPtr* pAudioDeviceInfo) = 0;
 
         /**
-         * Changes the currently active speaker.
-         * @param pInfo Information about the device to be changed.
-         * @return The changed device is returned.
-         * @remark Setting the speaker to nullptr indicates "No speaker in use."
-         *         If you pass the device returned after setting the speaker to nullptr to a call or a conference, it will be connected in a state with no speaker in use.
-         */
-        virtual SpeakerOptional ChangeSpeaker(AudioDeviceInfoPtr pInfo = nullptr) = 0;
-
-        /**
-         * Switches to use a custom speaker.
-         * @param pCustomMic Custom microphone.
-         * @return The selected custom device is returned.
-         */
-        virtual SpeakerOptional ChangeSpeaker(CustomSpeakerPtr pCustomSpeaker) = 0;
-
-        /**
-         * Retrieves the default microphone information of the current system.
-         * @return Default system microphone information.
-         */
-        virtual AudioDeviceInfoOptional GetDefaultMicInfo() = 0;
-
-        /**
-         * Retrieves the default speaker information of the current system.
-         * @return Default system speaker information.
-         */
-        virtual AudioDeviceInfoOptional GetDefaultSpeakerInfo() = 0;
-
-        /**
-         * Registers an event to be notified of device changes.
-         * @param pEvent Event to be notified of device changes.
+         * Registers an audio device event delegate.
+         * @param pEvent
          * @return true on success
          */
         virtual bool RegisterAudioDeviceEvent(IAudioDeviceEvent* pEvent) = 0;
 
         /**
-         * Deregisters an event to be notified of device changes.
+         * Deregisters the audio device event delegate.
          * @return true on success
          */
         virtual bool DeregisterAudioDeviceEvent() = 0;
-
-        /**
-         * Retrieves the currently active speaker.
-         * @return Active speaker.
-         * If no speaker device is selected, a NullOptional is returned.
-         */
-        virtual SpeakerOptional GetCurrentSpeaker() = 0;
-
-        /**
-         * Retrieves the currently active microphone.
-         * @return Active microphone.
-         * If no microphone device is selected, a NullOptional is returned.
-         */
-        virtual MicOptional GetCurrentMic() = 0;
-
-        /**
-         * Registers an event to receive exceptions occurring during microphone device usage.
-         * @param pMicExceptionEvent Microphone device exception event.
-         * @return true on success
-         */
-        virtual bool RegisterMicExceptionEvent(MicExceptionEventPtr pMicExceptionEvent) = 0;
-
-        /**
-         * Deregisters an event to receive exceptions occurring during microphone device usage.
-         * @return true on success
-         */
-        virtual bool DeregisterMicExceptionEvent() = 0;
-
-        /**
-         * Registers and starts a preview to check the currently selected microphone device.
-         * @param pMicPreviewEvent Event for receiving the volume level incoming to the microphone device.
-         * @param unInterval Interval for receiving volume events.(in milliseconds)
-         * @return true on success
-         * @remark Only one event can be registered for preview, and it cannot be executed redundantly. Therefore, if executed a second time, it returns false.
-         */
-        virtual bool StartMicPreview(MicPreviewEventPtr pMicPreviewEvent, unsigned int unInterval) = 0;
-
-        /**
-         * Deregisters and stops a preview to check the currently selected microphone device.
-         * @return true on success
-           */
-        virtual bool StopMicPreview() = 0;
     };
-
-    typedef SharedPtr<AudioManager> AudioManagerPtr;
 }

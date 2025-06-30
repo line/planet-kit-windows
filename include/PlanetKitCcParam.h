@@ -14,16 +14,19 @@
 
 #pragma once
 #include "PlanetKit.h"
-#include "PlanetKitSharedPtr.hpp"
 
-namespace PlanetKit {
+namespace PlanetKit
+{
+    class PLANETKIT_API CCParam;
+
+    template class PLANETKIT_API AutoPtr<CCParam>;
+    typedef AutoPtr<CCParam> CCParamPtr;
+
     /**
      * @details Gets peer data from CCParam.
      */
-    class CCParam {
+    class CCParam : public Base {
     public:
-        virtual ~CCParam() { }
-
         /**
         * Gets the peer ID from CCParam.
         * @return Peer ID
@@ -41,13 +44,6 @@ namespace PlanetKit {
         * @return Peer media type
         */
         virtual EMediaType GetMediaType() = 0;
-
-        /**
-        * Indicates whether the "Record On Cloud" feature is enabled.
-        * @return true when "Record On Cloud" feature is enabled.
-        */
-        virtual bool IsRecordOnCloudEnabled() = 0;
     };
 
-    typedef SharedPtr<CCParam> CCParamPtr;
 }

@@ -14,53 +14,68 @@
 
 #pragma once
 
+#include <Windows.h>
+
 #include "PlanetKit.h"
 #include "PlanetKitVideoCommon.h"
-#include "IPlanetKitVideoCapturerEvent.h"
-#include "IPlanetKitVideoRenderEvent.h"
 
-namespace PlanetKit {
+namespace PlanetKit 
+{
+    class IVideoRenderEvent;
+    class PLANETKIT_API VideoRender;
+
+    template class PLANETKIT_API AutoPtr<VideoRender>;
+    typedef AutoPtr<VideoRender> VideoRenderPtr;
+
+
     class PLANETKIT_API VideoRender : public Base {
     public:
-        /**
-         * Pushes a video frame to render.
-         * @param pVideoFrame Video frame to be rendered.
-         * @return true on success.
-         */
-        virtual bool RenderVideoFrame(const SVideoFrame* pVideoFrame) = 0;
 
         /**
-         * Registers a video render event delegate to the render instance.
-         * @param pDelegate 
-         * @return true on successful registration.
-         */
-        virtual bool RegisterRenderEvent(IVideoRenderEventPtr pDelegate) = 0;
+        * Pushes a video frame to render.
+        * @param pVideoFrame Video frame to be rendered.
+        * @return true on success.
+        */
+        virtual bool RenderVideoFrame(const SVideoFrame *pVideoFrame) = 0;
+
 
         /**
-         * Deregisters the video render event delegate from the render instance.
-         * @return true on successful deregistration.
-         */
+        * Registers a video render event delegate to the render instance.
+        * @param pDelegate 
+        * @return true on successful registration.
+        */
+        virtual bool RegisterRenderEvent(IVideoRenderEvent *pDelegate) = 0;
+
+
+        /**
+        * Deregisters the video render event delegate from the render instance.
+        * @return true on successful deregistration.
+        */
         virtual bool DeregisterRenderEvent() = 0;
 
-        /**
-         * Resets the video render start event. 
-         * After ResetRenderStartEvent() has been called, IVideoRenderEvent::OnRenderStart will be called on the next video frame received.
-         * @return true on successful deregistration.
-         */
-        virtual void ResetRenderStartEvent() = 0;
 
         /**
-         * Sets the video aspect ratio mode. 
-         * @param eMode Video aspect ratio mode. 
-         * @return true on success.
-         */
+        * Resets the video render start event. 
+        * After ResetRenderStartEvent() has been called, IVideoRenderEvent::OnRenderStart will be called on the next video frame received.
+        * @return true on successful deregistration.
+        */
+        virtual void ResetRenderStartEvent() = 0;
+
+
+        /**
+        * Sets the video aspect ratio mode. 
+        * @param eMode Video aspect ratio mode. 
+        * @return true on success.
+        */
         virtual bool SetVideoAspectRatioMode(EVideoAspectRatioMode eMode) = 0;
         
+
         /**
-         * Gets the render's video aspect ratio mode.
-         * @return Current render's EVideoAspectRatioMode.
-         */
+        * Gets the render's video aspect ratio mode.
+        * @return Current render's EVideoAspectRatioMode.
+        */
         virtual EVideoAspectRatioMode GetVideoAspectRatioMode() = 0;
+
 
         /**
          * Sets the mirroring type of the view.
@@ -97,6 +112,22 @@ namespace PlanetKit {
         virtual ~VideoRender() {}
     };
 
+    template class PLANETKIT_API AutoPtr<VideoRender>;
     typedef AutoPtr<VideoRender> VideoRenderPtr;
+
+    template class PLANETKIT_API Optional<VideoRenderPtr>;
     typedef Optional<VideoRenderPtr> VideoRenderOptional;
+
+    class PLANETKIT_API IVideoRenderEvent {
+    public:
+        /// Called when the rendering starts.
+        virtual void OnRenderStart(HWND hWnd) = 0;
+
+        /**
+         * Called when the rendering fails.
+         * @remark
+         *  - Raised when the rendering fails.
+         */
+        virtual void OnRenderFailure(HWND hWnd) = 0;
+    };
 }

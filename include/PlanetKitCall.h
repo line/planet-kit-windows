@@ -15,6 +15,7 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitAudioDevice.h"
 #include "IPlanetKitResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitStatistics.h"
@@ -27,16 +28,50 @@
 #include "PlanetKitVideoStatus.h"
 #include "PlanetKitMyMediaStatus.h"
 
-#include "IPlanetKitAudioHook.h"
+#include "PlanetKitAudioHook.h"
 #include "PlanetKitScreenShareInfo.h"
 
-#include "PlanetKitCallDefine.h"
-#include "IPlanetKitCallAudioReceiver.h"
-#include "IPlanetKitVideoReceiver.h"
+namespace PlanetKit
+{
+    /* Forward declaration */
+    class PLANETKIT_API PlanetKitCall;
+    class PLANETKIT_API ICallEvent;
 
-namespace PlanetKit {
+    /**
+     * PlanetKit state of a 1-to-1 call
+     */
+    typedef enum ECallState {
+        /// Idle
+        CALL_IDLE,
+        /// Trying to call
+        CALL_TRYING,
+        /// Waiting for an answer
+        CALL_WAIT_ANSWER,
+        /// Verified
+        CALL_VERIFIED,
+        /// Connected
+        CALL_CONNECTED,
+        /// Disconnected
+        CALL_DISCONNECTED
+
+    } ECallState;
+
+
+    /* PlanetKitCall Receiver */
+    class PLANETKIT_API ICallAudioReceiver
+    {
+    public:
+        /**
+        * Audio data callback called by the call instance. Called synchronously after audio is sent or received to/from the peer and the server.
+        * @param pAudioData
+        */
+        virtual void OnAudio(const SAudioData * pAudioData) = 0;
+    };
+
+    
     class PLANETKIT_API PlanetKitCall : public Base {
     public:
+
         /**
          * Accepts an incoming call.
          * @param bPreparation If this value is true, the callee can delay connection until it calls FinishPreparation().
@@ -47,12 +82,14 @@ namespace PlanetKit {
          *  - [Preparation guide]( @see https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status ) <br>
          *  - [CallStartMessage guide]( @see https://docs.lineplanet.me/windows/extended-functions/call-start-message ) <br>
          */
-        virtual void AcceptCall(bool bPreparation, CallStartMessageOptional pCallStartMessage = NullOptional, EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME, bool bRecordOnCloud = false) = 0;
+        virtual void AcceptCall(bool bPreparation, CallStartMessagePtr pCallStartMessage = CallStartMessagePtr(nullptr), EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME, bool bRecordOnCloud = false) = 0;
+
 
         /**
         * Ends an active/verified call.
         */
         virtual void EndCall() = 0;
+
 
         /**
          * Ends an active/verified call.
@@ -74,6 +111,7 @@ namespace PlanetKit {
         */
         virtual bool FinishPreparation() = 0;
 
+
         /**
         * Gets the current call state.
         * @return ECallState
@@ -87,7 +125,7 @@ namespace PlanetKit {
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool MuteMyAudio(bool bMute, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool MuteMyAudio(bool bMute, void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
         * Checks whether the local user's audio is muted.
@@ -129,7 +167,21 @@ namespace PlanetKit {
         * @param pCallEvent.
         * @return true on success.
         */
-        virtual bool RegisterCallEvent(ICallEventPtr pCallEvent) = 0;
+        virtual bool RegisterCallEvent(ICallEvent *pCallEvent) = 0;
+
+        /**
+        * Set audio input device used in the call. Pass nullptr to remove audio device from call.
+        * @param pDevice Audio input device.
+        * @return true on success
+        */
+        virtual bool SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
+
+        /**
+        * Set audio output device used in the call. Pass nullptr to remove audio device from call.
+        * @param pDevice Audio output device.
+        * @return true on success
+        */
+        virtual bool SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
 
         /**
          * Sends short data to the peer.<br>
@@ -257,17 +309,17 @@ namespace PlanetKit {
         /**
         * Puts reference audio data for acoustic echo cancellation.
         * If PlanetKitCall::StartUserAcousticEchoCancellerReference() is called, the user must provide reference audio data for the AEC feature using this method.
-        * @param sAudioData Reference audio data
+        * @param pAudioData Reference audio data
         * @return Size of audio reference data written in bytes
         */
-        virtual int PutUserAcousticEchoCancellerReference(const SAudioData& sAudioData) = 0;
+        virtual int PutUserAcousticEchoCancellerReference(const SAudioData* pAudioData) = 0;
 
         /**
          * Starts AEC reference data.
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          */
-        virtual bool StartUserAcousticEchoCancellerReference(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool StartUserAcousticEchoCancellerReference(void *pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Stops AEC reference data.
@@ -278,7 +330,7 @@ namespace PlanetKit {
 
         // For debug purposes.
         // Internal use only.
-        virtual int DebugMonitoringInfo(char* szBuffer, size_t nBufferSize) = 0;
+        virtual int DebugMonitoringInfo(char *szBuffer, size_t nBufferSize) = 0;
 
         /**
          * Makes an outbound data session.
@@ -289,7 +341,7 @@ namespace PlanetKit {
          * @return true on successful function call. Must check the result.
          */
         virtual bool MakeOutboundDataSession(int nStreamId, EDataSessionType eType,
-            NULLABLE void* pResultUserData, IOutboundDataSessionHandlerPtr pDataSessionHandler
+            NULLABLE void* pResultUserData, IOutboundDataSessionHandler* pDataSessionHandler
             ) = 0;
 
         /**
@@ -299,7 +351,7 @@ namespace PlanetKit {
          * @param pDataSessionHandler Specifies the callback handler that is called when receiving data or when an exception occurs.
          * @return true on successful function call. Must check the result.
          */
-        virtual bool MakeInboundDataSession(int nStreamId, NULLABLE void* pResultUserData, IInboundDataSessionHandlerPtr pDataSessionHandler) = 0;
+        virtual bool MakeInboundDataSession(int nStreamId, NULLABLE void* pResultUserData, IInboundDataSessionHandler* pDataSessionHandler) = 0;
 
         /**
          * Gets the existing outbound data session.
@@ -357,28 +409,28 @@ namespace PlanetKit {
         * @param pReceiver Audio receiver to register.
         * @return true on success
         */
-        virtual bool RegisterMyAudioReceiver(ICallAudioReceiverPtr pReceiver) = 0;
+        virtual bool RegisterMyAudioReceiver(ICallAudioReceiver *pReceiver) = 0;
 
         /**
         * Registers the peer's audio receiver to the call.
         * @param pReceiver Audio receiver to register.
         * @return true on success
         */
-        virtual bool RegisterPeerAudioReceiver(ICallAudioReceiverPtr pReceiver) = 0;
+        virtual bool RegisterPeerAudioReceiver(ICallAudioReceiver *pReceiver) = 0;
 
         /**
         * Deregisters the local user's audio receiver from the call.
         * @param pReceiver Audio receiver to deregister.
         * @return true on success
         */
-        virtual bool DeregisterMyAudioReceiver(ICallAudioReceiverPtr pReceiver) = 0;
+        virtual bool DeregisterMyAudioReceiver(ICallAudioReceiver *pReceiver) = 0;
 
         /**
         * Deregisters the peer's audio receiver from the call.
         * @param pReceiver Audio receiver to deregister.
         * @return true on success
         */
-        virtual bool DeregisterPeerAudioReceiver(ICallAudioReceiverPtr pReceiver) = 0;
+        virtual bool DeregisterPeerAudioReceiver(ICallAudioReceiver *pReceiver) = 0;
 
         /**
          * Gets an instance of MyMediaStatus.
@@ -401,7 +453,7 @@ namespace PlanetKit {
          *  - Returns true if the local user's video frame receiver is successfully added.<br>
          *  - Returns false if the local user's video frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddMyVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Clears all of the local user's video views and video frame receivers that are currently stored.
@@ -424,7 +476,7 @@ namespace PlanetKit {
          *  - Returns true if the local user's video frame receiver is successfully removed.<br>
          *  - Returns false if the local user's video frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemoveMyVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool RemoveMyVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Adds a window handle to render a peer's video view.
@@ -442,7 +494,7 @@ namespace PlanetKit {
          *  - Returns true if the peer's video frame receiver is successfully added.<br>
          *  - Returns false if the peer's video frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddPeerVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Clears all of the peer's video views and video frame receivers that are currently stored.
@@ -465,7 +517,7 @@ namespace PlanetKit {
          *  - Returns true if the peer's frame receiver is successfully removed.<br>
          *  - Returns false if the peer's video frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemovePeerVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool RemovePeerVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Adds a window handle to render the local user's screen share view.
@@ -483,7 +535,7 @@ namespace PlanetKit {
          *  - Returns true if the local user's screen share frame receiver is successfully added.<br>
          *  - Returns false if the local user's screen share frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddMyScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Clears all of the local user's screen share views and screen share frame receivers that are currently stored.
@@ -506,7 +558,7 @@ namespace PlanetKit {
          *  - Returns true if the local user's screen share frame receiver is successfully removed.<br>
          *  - Returns false if the local user's screen share frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemoveMyScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool RemoveMyScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Adds a window handle to render a peer's screen share view.
@@ -524,7 +576,7 @@ namespace PlanetKit {
          *  - Returns true if the peer's screen share frame receiver is successfully added.<br>
          *  - Returns false if the peer's screen share frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddPeerScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Clears all of the peer's screen share views and screen share frame receivers that are currently stored.
@@ -547,7 +599,7 @@ namespace PlanetKit {
          *  - Returns true if the peer's screen share frame receiver view is successfully removed.<br>
          *  - Returns false if the peer's screen share frame receiver does not exist or if it fails to remove the frame receiver.
          */
-        virtual bool RemovePeerScreenShareVideoReceiver(IVideoReceiverPtr pReceiver) = 0;
+        virtual bool RemovePeerScreenShareVideoReceiver(IVideoReceiver* pReceiver) = 0;
 
         /**
          * Enables hooking of the local user's microphone audio.
@@ -559,7 +611,7 @@ namespace PlanetKit {
          *  - Audio data frames sent to the peer can be received through pAudioHook.<br>
          *  - The audio data frames can be modified.
          */
-        virtual bool EnableHookMyAudio(IAudioHookPtr pAudioHook, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool EnableHookMyAudio(IPlanetKitAudioHook* pAudioHook, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
 
         /**
          * Disables hooking of the local user's microphone audio
@@ -575,8 +627,8 @@ namespace PlanetKit {
          * @return true on success
          * @remark
          *  - To send the modified audio frame data to the peer, you must call the PutHookedMyAudioBack API.<br>
-         *  - Changing the audio data delivered through the parameter of IAudioHook::OnHooked alone does not alter the data sent to the peer.
+         *  - Changing the audio data delivered through the parameter of IPlanetKitAudioHook::OnHooked alone does not alter the data sent to the peer.
          */
-        virtual bool PutHookedMyAudioBack(HookedAudioPtr pHookedAudio) = 0;
+        virtual bool PutHookedMyAudioBack(PlanetKitHookedAudioPtr pHookedAudio) = 0;
     };
 }
