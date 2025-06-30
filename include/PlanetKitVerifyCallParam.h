@@ -14,20 +14,20 @@
 
 #pragma once
 
-#include "PlanetKitCCParam.h"
+#include "PlanetKitCcParam.h"
 #include "PlanetKitVideoCommon.h"
+#include "PlanetKitTypes.h"
 #include "IPlanetKitCallEvent.h"
 
 namespace PlanetKit
 {
-    class PLANETKIT_API VerifyCallParam;
-    typedef SharedPtr<VerifyCallParam> VerifyCallParamPtr;
+    template class PLANETKIT_API AutoPtr<VerifyCallParam>;
+    typedef AutoPtr<VerifyCallParam> VerifyCallParamPtr;
 
     /// Call parameter for VerifyCall API
-    class PLANETKIT_API VerifyCallParam {
+    class PLANETKIT_API VerifyCallParam : public Base
+    {
     public:
-        virtual ~VerifyCallParam() { }
-
         /**
          * Creates CallParam for using PlanetKitManager::VerifyCall with ccParam.
          * @remark
@@ -69,12 +69,18 @@ namespace PlanetKit
          */
         virtual const WString& GetEndTonePath() = 0;
 
-        virtual ICallEventPtr CallEvent() = 0;
+        virtual ICallEvent* CallEvent() = 0;
+
+        /**
+         * Gets the flag value of 'ResponseOnVideoEnable'.
+         * @see EResponseOnVideoEnable
+         */
+        virtual EResponseOnVideoEnable ResponseOnVideoEnable() = 0;
 
         /**
          * Gets the video receiving capability.
          */
-        virtual const VideoCapabilityOptional RecvVideoCapability() = 0;
+        virtual const SVideoCapability& RecvVideoCapability() = 0;
 
         /// Gets whether to allow making a 1-to-1 call even when PlanetKit can't start microphone.
         virtual bool IsAllowCallWithoutMic() = 0;
@@ -113,7 +119,13 @@ namespace PlanetKit
         /**
          * Sets the ICallEvent listener class.
          */
-        virtual void SetCallEvent(ICallEventPtr pEvent) = 0;
+        virtual void SetCallEvent(ICallEvent* pEvent) = 0;
+
+        /**
+         * Sets the flag value of 'ResponseOnVideoEnable'.
+         * @see EResponseOnVideoEnable
+         */
+        virtual void SetResponseOnVideoEnable(EResponseOnVideoEnable eEnable) = 0;
 
         /**
          * Sets the video receiving capability.
@@ -126,8 +138,14 @@ namespace PlanetKit
         /// Checks whether the media type is a video call.
         virtual bool IsVideoCall() = 0;
 
+        // ConferenceParam does not add a reference to AudioDevice/VideoCapturer.
+        /// Gets the audio input device.
+        virtual AudioDeviceOptional GetAudioInputDevice() = 0;
+        /// Gets the audio output device.
+        virtual AudioDeviceOptional GetAudioOutputDevice() = 0;
+
         /// Gets the video sending capability.
-        virtual const VideoCapabilityOptional SendVideoCapability() = 0;
+        virtual const SVideoCapability& SendVideoCapability() = 0;
 
         /// Gets the maximum link bandwidth in kbps for sending.
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
@@ -147,6 +165,13 @@ namespace PlanetKit
 
         /// Checks whether statistics are used.
         virtual bool EnableStatistics() = 0;
+
+        // CallInitParam does not add a reference to AudioDevice/VideoCapturer.
+        /// Sets the audio input device.
+        virtual void SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
+
+        /// Sets the audio output device.
+        virtual void SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
 
         /// Sets the video sending capability.
         virtual void SetSendVideoCapability(const SVideoCapability& sCapa) = 0;
@@ -189,4 +214,7 @@ namespace PlanetKit
          */
         virtual bool IsPlayEndtoneRegardlessOfCallState() = 0;
     };
+
+    template class PLANETKIT_API AutoPtr<VerifyCallParam>;
+    typedef AutoPtr<VerifyCallParam> VerifyCallParamPtr;
 }

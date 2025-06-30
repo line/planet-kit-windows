@@ -14,28 +14,178 @@
 
 #pragma once
 
-#include "PlanetKitStatisticsAudioSend.h"
-#include "PlanetKitStatisticsAudioRecv.h"
+#include "PlanetKit.h"
+#include "PlanetKitUserId.h"
+#include "PlanetKitTypes.h"
 
-#include "PlanetKitStatisticsVideoSend.h"
-#include "PlanetKitStatisticsVideoRecv.h"
+namespace PlanetKit
+{
+    class PLANETKIT_API Statistics;
+    class PLANETKIT_API StatisticsVideoRecv;
+    class PLANETKIT_API StatisticsVideoSend;
 
-#include "PlanetKitStatisticsScreenShareSend.h"
-#include "PlanetKitStatisticsScreenShareRecv.h"
+    class PLANETKIT_API StatisticsScreenShareRecv;
+    class PLANETKIT_API StatisticsScreenShareSend;
+
+    template class PLANETKIT_API AutoPtr<Statistics>;
+    typedef AutoPtr<Statistics> StatisticsPtr;
+
+    template class PLANETKIT_API Optional<StatisticsPtr>;
+    typedef Optional<StatisticsPtr> StatisticsOptional;
+
+    template class PLANETKIT_API AutoPtr<StatisticsVideoRecv>;
+    typedef AutoPtr<StatisticsVideoRecv> StatisticsVideoRecvPtr;
+
+    template class PLANETKIT_API Array<StatisticsVideoRecvPtr>;
+    typedef Array<StatisticsVideoRecvPtr> StatisticsVideoRecvArray;
 
 
-namespace PlanetKit {
+    template class PLANETKIT_API Optional<StatisticsVideoSend*>;
+    typedef Optional<StatisticsVideoSend*> StatisticsVideoSendOptional;
+
+    template class PLANETKIT_API AutoPtr<StatisticsScreenShareRecv>;
+    typedef AutoPtr<StatisticsScreenShareRecv> StatisticsScreenShareRecvPtr;
+
+    template class PLANETKIT_API Array<StatisticsScreenShareRecvPtr>;
+    typedef Array<StatisticsScreenShareRecvPtr> StatisticsScreenShareRecvArray;
+
+    template class PLANETKIT_API Optional<StatisticsScreenShareSend*>;
+    typedef Optional<StatisticsScreenShareSend*> StatisticsScreenShareSendOptional;
+
+
+    typedef void StatisticsScreenSharingSendOptional;
+    typedef void StatisticsScreenSharingRecvArray;
+
+    /**
+     * @brief Network statistics information
+     */
+    class PLANETKIT_API StatisticsNetwork
+    {
+    public :
+        /// Loss Rate
+        virtual FloatOptional LossRate() = 0;
+
+        /// Jitter ms
+        virtual UIntOptional JitterMS() = 0;
+
+        /// Latency ms
+        virtual UIntOptional LatencyMS() = 0;
+
+        /// Bits per second
+        virtual unsigned int BPS() = 0;
+    };
+
+    /**
+     * @brief Video statistics information
+     */
+    class PLANETKIT_API StatisticsVideo
+    {
+    public :
+        /// Width of the screen
+        virtual unsigned short Width() = 0;
+        /// Height of the screen
+        virtual unsigned short Height() = 0;
+        /// Frames per second
+        virtual unsigned short FPS() = 0;
+    };
+
+    /**
+     * @brief Outgoing audio statistics information
+     */
+    class PLANETKIT_API StatisticsAudioSend {
+    public :
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+    };
+
+    /**
+     * @brief Incoming audio statistics information
+     */
+    class PLANETKIT_API StatisticsAudioRecv
+    {
+    public:
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+    };
+
+    /**
+     * @brief Outgoing video statistics information
+     */
+    class PLANETKIT_API StatisticsVideoSend
+    {
+    public :
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+        /// Video statistics information
+        virtual StatisticsVideo* Video() = 0;
+    };
+
+    /**
+     * @brief Incoming video statistics information
+     */
+    class PLANETKIT_API StatisticsVideoRecv : public Base {
+    public :
+        /// Gets the peer's ID.
+        virtual UserIdPtr GetPeerID() = 0;
+
+        /**
+         * Gets the subscribed subgroup name.
+         * @return
+         *  - The subgroup name string which is encoded in UTF-16 and null-terminated.<br>
+         *  - It also can be NullOptional and it means 'main room'.
+         */
+        virtual const WStringOptional& GetSubgroupName() = 0;
+
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+        /// Video statistics information
+        virtual StatisticsVideo* Video() = 0;
+    };
+
+    /**
+     * @brief Outgoing screen share statistics information
+     */
+    class PLANETKIT_API StatisticsScreenShareSend
+    {
+    public:
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+        /// Video statistics information
+        virtual StatisticsVideo* Video() = 0;
+    };
+
+    /**
+     * @brief Incoming screen share statistics information
+     */
+    class PLANETKIT_API StatisticsScreenShareRecv : public Base {
+    public:
+        /**
+         * Gets the subscribed subgroup name.
+         * @return
+         *  - The subgroup name string which is encoded in UTF-16 and null-terminated.<br>
+         *  - It also can be NullOptional and it means 'main room'.
+         */
+        virtual const WStringOptional& GetSubgroupName() = 0;
+
+        /// Gets the peer's ID.
+        virtual UserIdPtr GetPeerID() = 0;
+
+        /// Network statistics information
+        virtual StatisticsNetwork* Network() = 0;
+        /// Video statistics information
+        virtual StatisticsVideo* Video() = 0;
+    };
+
     /**
      * @brief Statistics information
      */
-    class PLANETKIT_API Statistics {
+    class PLANETKIT_API Statistics : public Base
+    {
     public :
-        virtual ~Statistics() { }
-
         /// Outgoing audio statistics information
-        virtual StatisticsAudioSendPtr AudioSend() = 0;
+        virtual StatisticsAudioSend* AudioSend() = 0;
         /// Incoming audio statistics information
-        virtual StatisticsAudioRecvPtr AudioRecv() = 0;
+        virtual StatisticsAudioRecv* AudioRecv() = 0;
         
         /**
          * @brief Gets the outgoing video statistics information.
@@ -58,8 +208,4 @@ namespace PlanetKit {
         /// Gets statistics of incoming screen share as an array.
         virtual const StatisticsScreenShareRecvArray& GetScreenShareRecv() = 0;
     };
-
-    typedef SharedPtr<Statistics> StatisticsPtr;
-    typedef Optional<StatisticsPtr> StatisticsOptional;
-
 };

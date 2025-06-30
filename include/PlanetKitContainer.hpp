@@ -14,14 +14,15 @@
 
 #pragma once
 
-#include "PlanetKitPredefine.h"
+#include <string.h>
 
-namespace PlanetKit {
+namespace PlanetKit
+{
     /**
      * Array class.
      */
     template <class T>
-    class PLANETKIT_API Array {
+    class Array {
     public:
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
         Array() = default;

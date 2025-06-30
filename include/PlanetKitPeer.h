@@ -15,8 +15,8 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitTypes.h"
 #include "PlanetKitUserId.h"
-#include "PlanetKitPeerDefine.h"
 
 #include "PlanetKitPeerControl.h"
 #include "PlanetKitHoldStatus.h"
@@ -24,6 +24,32 @@
 #include "PlanetKitSharedContents.h"
 
 namespace PlanetKit {
+    class PLANETKIT_API SharedContentsData : public Base {
+    public:
+        SharedContentsData(const void * pData, unsigned int unDataSize, unsigned int unElapsedAfterSetMsec);
+        ~SharedContentsData();
+
+        /**
+         * Gets contents data.
+         */
+        const ByteArray& GetData();
+
+        /**
+         * Gets elapsed seconds after setted.
+         */
+        unsigned int GetElapsedSeconds();
+
+        void            *m_pData;
+        unsigned int     m_unDataSize;
+        unsigned int     m_unElapsedAfterSetMsec;
+        
+        ULONG AddRef();
+        ULONG Release();
+
+    private:
+        volatile ULONG m_ulRef = 1;
+    };
+
     /**
      * Peer information.
      */
@@ -56,7 +82,7 @@ namespace PlanetKit {
         virtual bool IsAudioMuted() = 0;
 
         /// Gets the hold status on the call.
-        virtual const HoldStatus& GetHoldStatus() = 0;
+        virtual HoldStatus GetHoldStatus() = 0;
 
         /**
          * Gets the subscribed subgroup name as an array class.
@@ -83,8 +109,9 @@ namespace PlanetKit {
 
         /**
          * Gets the peer's audio volume value.
+         * @param szSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated but it can be `NullOptional` and it means `MainRoom`.
          */
-        virtual VolumeResult GetAudioVolumeLevelSetting() = 0;
+        virtual VolumeResult GetAudioVolumeLevelSetting(const WStringOptional& strSubgroupName = NullOptional) = 0;
 
         /**
          * Gets the peer's video status.

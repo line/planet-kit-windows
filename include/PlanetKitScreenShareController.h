@@ -17,15 +17,12 @@
 
 #include "PlanetKitScreenShareInfo.h"
 #include "PlanetKitVideoRender.h"
-#include "IPlanetKitVideoCapturerEvent.h"
 
 namespace PlanetKit
 {
     /// The class for capturing with a screen share.
-    class PLANETKIT_API ScreenShareController {
+    class PLANETKIT_API ScreenShareController : virtual public Base {
     public:
-        virtual ~ScreenShareController() { }
-
         /**
          * Gets the information of the targets for screen share.
          * @param arrScreenShare The list of available screen share information.
@@ -63,7 +60,7 @@ namespace PlanetKit
          * @return
          *  - Returns true if successful.
          */
-        virtual bool RegisterCapturerEvent(IVideoCapturerEventPtr pDelegate) = 0;
+        virtual bool RegisterCapturerEvent(IVideoCapturerEvent* pDelegate) = 0;
 
         /**
          * Deregisters an event to receive in case the status of the shared window changes.
@@ -89,7 +86,7 @@ namespace PlanetKit
          *  - This intercepts the frame captured through the camera before delivering it to the counterpart.
          *  - If necessary, you can change the frame to be delivered to the counterpart.
          */
-        virtual bool RegisterVideoInterceptor(IVideoInterceptorPtr pInterceptor) = 0;
+        virtual bool RegisterVideoInterceptor(IVideoInterceptor* pInterceptor) = 0;
 
         /**
          * Deregisters the video interceptor.
@@ -128,5 +125,6 @@ namespace PlanetKit
         virtual bool IsPostingFrameAvailable(UINT64 ull64tick) = 0;
     };
 
-    typedef SharedPtr<ScreenShareController> ScreenShareControllerPtr;
+    template class PLANETKIT_API AutoPtr<ScreenShareController>;
+    typedef AutoPtr<ScreenShareController> ScreenShareControllerPtr;
 }

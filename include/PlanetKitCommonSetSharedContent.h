@@ -15,14 +15,13 @@
 #pragma once
 
 #include "PlanetKit.h"
+#include "PlanetKitTypes.h"
 
 #include "PlanetKitPeer.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API CommonSetSharedContent {
+    class PLANETKIT_API CommonSetSharedContent : public Base {
     public:
-        virtual ~CommonSetSharedContent() { }
-
         /**
          * Gets the peer's ID.
          */
@@ -38,7 +37,4 @@ namespace PlanetKit {
         /// Size of the shared data
         virtual unsigned int DataSize() = 0;
     };
-
-    typedef SharedPtr<CommonSetSharedContent> CommonSetSharedContentPtr;
-    typedef Array<CommonSetSharedContentPtr> CommonSetSharedContentArray;
 };

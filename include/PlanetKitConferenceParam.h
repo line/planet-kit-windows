@@ -17,17 +17,19 @@
 #include "PlanetKit.h"
 #include "PlanetKitVideoCommon.h"
 #include "PlanetKitAudioCommon.h"
+#include "PlanetKitAudioDevice.h"
 
 #include "IPlanetKitConferenceEvent.h"
 
-namespace PlanetKit {
+namespace PlanetKit
+{
     class PLANETKIT_API ConferenceParam;
-    typedef SharedPtr<ConferenceParam> ConferenceParamPtr;
 
-    class PLANETKIT_API ConferenceParam {
+    template class PLANETKIT_API AutoPtr<ConferenceParam>;
+    typedef AutoPtr<ConferenceParam> ConferenceParamPtr;
+
+    class PLANETKIT_API ConferenceParam : public Base {
     public:
-        virtual ~ConferenceParam() { }
-
         /**
          * Creates an instance of the ConferenceParam class with an API key.
          * @param pMyID Local user's ID and service ID
@@ -78,8 +80,11 @@ namespace PlanetKit {
         /**
          * Gets the instance of the IConferenceEvent listener class.
          */
-        virtual IConferenceEventPtr ConferenceEvent() = 0;
+        virtual IConferenceEvent* ConferenceEvent() = 0;
         
+        /// Checks the hardware video codec.
+        virtual bool UseRxHWVidCodec() = 0;
+
         /// Gets the "Allow Conference Without Mic" flag that you set.
         virtual bool IsAllowConferenceWithoutMic() = 0;
 
@@ -115,8 +120,11 @@ namespace PlanetKit {
         virtual void SetRoomServiceId(const WString& strRoomServiceId) = 0;
 
         /// Sets a conference callback event instance.
-        virtual void SetConferenceEvent(IConferenceEventPtr pEvent) = 0;
+        virtual void SetConferenceEvent(IConferenceEvent* pEvent) = 0;
         
+        /// Sets the flag of using hardware video codec.
+        virtual void SetUseRxHWVidCodec(bool bUseRxHWVidCodec) = 0;
+
         /**
          * Sets the "Allow Conference Without Mic" flag.<br>
          * Setting this flag to true enables joining the conference when PlanetKit can't start the microphone.
@@ -161,10 +169,16 @@ namespace PlanetKit {
 
         /// Checks whether the media type is a video call.
         virtual bool IsVideoCall() = 0;
-                
+
+        // ConferenceParam does not add a reference to AudioDevice/VideoCapturer.
+        /// Gets the audio input device.
+        virtual AudioDeviceOptional GetAudioInputDevice() = 0;
+        /// Gets the audio output device.
+        virtual AudioDeviceOptional GetAudioOutputDevice() = 0;
+        
         /// Gets the video sending capability.
-        virtual const VideoCapabilityOptional SendVideoCapability() = 0;
-        /// Gets the maximum link bandwidth in kbps for sending.
+        virtual const SVideoCapability& SendVideoCapability() = 0;
+                /// Gets the maximum link bandwidth in kbps for sending.
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
         /// Gets the maximum link bandwidth in kbps for receiving.
         virtual unsigned int GetMaxReceiveLinkBandwidth() = 0;
@@ -182,6 +196,13 @@ namespace PlanetKit {
 
         /// Checks whether statistics are used.
         virtual bool EnableStatistics() = 0;
+
+        // CallInitParam does not add a reference to AudioDevice/VideoCapturer.
+        /// Sets the audio input device.
+        virtual void SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
+
+        /// Sets the audio output device.
+        virtual void SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
 
         /// Sets the video sending capability.
         virtual void SetSendVideoCapability(const SVideoCapability& sCapa) = 0;
@@ -238,5 +259,8 @@ namespace PlanetKit {
          * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
          */
         virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
+    protected:
+        ConferenceParam() {}
+        virtual ~ConferenceParam() {}
     };
 }

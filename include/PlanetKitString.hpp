@@ -17,8 +17,6 @@
 #include <string.h>
 #include <assert.h>
 
-#include "PlanetKitPredefine.h"
-
 #pragma warning(push)
 
 // Disable warning: multiple copy constructors specified
@@ -264,6 +262,8 @@ namespace PlanetKit {
          * Compare between string
          */
         bool operator==(const wchar_t* rhs) const {
+            assert(!(rhs == nullptr));
+
             if (m_nSize == 0 && rhs == nullptr) {
                 return true;
             }
@@ -416,15 +416,11 @@ namespace PlanetKit {
              * Copy string
              */
             void Copy(const wchar_t* src) {
-                if (*this == src) {
-                    return;
-                }
-
                 Clear();
 
                 assert(!(src == nullptr));
 
-                if (src && wcslen(src) > 0) {
+                if (src) {
                     m_nSize = wcslen(src);
 
                     if (m_nSize > 0) {
@@ -468,16 +464,20 @@ namespace PlanetKit {
             }
 
             void Clear() {
-                if (m_pData) {
+                if (m_pData && m_nSize) {
                     delete[] m_pData;
-                    m_pData = nullptr;
-                    m_nSize = 0;
                 }
+                else if (m_pData) {
+                    delete m_pData;
+                }
+
+                m_pData = nullptr;
+                m_nSize = 0;
             }
 
             void Initialize() {
-                m_pData = new wchar_t[1];
-                m_pData[0] = L'\0';
+                m_pData = new wchar_t;
+                *m_pData = L'\0';
                 m_nSize = 0;
             }
 

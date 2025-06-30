@@ -31,7 +31,7 @@ namespace PlanetKit
     template class PLANETKIT_API Array<PeerVideoStatusPtr>;
     typedef Array<PeerVideoStatusPtr> PeerVideoStatusArray;
 
-    struct PLANETKIT_API VideoStatus {
+    struct VideoStatus {
         EVideoState eVideoState;
         EVideoPauseReason eVideoPauseReason = EVideoPauseReason::PLNK_VIDEO_PAUSE_REASON_UNDEFINED;
     };

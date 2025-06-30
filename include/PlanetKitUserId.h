@@ -15,19 +15,17 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitSharedPtr.hpp"
 #include "PlanetKitCommonTypes.h"
-
 
 namespace PlanetKit {
     class PLANETKIT_API UserId;
-    typedef SharedPtr<UserId> UserIdPtr;
+
+    template class PLANETKIT_API AutoPtr<UserId>;
+    typedef AutoPtr<UserId> UserIdPtr;
 
     /// User identifier information class
-    class PLANETKIT_API UserId {
+    class PLANETKIT_API UserId : public Base {
     public :
-        virtual ~UserId() { }
-
         /**
          * Creates an instance of the UserId class.
          * @param strID User ID string, which is encoded in UTF-16 and null-terminated.

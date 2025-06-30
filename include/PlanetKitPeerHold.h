@@ -18,15 +18,18 @@
 
 #include "PlanetKitPeer.h"
 
-namespace PlanetKit {
+namespace PlanetKit
+{
     class PLANETKIT_API PeerHold;
-    typedef SharedPtr<PeerHold> PeerHoldPtr;
+
+    template class PLANETKIT_API AutoPtr<PeerHold>;
+    typedef AutoPtr<PeerHold> PeerHoldPtr;
+
+    template class PLANETKIT_API Array<PeerHoldPtr>;
     typedef Array<PeerHoldPtr> PeerHoldArray;
 
     class PLANETKIT_API PeerHold : public Base {
     public:
-        virtual ~PeerHold() { }
-
         /// Gets the user ID.
         virtual PeerPtr GetPeer() = 0;
         /// Gets the hold Reason.
