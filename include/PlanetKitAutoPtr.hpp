@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <Windows.h>
+#include "PlanetKitPredefine.h"
 
 namespace PlanetKit
 {
@@ -22,7 +22,7 @@ namespace PlanetKit
      * PlanetKit reference automation pointer class.
      */
     template <class T>
-    class AutoPtr {
+    class PLANETKIT_API AutoPtr {
     public:
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
