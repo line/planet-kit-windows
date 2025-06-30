@@ -14,21 +14,20 @@
 
 #pragma once
 
-/*! \file */
-
+#include "PlanetKit.h"
+#include "PlanetKitVideoDefine.h"
 #include "PlanetKitUserId.h"
+#include "PlanetKitVideoFrame.h"
+#include "IPlanetKitVideoInterceptor.h"
 
-namespace PlanetKit 
-{
-    class PLANETKIT_API VideoSource;
-
+namespace PlanetKit  {
     typedef HWND WindowHandle;
+    typedef void* ScreenShareID; //HWND
 
     /**
      * Enumeration for the result of capturer APIs
      */
-    enum ECapturerResult
-    {
+    enum ECapturerResult {
         /// Successfully started the capturer.
         ECapturerResult_Success = 0,
         /// An unknown error occurred.
@@ -115,7 +114,7 @@ namespace PlanetKit
         EVideoControlResult_PreviewReceiverIsInvalid,
         /**
          * Failed because no camera is currently selected. 
-         * Please call CameraController::SelectCamera() to select a camera first.
+         * Please call CameraController::ChangeCamera() to select a camera first.
          */
         EVideoControlResult_CameraIsNotSelected,
         /// Not used.
@@ -125,8 +124,7 @@ namespace PlanetKit
     /**
      * @brief Video resolution that PlanetKit can support.
      */
-    typedef enum EVideoResolution
-    {
+    typedef enum EVideoResolution {
         /// Unknown resolution
         PLNK_VIDEO_RESOLUTION_UNKNOWN = -1, 
         /// Recommended resolution
@@ -147,10 +145,23 @@ namespace PlanetKit
     }EVideoResolution;
 
     /**
+     * Video resolution capability.
+     */
+    typedef enum EVideoResolutionCapability {
+        /// QVGA resolution, max width and height (320, 240)
+        PLNK_VIDEO_RESOLUTION_CAPABILITY_QVGA = 1,
+        /// VGA resolution, max width and height (640, 480)
+        PLNK_VIDEO_RESOLUTION_CAPABILITY_VGA = 2,
+        /// HD resolution, max width and height (1280, 960)
+        PLNK_VIDEO_RESOLUTION_CAPABILITY_HD = 3,
+        /// FHD resolution, max width and height (1920, 1080)
+        PLNK_VIDEO_RESOLUTION_CAPABILITY_FHD = 4,
+    }  EVideoResolutionCapability;
+
+    /**
      * Camera resolution that PlanetKit can support.
      */
-    typedef enum ECameraResolution
-    {
+    typedef enum ECameraResolution {
         /// VGA resolution (640:480)
         PLNK_CAMERA_RESOLUTION_VGA, 
         /// VGA 16:9 resolution (640:360)
@@ -171,8 +182,7 @@ namespace PlanetKit
     /**
      * Camera FPS that PlanetKit can support.
      */
-    typedef enum EVideoCaptureFps
-    {
+    typedef enum EVideoCaptureFps {
         /// Default
         PLNK_VIDEO_CAPTURE_FPS_DEFAULT = 0, 
         /// 5 fps
@@ -192,8 +202,7 @@ namespace PlanetKit
     /**
      * Video FPS that PlanetKit can support.
      */
-    typedef enum EVideoFps 
-    {
+    typedef enum EVideoFps {
         /// Undefined
         PLNK_VIDEO_FPS_UNDEFINED = 0,
         /// 5 fps
@@ -220,8 +229,7 @@ namespace PlanetKit
     /**
      * Capture media type
      */
-    typedef enum ECapturerMediaType
-    {
+    typedef enum ECapturerMediaType {
         /// Unknown
         PLNK_CAPTURER_TYPE_Unknown = 0,
         /// I420
@@ -379,24 +387,9 @@ namespace PlanetKit
     } EVideoMirrorType;
 
     /**
-     * Rotation of video
-     */
-    typedef enum EVideoRotation {
-        /// No rotation
-        PLNK_VIDEO_ROTATION_0 = 0,
-        /// Rotation by 90 degrees
-        PLNK_VIDEO_ROTATION_90 = 1,
-        /// Rotation by 180 degrees
-        PLNK_VIDEO_ROTATION_180 = 2,
-        /// Rotation by 270 degrees
-        PLNK_VIDEO_ROTATION_270 = 3
-    }EVideoRotation;
-
-    /**
      * Rendered video ratio mode
      */
-    typedef enum EVideoAspectRatioMode
-    {
+    typedef enum EVideoAspectRatioMode {
         /// Fills the window and ignores the aspect ratio.
         PLNK_VIDEO_FILL_WINDOW,
         /// Keeps the aspect ratio and fits the window.
@@ -408,8 +401,7 @@ namespace PlanetKit
     }EVideoAspectRatioMode;
 
     /// Type to use when opening the camera.
-    typedef enum ECameraInfoType
-    {
+    typedef enum ECameraInfoType {
         /// Indicates the normal type. When opening the camera, it uses the optimal specification that can be supported.
         PLNK_CAMERA_INFO_NORMAL = 0,
         /// Indicates a type that uses only the MJPEG type. Opening the camera fails if the device does not support MJPEG.
@@ -427,21 +419,18 @@ namespace PlanetKit
     /**
      * Video capability
      */
-    typedef struct SVideoCapability
-    {
-        /// Video max resolution
-        EVideoResolution eMaxResolution;
-        /// Video max FPS
+    struct PLANETKIT_API SVideoCapability {
+        /// Video max resolution capability.
+        EVideoResolutionCapability eMaxVideoResolutionCapability;
+        /// Video max FPS.
         EVideoFps eMaxFps;
-        /// Preferred HW codec
-        bool bPreferHWCodec;
-    } SVideoCapability;
+    };
+    typedef Optional<SVideoCapability> VideoCapabilityOptional;
 
     /**
      * Capturer type
      */
-    typedef enum EVideoCapturerType
-    {
+    typedef enum EVideoCapturerType {
         /// Camera
         PLNK_VID_CAPTURER_CAMERA,
         /// Screen selected for screen share
@@ -452,17 +441,34 @@ namespace PlanetKit
         PLNK_VID_CAPTURER_NO_CAPTURER,
     } EVideoCapturerType;
 
-    typedef enum EInitialMyVideoState
-    {
+    /**
+     * Virtual background type
+     */
+    typedef enum EVirtualBackgroundType {
+        /// No virtual background
+        PLNK_VIRTUAL_BACKGROUND_TYPE_NONE,
+        /// Blurred background
+        PLNK_VIRTUAL_BACKGROUND_TYPE_BLUR,
+        /// Image background
+        PLNK_VIRTUAL_BACKGROUND_TYPE_IMAGE,
+    } EVirtualBackgroundType;
+
+    typedef enum EInitialMyVideoState {
         PLNK_INITIAL_MY_VIDEO_STATE_RESUME = 0,
         PLNK_INITIAL_MY_VIDEO_STATE_PAUSE,
     }EInitialMyVideoState;
 
+    typedef Optional<EScreenShareState> EScreenShareStateOptional;
+
+    typedef struct ScreenShareStateResult {
+        EScreenShareStateOptional eScreenShareState;
+        EPeerGetFailReason ePeerGetFailReason = EPeerGetFailReason::PLNK_PEER_GET_FAIL_REASON_NONE;
+    } ScreenShareStateResult;
+
     /**
      * Result for PlanetKitConference::StopPeerVideo and PlanetKitConference::RequestPeerVideo, which is delivered by the callback API.
      */
-    typedef struct SRequestMediaResultParam
-    {
+    typedef struct SRequestMediaResultParam {
         /// Result of PlanetKitConference::StopPeerVideo or PlanetKitConference::RequestPeerVideo APIs
         bool bIsSuccess;
         /// Error code
@@ -474,8 +480,7 @@ namespace PlanetKit
     /**
      * Result for PlanetKitConference::RequestPeerVideo, which is delivered by the callback API.
      */
-    typedef struct SRequestVideoResolutionResultParam
-    {
+    typedef struct SRequestVideoResolutionResultParam {
         /// Result of PlanetKitConference::RequestPeerVideo APIs
         bool                bIsSuccess;
         /// Error code
@@ -489,127 +494,24 @@ namespace PlanetKit
     } SRequestVideoResolutionResultParam;
 
     /**
-     * Video frame information
+     * The buffer formats currently supported for virtual background in PlanetKit.
      */
-    typedef struct SVideoFrame
-    {
-        /// Pointer to the frame buffer
-        unsigned char *pbuffer;
-        /// Allocated buffer size
-        unsigned int unBufferSize;
-        /// Length (in bytes) of buffer
-        unsigned int unDataLength;
-        /// Width
-        unsigned int unWidth;
-        /// Height
-        unsigned int unHeight;
-        /// Tick
-        long long llTick;
-        /// Time stamp
-        long long llTimeStamp;
-        /// Duration
-        long long llDuration;
-        /// Rotation
-        EVideoRotation eRotation;
-
-        /// You can use this flag to check whether the frame belongs to the main room.
-        bool bSubgroupMain;
-        /// Subgroup name that can be used if bSubgroupMain flag is false
-        wchar_t szSubgroupName[PLNK_BUFFER_SIZE_512];
-    }SVideoFrame;
-
-    /// Video frame class
-    class VideoFrame : public Base
-    {
-    public :
-        /// Gets the frame buffer. (I420 buffer)
-        virtual unsigned char* GetBuffer() = 0;
-        /// Gets the allocated buffer size.
-        virtual unsigned int GetBufferSize() = 0;
-        /// Gets the length (in bytes) of the buffer.
-        virtual unsigned int GetDataLength() = 0;
-        /// Gets the frame width.
-        virtual int GetWidth() = 0;
-        /// Gets the frame height.
-        virtual int GetHeight() = 0;
-        /// Gets the frame stride.
-        virtual int GetStride() = 0;
+    enum ESupportedVirtualBackgroundFormat {
+        // BGRA
+        PLNK_SUPPORTED_VIRTUALBACKGROUND_FORMAT_BGRA = 0,
     };
-
-    template class PLANETKIT_API AutoPtr<VideoFrame>;
-    typedef AutoPtr<VideoFrame> VideoFramePtr;
-    
-    typedef  void * ScreenId;
-    typedef  void * WindowId; //HWND
-    typedef  void * ScreenShareID; //HWND
-
+  
     /**
-     * This class is provided to receive peer's video data and render it directly.
-     * @remark
-     *   You should create a custom class that inherits from this class.
-     * @see
-     *   - PlanetKitConference::RegisterMyVideoReceiver
-     *   - PlanetKitConference::RegisterPeersVideoReceiver
-     *   - PlanetKitConference::RegisterMyScreenShareReceiver
-     *   - PlanetKitConference::RegisterPeerScreenShareReceiver
-     *   - PlanetKitConference::DeregisterMyVideoReceiver
-     *   - PlanetKitConference::DeregisterPeersVideoReceiver
-     *   - PeerControl::SetReceiver
+     * Configuration that determines whether to attempt to use the hardware codec.
      */
-
-    class PLANETKIT_API IVideoReceiver {
-    public:
-        /**
-         * Called when the peer's video data is activated.
-         * @param pVideoFrame Peer's video data. You can render the peer's video with this parameter.
-         * @param szPeerId Peer's ID.
-         * @param szPeerServiceId Peer's service ID.
-         * @remark
-         * - In the case of the local user's own frame, the ID and ServiceID will be nullptr.
-         */
-        virtual void OnVideo(const SVideoFrame *pVideoFrame, UserIdPtr pUserID) = 0;
-    };
-
-    template<typename T>
-    inline T GET_VIDEO_DATA_LENGTH(const T& witdh, const T& height)
-    {
-        return (T)(witdh * height * 1.5);
-    }
-
-    /// The interface for receiving a callback when frame processing is finished.
-    class PLANETKIT_API IVideoInterceptorDelegate {
-    public:
-        /**
-         * A callback that occurs when a capture is finished.
-         * @param pVideoFrame The frame being captured.
-         * @return
-         *  - Returns true if successful.
-         */
-        virtual bool onProcessFinished(SVideoFrame* pVideoFrame) = 0;
-    };
-
-    /// The interface for receiving a callback when the status of the window in screen share changes.
-    class PLANETKIT_API IVideoInterceptor {
-    public:
-        /**
-        * Returns SVideoFrame* if a video frame is processed synchronously
-        */
-        virtual SVideoFrame* ProcessVideoFrame(SVideoFrame* pVideoFrame) = 0;
-
-        /**
-         * Registers the frame processing completion callback.
-         * @param pDelegate A callback that occurs when a capture is finished.
-         * @return
-         *  - Returns true if successful.
-         */
-        virtual bool RegisterDelegate(IVideoInterceptorDelegate* pDelegate) = 0;
-
-        /**
-         * Deregisters the frame processing completion callback.
-         * @return
-         *  - Returns true if successful.
-         */
-        virtual bool DeregisterDelegate() = 0;
-    };
-
+    typedef struct SPreferredHardwareCodec {
+        // A value that determines whether to attempt to use the hardware codec when sending video to the peer during a call.
+        bool bCallVideoSend = true;
+        // A value that determines whether to attempt to use the hardware codec when receiving video from the peer during a call.
+        bool bCallVideoReceive = true;
+        // A value that determines whether to attempt to use the hardware codec when sending video to the peer during a conference.
+        bool bConferenceVideoSend = true;
+        // A value that determines whether to attempt to use the hardware codec when receiving video from the peer during a conference.
+        bool bConferenceVideoReceive = true;
+    }SPreferredHardwareCodec;
 }

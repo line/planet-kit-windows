@@ -18,18 +18,17 @@
 #include "PlanetKitUserId.h"
 #include "PlanetKitAudioCommon.h"
 #include "PlanetKitVideoCommon.h"
-#include "PlanetKitAudioDevice.h"
 #include "PlanetKitCallStartMessage.h"
 #include "IPlanetKitCallEvent.h"
 
-namespace PlanetKit
-{
-    template class PLANETKIT_API AutoPtr<MakeCallParam>;
-    typedef AutoPtr<MakeCallParam> MakeCallParamPtr;
+namespace PlanetKit {
+    class PLANETKIT_API MakeCallParam;
+    typedef SharedPtr<MakeCallParam> MakeCallParamPtr;
 
     /// Call parameter for MakeCall API
-    class PLANETKIT_API MakeCallParam : public Base {
+    class PLANETKIT_API MakeCallParam {
     public:
+        virtual ~MakeCallParam() { }
 
         /**
          * Creates an instance of the MakeCallParam class with an access token.
@@ -144,18 +143,12 @@ namespace PlanetKit
          */
         virtual const WString& GetEndTonePath() = 0;
 
-        virtual ICallEvent* CallEvent() = 0;
-
-        /**
-         * Gets the flag value of 'ResponseOnVideoEnable'.
-         * @see EResponseOnVideoEnable
-         */
-        virtual EResponseOnVideoEnable ResponseOnVideoEnable() = 0;
-
+        virtual ICallEventPtr CallEvent() = 0;
+        
         /**
          * Gets the video receiving capability.
          */
-        virtual const SVideoCapability& RecvVideoCapability() = 0;
+        virtual const VideoCapabilityOptional RecvVideoCapability() = 0;
 
         /// Gets whether to allow making a 1-to-1 call even when PlanetKit can't start microphone.
         virtual bool IsAllowCallWithoutMic() = 0;
@@ -194,13 +187,7 @@ namespace PlanetKit
         /**
          * Sets the ICallEvent listener class.
          */
-        virtual void SetCallEvent(ICallEvent* pEvent) = 0;
-
-        /**
-         * Sets the flag value of 'ResponseOnVideoEnable'.
-         * @see EResponseOnVideoEnable
-         */
-        virtual void SetResponseOnVideoEnable(EResponseOnVideoEnable eEnable) = 0;
+        virtual void SetCallEvent(ICallEventPtr pEvent) = 0;
 
         /**
          * Sets the video receiving capability.
@@ -213,14 +200,8 @@ namespace PlanetKit
         /// Checks whether the media type is a video call.
         virtual bool IsVideoCall() = 0;
 
-        // ConferenceParam does not add a reference to AudioDevice/VideoCapturer.
-        /// Gets the audio input device.
-        virtual AudioDeviceOptional GetAudioInputDevice() = 0;
-        /// Gets the audio output device.
-        virtual AudioDeviceOptional GetAudioOutputDevice() = 0;
-
         /// Gets the video sending capability.
-        virtual const SVideoCapability& SendVideoCapability() = 0;
+        virtual const VideoCapabilityOptional SendVideoCapability() = 0;
 
         /// Gets the maximum link bandwidth in kbps for sending.
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
@@ -240,13 +221,6 @@ namespace PlanetKit
 
         /// Checks whether statistics are used.
         virtual bool EnableStatistics() = 0;
-
-        // CallInitParam does not add a reference to AudioDevice/VideoCapturer.
-        /// Sets the audio input device.
-        virtual void SetAudioInputDevice(AudioDevicePtr pDevice) = 0;
-
-        /// Sets the audio output device.
-        virtual void SetAudioOutputDevice(AudioDevicePtr pDevice) = 0;
 
         /// Sets the video sending capability.
         virtual void SetSendVideoCapability(const SVideoCapability& sCapa) = 0;
@@ -269,8 +243,13 @@ namespace PlanetKit
         /// Sets the flag for using statistics.
         virtual void SetEnableStatistics(bool bEnableStatistics) = 0;
 
-        /// Sets the audio description update callback interval (ms).
-        /// If you do not want the callback, set bUse to false.
+        /**
+         * Sets the audio description update callback interval (ms).
+         * @param bUse Determines whether the audio description callback is used. If set to false, the callback will not occur regardless of the interval setting.
+         * @param unAudioDescriptionInterval Audio description listening interval in milliseconds.
+         * @remark
+         *  - If the interval parameter (unAudioDescriptionInterval) is set to 200 or less, the interval is set to a minimum of 200 ms.
+         */
         virtual void SetAudioDescriptionInfo(bool bUse, unsigned int unAudioDescriptionInterval) = 0;
 
         /// Gets the audio description information.
@@ -299,7 +278,4 @@ namespace PlanetKit
          */
         virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
     };
-
-    template class PLANETKIT_API AutoPtr<MakeCallParam>;
-    typedef AutoPtr<MakeCallParam> MakeCallParamPtr;
 }

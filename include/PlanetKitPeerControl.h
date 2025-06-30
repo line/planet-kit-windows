@@ -15,7 +15,8 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitTypes.h"
+#include "IPlanetKitResultHandler.h"
+
 #include "PlanetKitAudioCommon.h"
 #include "PlanetKitVideoCommon.h"
 
@@ -23,64 +24,10 @@
 #include "PlanetKitCameraController.h"
 #include "PlanetKitScreenShareController.h"
 
+#include "IPlanetKitPeerControlEvent.h"
+#include "IPlanetKitVideoReceiver.h"
+
 namespace PlanetKit {
-    /// Callback APIs for a peer's status
-    class PLANETKIT_API IPeerControlEvent {
-    public :
-        /// Called when a peer is initialized.
-        virtual void OnInitialized(PeerControlPtr pPeerControl, bool bResult) = 0;
-        /// Called when a peer is muted.
-        virtual void OnMuted(PeerControlPtr pPeerControl) = 0;
-        /// Called when a peer is unmuted.
-        virtual void OnUnmuted(PeerControlPtr pPeerControl) = 0;
-        /// Called when a peer's video status is updated.
-        virtual void OnVideoUpdated(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup, const VideoStatus& videoStatus) = 0;
-        /// Called when a peer's screen share is updated.
-        virtual void OnScreenShareUpdated(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup, EScreenShareState eState) = 0;
-        /// Called when a peer subscribes to a subgroup.
-        virtual void OnSubscribed(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup) = 0;
-        /// Called when a peer unsubscribes from a subgroup.
-        virtual void OnUnsubscribed(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup) = 0;
-        /// Called when a peer is disconnected from the conference room.
-        virtual void OnDisconnected(PeerControlPtr pPeerControl) = 0;
-        
-        /**
-         * Called when a peer holds.
-         * @param strHoldReason Reason string that can be nullptr.
-         */
-        virtual void OnHold(PeerControlPtr pPeerControl, const WString& strHoldReason) = 0;
-		/// Called when a peer unholds.
-        virtual void OnUnHold(PeerControlPtr pPeerControl) = 0;
-
-        /**
-         * Called when a peer sets shared contents.
-         * @param unElapsedAfterSet Setting time
-         * @param pvData Shared contents data
-         * @param unDataSize Data size of the parameter pvData
-         */
-        virtual void OnSetSharedContents(PeerControlPtr pPeerControl, unsigned int unElapsedAfterSet, const void* pvData, unsigned int unDataSize) = 0;
-        /// Called when a peer unsets shared contents.
-        virtual void OnUnsetSharedContents(PeerControlPtr pPeerControl) = 0;
-
-        /// Called when a peer's average volume level is updated.
-        virtual void OnPeerAudioDescriptionUpdated(PeerControlPtr pPeerControl, const PeerAudioDescription& sPeerAudioDescription) = 0;
-    };
-
-    /**
-     * Result callback API that is called after working of PeerControl::StartVideo.
-     */
-    using StartVideoResultCallback = void(*)(PeerControlPtr pPeerControl, SRequestMediaResultParam* pRequestMediaResult, void* pUserData);
-
-    /**
-     * Result callback API that is called after working of PeerControl::StartVideo.
-     */
-    using StartVideoResolutionCallback = void(*)(PeerControlPtr pPeerControl, SRequestVideoResolutionResultParam* pRequestMediaResult, void* pUserData);
-
-    /**
-     * Result callback API that is called after working of PeerControl::StopVideo.
-     */
-    using StoptVideoResultCallback = void(*)(PeerControlPtr pPeerControl, SRequestMediaResultParam* pRequestMediaResult, void* pUserData);
-
     class PLANETKIT_API PeerControl : public Base {
     public :
         /**
@@ -94,10 +41,10 @@ namespace PlanetKit {
          * @remark
          *   If PeerControl already has an event listener, then this API will fail.
          */
-        virtual bool Register(IPeerControlEvent* pEventListener) = 0;
+        virtual bool Register(IPeerControlEventPtr pEventListener) = 0;
 
         /**
-         * Unregisters the event listener, RenderPtr, and IVideoReceiver* that PeerControl has.
+         * Unregisters the event listener, RenderPtr, and IVideoReceiverPtr that PeerControl has.
          */
         virtual void Unregister() = 0;
 
@@ -188,7 +135,7 @@ namespace PlanetKit {
          *  - You can set multiple video receivers for receiving VideoFrameData that can be used rendering, writing files, etc.
          * @see DeregisterReceiver
          */
-        virtual void RegisterReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual void RegisterReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Deregisters video receiver.
@@ -196,7 +143,7 @@ namespace PlanetKit {
          *  - You should deregister video receiver before you registered.
          * @see RegisterReceiver
          */
-        virtual void DeregisterReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual void DeregisterReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Sets the screen share video renderer.
@@ -216,7 +163,7 @@ namespace PlanetKit {
          *  - You can set multiple video receivers for receiving VideoFrameData that can be used rendering, writing files, etc.
          * @see DeregisterReceiver
          */
-        virtual void RegisterScreenShareReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual void RegisterScreenShareReceiver(IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Deregisters screen share receiver.
@@ -224,6 +171,16 @@ namespace PlanetKit {
          *  - You can deregister video receiver before you registered.
          * @see RegisterReceiver
          */
-        virtual void DeregisterScreenShareReceiver(IVideoReceiver* pReceiver) = 0;
+        virtual void DeregisterScreenShareReceiver(IVideoReceiverPtr pReceiver) = 0;
+
+        /**
+         * Sets the peer's volume.
+         * @param ucVolume Volume level in the range [0:110]
+         * @param pUserData User's data that will be passed along when the callback function is called.
+         * @param pCallback A callback function to be called after the API worked.
+         * @return true on success
+         */
+        virtual bool SetVolumeLevelSetting(unsigned char ucVolume, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+
     };
 };

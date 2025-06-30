@@ -1,35 +1,28 @@
+// Copyright 2022 LINE Plus Corporation
+//
+// LINE Plus Corporation licenses this file to you under the Apache License,
+// version 2.0 (the "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at:
+//
+//   https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations
+// under the License.
+
 #pragma once
+
 #include "PlanetKit.h"
+#include "PlanetKitAudioDefine.h"
 
 namespace PlanetKit {
     /**
-     * Struct of audio data.
-     */
-    typedef struct AudioData {
-        /// Buffer size of audio data
-        unsigned int unBufferSize = 0;
-        /// Audio data
-        PlanetKitByte* pBuffer = nullptr;
-    }AudioData;
-
-    /**
-     * Audio sample type.
-     */
-    typedef enum EAudioSampleType {
-        /// type float32
-        PLNK_AUDIO_SAMPLE_TYPE_SIGNED_FLOAT32 = 0,
-        /// type short16
-        PLNK_AUDIO_SAMPLE_TYPE_SIGNED_SHORT16 = 1
-    } EAudioSampleType;
-
-    class PLANETKIT_API PlanetKitHookedAudio;
-    typedef AutoPtr<PlanetKitHookedAudio> PlanetKitHookedAudioPtr;
-
-    /**
      * Defines the audio data used for the local user's audio modification feature.<br>
-     * The audio is received through IPlanetKitAudioHook, and the modified audio is applied using SetAudioData.
+     * The audio is received through IAudioHook, and the modified audio is applied using SetAudioData.
      */
-    class PLANETKIT_API PlanetKitHookedAudio : public Base {
+    class PLANETKIT_API HookedAudio : public Base {
     public:
         /**
          * Sample rate of audio data.
@@ -72,20 +65,8 @@ namespace PlanetKit {
         /*
          * Gets raw data of audio.
          */
-        virtual const AudioData GetAudioData() = 0;
+        virtual const AudioData& GetAudioData() = 0;
     };
 
-    /**
-     * This is an interface used for audio reception in PlanetKitCall::EnableHookMyAudio.
-     * @see PlanetKitCall::EnableHookMyAudio
-     * @see PlanetKitCall::DisableHookMyAudio
-     * @see PlanetKitCall::PutHookedMyAudioBack
-     */
-    class PLANETKIT_API IPlanetKitAudioHook {
-    public:
-        /**
-         * @param pHookedAudio Audio frame data sent to peer.
-         */
-        virtual void OnHooked(PlanetKitHookedAudioPtr pHookedAudio) = 0;
-    };
+    typedef AutoPtr<HookedAudio> HookedAudioPtr;
 }

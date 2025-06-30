@@ -15,161 +15,33 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitTypes.h"
 #include "PlanetKitCommonVideoStatus.h"
-#include "PlanetKitCallEventParam.h"
+#include "PlanetKitShortDataParam.h"
 #include "PlanetKitAudioCommon.h"
 #include "PlanetKitDataSessionInterface.h"
 
-#include "PlanetKitPeer.h"
 #include "PlanetKitPeerHold.h"
 #include "PlanetKitVideoStatus.h"
 
-namespace PlanetKit
-{
+#include "PlanetKitConferencePeerUpdateParam.h"
+#include "PlanetKitConferenceVideoUpdateParam.h"
+#include "PlanetKitConferenceSubgroupUpdatePeer.h"
+#include "PlanetKitConferenceConnectedParam.h"
+#include "PlanetKitConferenceDisconnectedParam.h"
+#include "PlanetKitConferenceException.h"
+#include "PlanetKitConferencePeerScreenShareUpdatedParam.h"
+
+namespace PlanetKit {
     class PLANETKIT_API PlanetKitConference;
-
-    //template class PLANETKIT_API AutoPtr<PlanetKitConference>;
     typedef AutoPtr<PlanetKitConference> PlanetKitConferencePtr;
-
-
-    /// Updated information of peers list who are connected to or disconnected from a subgroup.
-    class PLANETKIT_API ConferencePeerUpdateParam : public Base {
-    public :
-        /// Gets the conference subgroup instance.
-        virtual SubgroupPtr GetSubgroup() = 0;
-
-        /// Gets the array of added peers.
-        virtual const PeerArray& GetAddedPeer() = 0;
-        /// Gets the array of removed peers.
-        virtual const PeerArray& GetRemovedPeer() = 0;
-
-        /// Gets the total peers count.
-        virtual size_t TotalCount() = 0;
-    };
-
-    /// Video update parameter
-    class PLANETKIT_API ConferenceVideoUpdatedParam : public Base {
-    public:
-        /// Gets the VideoStatus array.
-        virtual const PeerVideoStatusArray& GetPeerVideoStatus() = 0;
-
-        /// Gets the Subgroup.
-        virtual SubgroupPtr GetSubgroup() = 0;
-        
-    };
-
-    /**
-     * Updated information of peers
-     */
-    class PLANETKIT_API ConferenceSubgroupUpdatePeer : public Base
-    {
-    public :
-        /// Gets the peer object class.
-        virtual PeerPtr GetPeer() const = 0;
-
-        /// Gets the subscribed subgroup name array.
-        virtual const WStringArray& GetSubscribedSubgroupNames() const = 0;
-
-        /// Gets the unsubscribed subgroup name array.
-        virtual const WStringArray& GetUnsubscribedSubgroup() const = 0;
-    };
-
-    /**
-     * Parameter used in IConferenceEvent::OnConnected.
-     */
-    class PLANETKIT_API ConferenceConnectedParam : virtual public Base {
-    public :
-        /**
-         * Returns whether the sending video feature is using a hardware codec.
-         */
-        virtual bool IsVideoSendHardwareCodecEnabled() = 0;
-
-        /**
-         * Returns whether the screen share feature can support video share mode.
-         * @see
-         *  - PlanetKitConference::SetMyScreenShareVideoShareMode<br>
-         *  - PlanetKitConference::IsMyScreenShareVideoShareModeEnabled
-         */
-        virtual bool IsSupportVideoShareMode() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<ConferenceConnectedParam>;
-    typedef AutoPtr<ConferenceConnectedParam> ConferenceConnectedParamPtr;
-
-    /**
-     * Parameter used in IConferenceEvent::OnDisconnected.
-     */
-    class PLANETKIT_API ConferenceDisconnectedParam : virtual public Base {
-    public :
-        /**
-         * Returns whether this call has been disconnected by the remote subject.
-         */
-        virtual bool IsDisconnectedByRemote() = 0;
-
-        /**
-         * Gets the reason for disconnection.
-         */
-        virtual EDisconnectReason GetReason() = 0;
-
-        /**
-         * Gets the subject who performed the disconnection.
-         */
-        virtual EDisconnectSource GetDisconnectSource() = 0;
-
-        /**
-         * Gets the reason string that is encoded in UTF-16 and null-terminated.
-         * @remark
-         *  - The return value can be nullptr.
-         */
-        virtual const WString& GetUserReleaseCode() = 0;
-    };
-
-    template class PLANETKIT_API AutoPtr<ConferenceDisconnectedParam>;
-    typedef AutoPtr<ConferenceDisconnectedParam> ConferenceDisconnectedParamPtr;
-
-    /**
-     * Exception message information class.
-     * @see ConferenceExceptionMessage
-     * @see OnException
-     */
-    class PLANETKIT_API ConferenceException : public Base {
-    public :
-        /// Gets the peer information class.
-        virtual PeerPtr GetPeer() = 0;
-        /// Gets the subgroup information class.
-        virtual SubgroupPtr GetSubgroup() = 0;
-        /// Gets the exception type information.
-        virtual EConferenceExceptionType GetExceptionType() = 0;
-        /// Gets the exception message as a string that can be nullptr.
-        virtual const WString& GetMessage() = 0;
-
-    protected :
-        virtual ~ConferenceException() = default;
-    };
-
-
-    /**
-     * Parameter used for updates of peer's screen share information.
-     */
-    class PLANETKIT_API ConferencePeerScreenShareUpdatedParam
-    {
-    public :
-        /// Gets the peer's information object.
-        virtual PeerPtr GetPeer() = 0;
-        
-        /// Gets the subgroup information object.
-        virtual SubgroupPtr GetSubgroup() = 0;
-
-        /// Gets the screen share state.
-        virtual EScreenShareState ScreenShareState() = 0;
-    };
 
     /**
      * PlanetKit calls these APIs of IConferenceEvent when some events occur.
      */
     class PLANETKIT_API IConferenceEvent {
     public:
+        virtual ~IConferenceEvent() { }
+
         /**
          * Called when the conference state is changed to connected.
          * @param pPlanetKitConference Conference instance that the event was registered to.
@@ -196,7 +68,7 @@ namespace PlanetKit
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pParam Updated information of the peers' video.
          */
-        virtual void OnPeersVideoUpdated(PlanetKitConferencePtr pPlanetKitConference, ConferenceVideoUpdatedParam* pParam) = 0;
+        virtual void OnPeersVideoUpdated(PlanetKitConferencePtr pPlanetKitConference, ConferenceVideoUpdatedParamPtr pParam) = 0;
 
         /**
          * Called when the state of one or more conference public subgroup peers is updated.
@@ -280,7 +152,7 @@ namespace PlanetKit
         * Called when a peer starts or stops screen share in a subgroup.
         * @param pPeerScreenShareUpdateInfo Peer information
         */
-        virtual void OnPeerScreenShareUpdated(ConferencePeerScreenShareUpdatedParam* pPeerScreenShareUpdateInfo) = 0;
+        virtual void OnPeerScreenShareUpdated(ConferencePeerScreenShareUpdatedParamPtr pPeerScreenShareUpdateInfo) = 0;
 
         /**
          * Called after some errors have occurred in the conference room.
@@ -319,4 +191,6 @@ namespace PlanetKit
         */
         virtual void OnMyScreenShareStoppedByHold(PlanetKitConferencePtr pPlanetKitConference) = 0;
     };
+
+    typedef SharedPtr<IConferenceEvent> IConferenceEventPtr;
 }
