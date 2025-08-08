@@ -62,5 +62,5 @@ namespace PlanetKit {
         virtual void OnPeerAudioDescriptionUpdated(PeerControlPtr pPeerControl, const PeerAudioDescription& sPeerAudioDescription) = 0;
     };
 
-    typedef SharedPtr<IPeerControlEvent> IPeerControlEventPtr;
+    using IPeerControlEventPtr = SharedPtr<IPeerControlEvent>;
 };

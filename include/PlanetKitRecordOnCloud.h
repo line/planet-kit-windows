@@ -27,7 +27,7 @@ namespace PlanetKit {
         PLNK_RECORD_ON_CLOUD_DEACTIVATE_REASON_ACTIVATION_FAILED = 1,
     };
 
-    typedef Optional<ERecordOnCloudDeactivateReason> DeactivateReasonOptional;
+    using DeactivateReasonOptional = Optional<ERecordOnCloudDeactivateReason>;
 
     /**
      * This is a class related to the state of recording on the cloud.
@@ -49,5 +49,5 @@ namespace PlanetKit {
         virtual DeactivateReasonOptional GetDeactivatedReason() = 0;
     };
 
-    typedef SharedPtr<RecordOnCloud> RecordOnCloudPtr;
+    using RecordOnCloudPtr = SharedPtr<RecordOnCloud>;
 };

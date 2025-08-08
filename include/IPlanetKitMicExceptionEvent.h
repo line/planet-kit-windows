@@ -34,9 +34,6 @@ namespace PlanetKit {
 
     };
     
-    class PLANETKIT_API IMicExceptionEvent;
-    typedef SharedPtr<IMicExceptionEvent> MicExceptionEventPtr;
-
     /**
      * Event received when an error occurs while using the microphone device.
      */
@@ -50,4 +47,5 @@ namespace PlanetKit {
         virtual void OnMicStartError(EMicStartError eMicrophoneStartError) = 0;
     };
 
+    using MicExceptionEventPtr = SharedPtr<IMicExceptionEvent>;
 }

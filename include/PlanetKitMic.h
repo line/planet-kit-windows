@@ -19,8 +19,8 @@
 namespace PlanetKit {
     class PLANETKIT_API Mic;
 
-    typedef SharedPtr<Mic> MicPtr;
-    typedef Optional<MicPtr> MicOptional;
+    using MicPtr = SharedPtr<Mic>;
+    using MicOptional = Optional<MicPtr>;
 
     class PLANETKIT_API Mic {
     public:

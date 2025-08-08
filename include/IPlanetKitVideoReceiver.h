@@ -47,5 +47,5 @@ namespace PlanetKit {
         virtual void OnVideo(const SVideoFrame& pVideoFrame, UserIdPtr pUserID) = 0;
     };
 
-    typedef SharedPtr<IVideoReceiver> IVideoReceiverPtr;
+    using IVideoReceiverPtr = SharedPtr<IVideoReceiver>;
 };

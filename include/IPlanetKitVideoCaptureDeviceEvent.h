@@ -43,5 +43,5 @@ namespace PlanetKit {
         virtual void OnCameraError(ECameraControlResult eCameraControlResult) = 0;
     };
 
-    typedef SharedPtr<IVideoCaptureDeviceEvent> IVideoCaptureDeviceEventPtr;
+    using IVideoCaptureDeviceEventPtr = SharedPtr<IVideoCaptureDeviceEvent>;
 };

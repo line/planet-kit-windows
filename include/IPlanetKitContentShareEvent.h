@@ -19,8 +19,9 @@
 
 namespace PlanetKit {
     class PLANETKIT_API ContentShareInterface;
-    typedef AutoPtr<ContentShareInterface> ContentShareInterfacePtr;
-    typedef Optional<ContentShareInterfacePtr> ContentShareInterfaceOptional;
+    
+    using ContentShareInterfacePtr = AutoPtr<ContentShareInterface>;
+    using ContentShareInterfaceOptional = Optional<ContentShareInterfacePtr>;
 
     class PLANETKIT_API IContentShareEvent {
     public:
@@ -96,5 +97,5 @@ namespace PlanetKit {
         virtual void OnPeerUnsetRoomSharedContents(ContentShareInterfacePtr pContentShareInterface, CommonSetSharedContentPtr pCommonSharedContent) = 0;
     };
 
-    typedef SharedPtr<IContentShareEvent> IContentShareEventPtr;
+    using IContentShareEventPtr = SharedPtr<IContentShareEvent>;
 };

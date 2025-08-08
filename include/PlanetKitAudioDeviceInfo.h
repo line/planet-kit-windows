@@ -34,7 +34,7 @@ namespace PlanetKit {
         virtual EPhysicalFormFactor GetFormFactor() = 0;
     };
 
-    typedef SharedPtr<AudioDeviceInfo> AudioDeviceInfoPtr;
-    typedef Optional<AudioDeviceInfoPtr> AudioDeviceInfoOptional;
-    typedef Array<AudioDeviceInfoPtr> AudioDeviceInfoArray;
+    using AudioDeviceInfoPtr = SharedPtr<AudioDeviceInfo>;
+    using AudioDeviceInfoOptional = Optional<AudioDeviceInfoPtr>;
+    using AudioDeviceInfoArray = Array<AudioDeviceInfoPtr>;
 };

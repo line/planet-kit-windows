@@ -32,6 +32,6 @@ namespace PlanetKit {
         virtual StatisticsVideoPtr Video() = 0;
     };
 
-    typedef SharedPtr<StatisticsScreenShareSend> StatisticsScreenShareSendPtr;
-    typedef Optional<StatisticsScreenShareSendPtr> StatisticsScreenShareSendOptional;
+    using StatisticsScreenShareSendPtr = SharedPtr<StatisticsScreenShareSend>;
+    using StatisticsScreenShareSendOptional = Optional<StatisticsScreenShareSendPtr>;
 };
