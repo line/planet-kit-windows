@@ -32,6 +32,7 @@ namespace PlanetKit {
         }
 
         virtual bool DeregisterSpeakerEvent(SpeakerEventPtr pEvent) override {
+            PLNK_UNREFERENCED_PARAMETER(pEvent);
             m_pSpeakerEvent = nullptr;
             return true;
         }

@@ -24,6 +24,9 @@ namespace PlanetKit {
     class PLANETKIT_API ConferenceParam;
     typedef SharedPtr<ConferenceParam> ConferenceParamPtr;
 
+    constexpr unsigned int MinCustomUserType = 1;
+    constexpr unsigned int MaxCustomUserType = 9999;
+
     class PLANETKIT_API ConferenceParam {
     public:
         virtual ~ConferenceParam() { }
@@ -238,5 +241,26 @@ namespace PlanetKit {
          * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
          */
         virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
+
+        /**
+         * Sets the custom user type.<br>
+         * This is an optional parameter that can be used to define a custom user type for the local user.<br>
+         * The custom user type is represented as an unsigned integer value.
+         *
+         * @param customUserType The custom user type value, which should be in the range of 1 to 9999.
+         * 
+         * @remark If the value of customUserType falls outside the range of `MinCustomUserType` to `MaxCustomUserType`, the assignment fails and the previously set value is retained.
+         * 
+         * @see MinCustomUserType
+         * @see MaxCustomUserType
+         */
+        virtual bool SetCustomUserType(unsigned int customUserType) = 0;
+
+        /**
+         * Gets the custom user type.
+         * 
+         * @see SetCustomUserType
+         */
+        virtual unsigned int GetCustomUserType() = 0;
     };
 }

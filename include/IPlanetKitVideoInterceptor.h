@@ -43,5 +43,5 @@ namespace PlanetKit {
         virtual bool DeregisterDelegate() = 0;
     };
 
-    typedef SharedPtr<IVideoInterceptor> IVideoInterceptorPtr;
+    using IVideoInterceptorPtr = SharedPtr<IVideoInterceptor>;
 };

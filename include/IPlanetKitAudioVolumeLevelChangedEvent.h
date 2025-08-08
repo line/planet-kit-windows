@@ -19,9 +19,6 @@
 #include "PlanetKitAudioDefine.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API IAudioVolumeLevelChangedEvent;
-    typedef SharedPtr<IAudioVolumeLevelChangedEvent> AudioVolumeLevelChangedEventPtr;
-
     /**
      * Event listener to notify when the volume level of an audio device changes.
      */
@@ -35,4 +32,6 @@ namespace PlanetKit {
          */
         virtual void OnNotify(const AudioDeviceInfoPtr pAudioInfo, const SAudioEndpointVolumeInfo& sInfo) = 0;
     };
+
+    using AudioVolumeLevelChangedEventPtr = SharedPtr<IAudioVolumeLevelChangedEvent>;
 }

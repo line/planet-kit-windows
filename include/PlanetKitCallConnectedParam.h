@@ -27,13 +27,13 @@ namespace PlanetKit {
 
         /**
          * Gets the peer's call start message.
-         * @see [CallStartMessage guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/call-start-message )
+         * @see [CallStartMessage guide](https://docs.lineplanet.me/windows/extended-functions/call-start-message)
          */
         virtual CallStartMessagePtr GetPeerStartMessage() = 0;
 
         /**
          * Returns whether you can delay connection until you call PlanetKitCall::FinishPreparation() API.
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status )
+         * @see [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status)
          */
         virtual bool ShouldFinishPreparation() = 0;
 
@@ -42,7 +42,7 @@ namespace PlanetKit {
          * You must check the return value of ShouldFinishPreparation() and do one of the following:<br>
          * If the return value of ShouldFinishPreparation() is true, you need to call PlanetKitCall::FinishPreparation().<br>
          * If the return value of ShouldFinishPreparation() is false, you must wait until the peer calls PlanetKitCall::FinishPreparation().
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status )
+         * @see [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status)
          */
         virtual bool IsInPreparation() = 0;
 

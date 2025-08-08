@@ -17,9 +17,6 @@
 #include "PlanetKitAudioCommon.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API ISpeakerEvent;
-    typedef SharedPtr<ISpeakerEvent> SpeakerEventPtr;
-
     /**
      * Event for receiving audio frames incoming through the speaker.
      */
@@ -32,4 +29,6 @@ namespace PlanetKit {
          */
         virtual bool WillPlay(SAudioData& sAudioData) = 0;
     };
+
+    using SpeakerEventPtr = SharedPtr<ISpeakerEvent>;
 }

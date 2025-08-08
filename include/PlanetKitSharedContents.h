@@ -32,6 +32,6 @@ namespace PlanetKit {
         virtual unsigned int GetElapsedSeconds() = 0;
     };
 
-    typedef SharedPtr<SharedContents> SharedContentsPtr;
-    typedef Optional<SharedContentsPtr> SharedContentsOptional;
+    using SharedContentsPtr = SharedPtr<SharedContents>;
+    using SharedContentsOptional = Optional<SharedContentsPtr>;
 };

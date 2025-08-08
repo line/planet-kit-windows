@@ -27,5 +27,5 @@ namespace PlanetKit {
         virtual void OnCaptureWindowStateChanged(const SWindowStateChangeParam* pParam) = 0;
     };
 
-    typedef SharedPtr<IVideoCapturerEvent> IVideoCapturerEventPtr;
+    using IVideoCapturerEventPtr = SharedPtr<IVideoCapturerEvent>;
 };

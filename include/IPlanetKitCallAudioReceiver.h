@@ -30,5 +30,5 @@ namespace PlanetKit {
         virtual void OnAudio(const SAudioData& pAudioData) = 0;
     };
 
-    typedef SharedPtr<ICallAudioReceiver> ICallAudioReceiverPtr;
+    using ICallAudioReceiverPtr = SharedPtr<ICallAudioReceiver>;
 };

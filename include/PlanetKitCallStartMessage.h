@@ -24,8 +24,8 @@ namespace PlanetKit {
     constexpr int CallStartMessageLength = 200;
 
     class PLANETKIT_API CallStartMessage;
-    typedef SharedPtr<CallStartMessage> CallStartMessagePtr;
-    typedef Optional<CallStartMessagePtr> CallStartMessageOptional;
+    using CallStartMessagePtr = SharedPtr<CallStartMessage>;
+    using CallStartMessageOptional = Optional<CallStartMessagePtr>;
 
     /**
      * Local representation of data exchanged between caller and callee before PlanetKitCall session is established

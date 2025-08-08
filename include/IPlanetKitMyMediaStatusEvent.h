@@ -18,7 +18,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API MyMediaStatus;
-    typedef AutoPtr<MyMediaStatus> MyMediaStatusPtr;
+    using MyMediaStatusPtr = AutoPtr<MyMediaStatus>;
 
     /**
      * An interface for the local user's media status event listener.
@@ -53,5 +53,5 @@ namespace PlanetKit {
         virtual void OnMyAudioDescriptionUpdated(MyMediaStatusPtr pMyStatus, const MyAudioDescription& sMyAudioDescription) = 0;
     };
 
-    typedef SharedPtr<IMyMediaStatusEvent> IMyMediaStatusEventPtr;
+    using IMyMediaStatusEventPtr = SharedPtr<IMyMediaStatusEvent>;
 };

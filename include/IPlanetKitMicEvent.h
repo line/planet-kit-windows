@@ -18,7 +18,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API IMicEvent;
-    typedef SharedPtr<IMicEvent> MicEventPtr;
+    using MicEventPtr = SharedPtr<IMicEvent>;
 
     /**
      * Event for receiving audio frames incoming through the microphone.

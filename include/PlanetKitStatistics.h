@@ -59,7 +59,6 @@ namespace PlanetKit {
         virtual const StatisticsScreenShareRecvArray& GetScreenShareRecv() = 0;
     };
 
-    typedef SharedPtr<Statistics> StatisticsPtr;
-    typedef Optional<StatisticsPtr> StatisticsOptional;
-
+    using StatisticsPtr = SharedPtr<Statistics>;
+    using StatisticsOptional = Optional<StatisticsPtr>;
 };
