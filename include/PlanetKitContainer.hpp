@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include "PlanetKitPredefine.h"
-#include "PlanetKitMemory.h"
+#include <string.h>
 
-namespace PlanetKit {
+namespace PlanetKit
+{
     /**
      * Array class.
      */
     template <class T>
-    class PLANETKIT_API Array {
+    class Array {
     public:
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
         Array() = default;
@@ -54,11 +54,7 @@ namespace PlanetKit {
          */
         void Clear() {
             if (m_pData) {
-                for (size_t i = 0; i < m_nSize; ++i) {
-                    m_pData[i].~T();
-                }
-
-                PlanetKitMemory::FreeArrayMemory(m_pData);
+                delete[] m_pData;
                 m_pData = nullptr;
             }
 
@@ -88,14 +84,8 @@ namespace PlanetKit {
             Clear();
 
             if (size > 0) {
-                T* pBuffer = static_cast<T*>(PlanetKitMemory::AllocateArrayMemory(size * sizeof(T)));
+                m_pData = new T[size];
                 m_nSize = size;
-
-                for (size_t i = 0; i < m_nSize; ++i) {
-                    new (&pBuffer[i]) T();
-                }
-
-                m_pData = pBuffer;
             }
         }
 

@@ -17,8 +17,9 @@
 #include "PlanetKitVideoCommon.h"
 #include "PlanetKitManager.h"
 
-namespace PlanetKit {
-    class PLANETKIT_API VideoSource {
+namespace PlanetKit
+{
+    class VideoSource {
     public :
         VideoSource(EVideoCapturerType eType) {
             m_eType = eType;
@@ -40,13 +41,13 @@ namespace PlanetKit {
         bool IsPostingFrameAvailable(UINT64 ullTick64) {
             if (m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_CAMERA) {
                 CameraControllerPtr pController = GetCameraController();
-                if (pController != nullptr) {
+                if (nullptr != *pController) {
                     return pController->IsPostingFrameAvailable(ullTick64);
                 }
             }
             else if (m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_SCREEN || m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_WINDOW) {
                 ScreenShareControllerPtr pController = GetSCreenShareController();
-                if (pController != nullptr) {
+                if (nullptr != *pController) {
                     return pController->IsPostingFrameAvailable(ullTick64);
                 }
             }
@@ -62,13 +63,13 @@ namespace PlanetKit {
         bool OnFrame(SVideoFrame& sPlanetKitVideoFrame) {
             if (m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_CAMERA) {
                 CameraControllerPtr pController = GetCameraController();
-                if (pController != nullptr) {
+                if (nullptr != *pController) {
                     return pController->WriteFrameData(sPlanetKitVideoFrame);
                 }
             }
             else if (m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_SCREEN || m_eType == EVideoCapturerType::PLNK_VID_CAPTURER_WINDOW) {
                 ScreenShareControllerPtr pController = GetSCreenShareController();
-                if (pController != nullptr) {
+                if (nullptr != *pController) {
                     return pController->WriteFrameData(sPlanetKitVideoFrame);
                 }
             }
@@ -78,22 +79,30 @@ namespace PlanetKit {
     private:
         CameraControllerPtr GetCameraController() {
             PlanetKitManagerPtr pManager = PlanetKitManager::GetInstance();
-            if (pManager.hasValue() == false) {
-                CameraControllerPtr pCameraController;
-                return pCameraController;
+            if (nullptr == *pManager) {
+                return CameraControllerPtr(nullptr);
             }
 
-            return pManager->GetCameraController();
+            CameraControllerPtr pController = pManager->GetCameraController();
+            if (nullptr == *pController) {
+                return CameraControllerPtr(nullptr);
+            }
+
+            return pController;
         }
 
         ScreenShareControllerPtr GetSCreenShareController() {
             PlanetKitManagerPtr pManager = PlanetKitManager::GetInstance();
-            if (pManager.hasValue() == false) {
-                ScreenShareControllerPtr pScreenShareController;
-                return pScreenShareController;
+            if (nullptr == *pManager) {
+                return ScreenShareControllerPtr(nullptr);
             }
 
-            return pManager->GetScreenShareController();
+            ScreenShareControllerPtr pController = pManager->GetScreenShareController();
+            if (nullptr == *pController) {
+                return ScreenShareControllerPtr(nullptr);
+            }
+
+            return pController;
         }
 
         EVideoCapturerType m_eType = EVideoCapturerType::PLNK_VID_CAPTURER_CAMERA;

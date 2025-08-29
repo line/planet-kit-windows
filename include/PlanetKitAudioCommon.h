@@ -14,5 +14,167 @@
 
 #pragma once
 
-#include "PlanetKitAudioDeviceInfo.h"
-#include "IPlanetKitAudioVolumeLevelChangedEvent.h"
+#define MAX_DEVICE_ID_SIZE 512
+#define MAX_DEVICE_NAME_SIZE 512
+
+#include "PlanetKitTypes.h"
+#include "PlanetKitUserId.h"
+
+namespace PlanetKit 
+{
+    /**
+     * Audio device type
+     */
+    typedef enum EAudioDeviceType
+    {
+        /// Error type
+        PLNK_AUDIO_DEVICE_TYPE_UNDEFINED = 0,
+        /// Input device such as a microphone
+        PLNK_AUDIO_DEVICE_TYPE_INPUT,
+        /// Output device such as a speaker
+        PLNK_AUDIO_DEVICE_TYPE_OUTPUT
+    } EAudioDeviceType;
+    
+    /**
+     * EAudioDeviceType represents whether a device is an input or output device.<br>
+     * However, some devices such as a two-way communicator require additional information to be recognized.<br>
+     * For example, a two-way communicator such as a headphone is treated as both a microphone and a speaker, but is recognized by the OS as a microphone.<br>
+     * If you want devices to be recognized more specifically, then use this value.<br>
+     * @see https://docs.microsoft.com/en-us/windows/win32/coreaudio/pkey-audioendpoint-formfactor <br>
+     */
+    typedef enum EPhysicalFormFactor
+    {
+        /// Remote network device
+        PLNK_PHYSICAL_FORM_FACTOR_REMOTE_NETWORK_DEVICE = 0,
+        /// Speakers
+        PLNK_PHYSICAL_FORM_FACTOR_SPEAKERS,
+        /// Line level
+        PLNK_PHYSICAL_FORM_FACTOR_LINE_LEVEL,
+        /// Headphones
+        PLNK_PHYSICAL_FORM_FACTOR_HEADPHONES,
+        /// Microphone
+        PLNK_PHYSICAL_FORM_FACTOR_MICROPHONE,
+        /// Headset
+        PLNK_PHYSICAL_FORM_FACTOR_HEADSET,
+        /// Handset
+        PLNK_PHYSICAL_FORM_FACTOR_HANDSET,
+        /// Digital pass through
+        PLNK_PHYSICAL_FORM_FACTOR_UNKNOWN_DIGITAL_PASS_THROUGH,
+        /// SPDIF
+        PLNK_PHYSICAL_FORM_FACTOR_SPDIF,
+        /// Digital audio display device
+        PLNK_PHYSICAL_FORM_FACTOR_DIGITAL_AUDIO_DISPLAY_DEVICE,
+        /// Unknown
+        PLNK_PHYSICAL_FORM_FACTOR_UNKNOWN_FORM_FACTOR,
+        /// Max count value (not used)
+        PLNK_PHYSICAL_FORM_FACTOR_COUNT,
+        /// None
+        PLNK_PHYSICAL_FORM_FACTOR_NONE
+    }EPhysicalFormFactor;
+
+    /**
+     * Audio device information class
+     */
+    class AudioDeviceInfo : public Base
+    {
+    public:
+        /// Device ID
+        virtual const WString& GetID() = 0;
+        /// Device name
+        virtual const WString& GetName() = 0;
+        /// Device type
+        virtual EAudioDeviceType GetDeviceType() = 0;
+        /// Physical form factor of the device
+        virtual EPhysicalFormFactor GetFormFactor() = 0;
+    };
+
+    template class PLANETKIT_API AutoPtr<AudioDeviceInfo>;
+    typedef AutoPtr<AudioDeviceInfo> AudioDeviceInfoPtr;
+
+    template class PLANETKIT_API Array<AudioDeviceInfoPtr>;
+    typedef Array<AudioDeviceInfoPtr> AudioDeviceInfoArray;
+
+    /**
+     * Audio data sample format
+     */
+    typedef enum EAudioDataSampleType
+    {
+        /// Sample format float
+        PLNK_AUDIO_DATA_SAMPLE_TYPE_FLOAT_32,
+        /// Sample format short
+        PLNK_AUDIO_DATA_SAMPLE_TYPE_SHORT16
+
+    } EAudioDataSampleType;
+
+    /**
+     * Audio device sampling rate
+     */
+    typedef enum EAudioDeviceSamplingRate
+    {
+        /// 48kHz
+        SAMPLING_RATE_48K = 0,
+        /// 32kHz
+        SAMPLING_RATE_32K = 1,
+        /// 16kHz
+        SAMPLING_RATE_16K = 2,
+        /// Max count (not used)
+        SAMPLING_RATE_COUNT = 3
+
+    } EAudioDeviceSamplingRate;
+
+    /**
+     * Audio data
+     */
+    typedef struct SAudioData
+    {
+        /// Sampling rate
+        unsigned int            unAudioDataSamplingRate;
+        /// Sample count
+        unsigned int            unAudioDataSampleCount;
+        /// Sample format
+        EAudioDataSampleType  eAudioDataSampleFormat;
+        /// Audio data buffer
+        unsigned char           *ucBuffer;
+        /// Size of buffer
+        unsigned int            unBufferSize;
+    } SAudioData;
+
+    /**
+     * Audio device volume information
+     */
+    typedef struct SAudioEndpointVolumeInfo
+    {
+        /// Mute flag
+        bool bMuted;
+        /// Device master volume
+        float fMasterVolume;
+    } SAudioEndpointVolumeInfo;
+
+    /**
+     * @brief Audio description of a peer, which can be obtained with IConferenceEvent::OnPeersAudioDescriptionUpdated
+     */
+    typedef struct PeerAudioDescription {
+        /// Peer's user ID
+        UserIdPtr pUserId;
+        /// Peer's average volume level[0:100]
+        unsigned char ucVolume;
+        /// Name of the subgroup from which this audio originated. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strSentSubgroupName;
+        /// Name of the subgroup where this audio was tagged by the peer. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strTaggedSubgroupName;
+    }PeerAudioDescription;
+
+    typedef Array<PeerAudioDescription> PeerAudioDescriptionArray;
+
+    /**
+     * @brief Audio description of the local user, which can be obtained with IConferenceEvent::OnMyAudioDescriptionUpdated or IMyMediaStatusEvent::OnMyAudioDescriptionUpdated
+     */
+    typedef struct MyAudioDescription {
+        /// Local user's average volume level[0:100]
+        unsigned char ucVolume;
+        /// Name of the subgroup from which this audio originated. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strSentSubgroupName;
+        /// Name of the subgroup where this audio was tagged by the peer. The value can be NullOptional, which means PlanetKitMainRoomName.
+        WStringOptional strTaggedSubgroupName;
+    }MyAudioDescription;
+}
