@@ -27,13 +27,13 @@ namespace PlanetKit {
 
         /**
          * Gets the peer's call start message.
-         * @see [CallStartMessage guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/call-start-message )
+         * @see [CallStartMessage guide](https://docs.lineplanet.me/windows/extended-functions/call-start-message)
          */
         virtual CallStartMessagePtr GetPeerStartMessage() = 0;
 
         /**
          * Returns whether the peer set the preparation flag.
-         * @see [Preparation guide]( @see https://docs.lineplanet.me/ko/windows/extended-functions/responder-preparation-status )
+         * @see [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status)
          */
         virtual bool IsPeerUsePreparation() = 0;
     };

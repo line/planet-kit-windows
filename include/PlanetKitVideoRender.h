@@ -97,6 +97,6 @@ namespace PlanetKit {
         virtual ~VideoRender() {}
     };
 
-    typedef AutoPtr<VideoRender> VideoRenderPtr;
-    typedef Optional<VideoRenderPtr> VideoRenderOptional;
+    using VideoRenderPtr = AutoPtr<VideoRender>;
+    using VideoRenderOptional = Optional<VideoRenderPtr>;
 }

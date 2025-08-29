@@ -34,5 +34,5 @@ namespace PlanetKit {
         virtual void OnHooked(HookedAudioPtr pHookedAudio) = 0;
     };
 
-    typedef SharedPtr<IAudioHook> IAudioHookPtr;
+    using IAudioHookPtr = SharedPtr<IAudioHook>;
 };

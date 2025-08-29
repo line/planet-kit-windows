@@ -20,9 +20,9 @@ namespace PlanetKit {
     constexpr wchar_t* PlanetKitMainRoomName = nullptr;
 
     class PLANETKIT_API Subgroup;
-    typedef AutoPtr<Subgroup> SubgroupPtr;
-    typedef Optional<SubgroupPtr> SubgroupOptional;
-    typedef Array<SubgroupPtr> SubgroupArray;
+    using SubgroupPtr = AutoPtr<Subgroup>;
+    using SubgroupOptional = Optional<SubgroupPtr>;
+    using SubgroupArray = Array<SubgroupPtr>;
 
     /**
      * @brief Reasons for subgroup subscription failure

@@ -54,14 +54,15 @@
 #define PLANETKIT_DEPRECATED(x)
 #endif
 
-namespace PlanetKit
-{
+#define PLNK_UNREFERENCED_PARAMETER(P)  (P)
 
-    typedef const char PlanetKitByte;
+namespace PlanetKit {
+    using PlanetKitByte = const char;
+
     /**
      * @brief Fail reasons related to start
      */
-    typedef enum EStartFailReason {
+    enum EStartFailReason {
         // Core start fail reason
         /// Reason none (default value)
         PLNK_START_FAIL_REASON_NONE = 0,
@@ -117,12 +118,12 @@ namespace PlanetKit
         // iOS / macOS fail reason code range 2000 ~2999
 
         // Android fail reason code range 3000 ~ 3999
-    } EStartFailReason;
+    };
 
     /**
      * @brief Error information related to media requests
      */
-    typedef enum EMediaRequestError {
+    enum EMediaRequestError {
         /// None (default value)
         PLNK_MEDIA_REQ_ERROR_NONE = 0,
         /// Internal error
@@ -133,17 +134,17 @@ namespace PlanetKit
         PLNK_MEDIA_REQ_ERROR_INVALID_STATE,
         /// Enum max count (not used)
         PLNK_MEDIA_REQ_ERROR_OVER_MAX_COUNT,
-    } EMediaRequestError;
+    };
 
     /**
      * @brief Result values of starting
      */
-    typedef struct SStartResult {
+    struct SStartResult {
         /// Whether the start is successful or not
         bool bSuccess;
         /// Reason for failure
         EStartFailReason reason;
-    } SStartResult;
+    };
 
     /**
      * @brief
@@ -152,7 +153,7 @@ namespace PlanetKit
      *    - [1:1] means it can occur only in 1:1 Call.<br>
      *    - [Conference] means it can occur only in Conference Call.<br>
      */
-    typedef enum EDisconnectSource {
+    enum EDisconnectSource {
         /// [Both] Undefined
         PLNK_DISCONNECT_SOURCE_UNDEFINED = 0,
         /// [1:1] Callee
@@ -165,7 +166,7 @@ namespace PlanetKit
         PLNK_DISCONNECT_SOURCE_CLOUD_SERVER = 4,
         /// [Conference] App server
         PLNK_DISCONNECT_SOURCE_APP_SERVER = 5,
-    } EDisconnectSource;
+    };
 
 
     /**
@@ -175,7 +176,7 @@ namespace PlanetKit
      *    - [1:1] means it can occur only in 1:1 Call.<br>
      *    - [Conference] means it can occur only in Conference Call.<br>
      */
-    typedef enum EDisconnectReason {
+    enum EDisconnectReason {
         // Kit Platform Layer can assign one of the following reasons when disconnection occurs
         // COMMON REASON (1001 ~ 1100)
         /// [Both][Caller, Callee, Participant] Disconnected without any errors.
@@ -327,38 +328,38 @@ namespace PlanetKit
 
         // PLNK_DISCONNECT_REASON_WRONG_ROOM_ATTR = 1403,
 
-    } EDisconnectReason;
+    };
 
 
 
     /**
      * @brief Reason for disabled media
      */
-    typedef enum EMediaDisabledReason {
+    enum EMediaDisabledReason {
         /// None (Default value)
         PLNK_MEDIA_DISABLE_REASON_UNDEFINED = 0,
         /// User has disabled their own video.
         PLNK_MEDIA_DISABLE_REASON_USER = 1,
         /// Media has been declined.
         PLNK_MEDIA_DISABLE_REASON_DECLINE = 2,
-    } EMediaDisabledReason;
+    };
 
     /**
      * @brief Current video state
      */
-    typedef enum EVideoState {
+    enum EVideoState {
         /// Video state is disabled.
         PLNK_VIDEO_STATE_DISABLED = 0,
         /// Video state is enabled.
         PLNK_VIDEO_STATE_ENABLED,
         /// Video state is paused.
         PLNK_VIDEO_STATE_PAUSED,
-    } EVideoState;
+    };
 
     /**
      * @brief State of the peer's video activation
      */
-    typedef enum EPeerVideoState {
+    enum EPeerVideoState {
         /// Peer video is not activated (Default).
         PLNK_PEER_VIDEO_STATE_IDLE = 0,
         /// Peer video is ready to start.
@@ -366,12 +367,12 @@ namespace PlanetKit
         /// Peer video has started.
         PLNK_PEER_VIDEO_STATE_STARTED = 2
 
-    } EPeerVideoState;
+    };
 
     /**
      * @brief Reason for pausing video
      */
-    typedef enum EVideoPauseReason {
+    enum EVideoPauseReason {
         /// Paused by a user.
         PLNK_VIDEO_PAUSE_REASON_BY_USER = 0,
         /// Unknown interrupt has occurred.
@@ -386,12 +387,12 @@ namespace PlanetKit
         PLNK_VIDEO_PAUSE_REASON_CAMERA_INACTIVE,
         /// Paused by the request for hold.
         PLNK_VIDEO_PAUSE_REASON_HOLD,
-    } EVideoPauseReason;
+    };
 
     /**
      * @brief Peer's media type
      */
-    typedef enum EMediaType {
+    enum EMediaType {
         /// Unkown type
         PLNK_MEDIA_TYPE_UNKNOWN,
         /// Audio type only
@@ -402,35 +403,35 @@ namespace PlanetKit
         PLNK_MEDIA_TYPE_AUDIOVIDEO,
         /// Max count (do not use)
         PLNK_MEDIA_TYPE_COUNT
-    }EMediaType;
+    };
 
     /**
      * @brief
      *   This is an enum value added to handle unknown errors that may occur due to functional differences between versions.
      */
-    typedef enum EConferenceExceptionType {
+    enum EConferenceExceptionType {
         /// None
         PLNK_CONF_EXCEPTION_TYPE_NONE = 0,
         /// This is an exception that determines and informs the server when another user in the room uses a feature that is not supported by the local user's client.
         PLNK_CONF_EXCEPTION_TYPE_PEER_USED_UNSUPPORTED_FEATURE,
         /// A user-defined exception has occurred.
         PLNK_CONF_EXCEPTION_TYPE_USER,
-    }EConferenceExceptionType;
+    };
 
     /**
      * @brief State of screen share
      */
-    typedef enum EScreenShareState {
+    enum EScreenShareState {
         /// Disabled
         PLNK_SCREEN_SHARE_STATE_DISABLED = 0,
         /// Enabled
         PLNK_SCREEN_SHARE_STATE_ENABLED = 1
-    }EScreenShareState;
+    };
 
     /**
      * @brief Device definition of peer that can be utilized in statistics.
      */
-    typedef enum EUserEquipmentType {
+    enum EUserEquipmentType {
         /// None
         PLNK_UE_TYPE_NONE = 0,
         /// Android
@@ -448,37 +449,34 @@ namespace PlanetKit
 
         /// Not used definition
         PLNK_UE_TYPE_SIP_TERMINAL = 100,
-    }EUserEquipmentType;
+    };
 
     /**
      * @brief Type of connection token for connecting to the PlanetKit cloud server.
      */
-    typedef enum EConnectToken {
+    enum EConnectToken {
         /// This feature will be deprecated soon. It is only a value temporarily maintained for backward compatibility.
         API_KEY,
         /// Default feature of the connect token.
         ACCESS_TOKEN
-    } EConnectToken;
+    };
 
     /**
      * @brief Reason for the failure of getting screen share state.
      */
-    typedef enum EPeerGetFailReason {
+    enum EPeerGetFailReason {
         /// None
         PLNK_PEER_GET_FAIL_REASON_NONE = 0,
         /// Peer is not in the subgroup.
         PLNK_PEER_GET_FAIL_REASON_NOT_IN_SUBGROUP = 1,
         /// Peer is already disconnected.
         PLNK_PEER_GET_FAIL_REASON_DISCONNECTED = 2,
-    } EPeerGetFailReason;
+    };
 
     constexpr int PLNK_DISPLAY_NAME_MAX_SIZE_BYTES = 128;
 
     class EventManager;
     class PlanetKitManager;
-
-    typedef Array<String> StringArray;
-    typedef Array<WString> WStringArray;
 
     class PLANETKIT_API ContentShareInterface;
     class PLANETKIT_API SubgroupManager;

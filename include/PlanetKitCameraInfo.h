@@ -92,7 +92,7 @@ namespace PlanetKit {
         virtual void SetType(ECameraInfoType eCameraType) = 0;
     };
 
-    typedef SharedPtr<CameraInfo> CameraInfoPtr;
-    typedef Optional<CameraInfoPtr> CameraInfoOptional;
-    typedef Array<CameraInfoPtr> CameraInfoArray;
+    using CameraInfoPtr = SharedPtr<CameraInfo>;
+    using CameraInfoOptional = Optional<CameraInfoPtr>;
+    using CameraInfoArray = Array<CameraInfoPtr>;
 };
