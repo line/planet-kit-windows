@@ -24,15 +24,16 @@ namespace PlanetKit {
     constexpr int CallStartMessageLength = 200;
 
     class PLANETKIT_API CallStartMessage;
-
-    template class PLANETKIT_API AutoPtr<CallStartMessage>;
-    typedef AutoPtr<CallStartMessage> CallStartMessagePtr;
+    typedef SharedPtr<CallStartMessage> CallStartMessagePtr;
+    typedef Optional<CallStartMessagePtr> CallStartMessageOptional;
 
     /**
      * Local representation of data exchanged between caller and callee before PlanetKitCall session is established
      */
-    class PLANETKIT_API CallStartMessage : public Base {
+    class PLANETKIT_API CallStartMessage {
     public :
+        virtual ~CallStartMessage() { }
+
         /**
          * Creates the call start message.
          * @param strMessage Message data that you want to transfer to the peer, which must not exceed 200 bytes including the null-termination character after being converted to UTF-8.

@@ -17,6 +17,9 @@
 #include <string.h>
 #include <assert.h>
 
+#include "PlanetKitPredefine.h"
+#include "PlanetKitMemory.h"
+
 #pragma warning(push)
 
 // Disable warning: multiple copy constructors specified
@@ -151,7 +154,7 @@ namespace PlanetKit {
                 m_nSize = strlen(src);
 
                 if (m_nSize > 0) {
-                    m_pData = new char[m_nSize + 1];
+                    m_pData = static_cast<char*>(PlanetKitMemory::AllocateArrayMemory(m_nSize + 1));
                     strcpy_s(m_pData, m_nSize + 1, src);
                 }
             }
@@ -162,7 +165,7 @@ namespace PlanetKit {
          */
         void Clear() {
             if (m_pData && m_nSize) {
-                delete[] m_pData;
+                PlanetKitMemory::FreeArrayMemory(m_pData);
                 m_pData = nullptr;
                 m_nSize = 0;
             }
@@ -178,11 +181,11 @@ namespace PlanetKit {
                 char* pTemp = m_pData;
 
                 m_nSize += nLen;
-                m_pData = new char[m_nSize + 1];
+                m_pData = static_cast<char*>(PlanetKitMemory::AllocateArrayMemory(m_nSize + 1));
                 strcpy_s(m_pData, m_nSize + 1, pTemp);
                 strcat_s(m_pData, m_nSize + 1, rhs);
 
-                delete[] pTemp;
+                PlanetKitMemory::FreeArrayMemory(pTemp);
             }
         }
 
@@ -262,8 +265,6 @@ namespace PlanetKit {
          * Compare between string
          */
         bool operator==(const wchar_t* rhs) const {
-            assert(!(rhs == nullptr));
-
             if (m_nSize == 0 && rhs == nullptr) {
                 return true;
             }
@@ -416,15 +417,19 @@ namespace PlanetKit {
              * Copy string
              */
             void Copy(const wchar_t* src) {
+                if (*this == src) {
+                    return;
+                }
+
                 Clear();
 
                 assert(!(src == nullptr));
 
-                if (src) {
+                if (src && wcslen(src) > 0) {
                     m_nSize = wcslen(src);
 
                     if (m_nSize > 0) {
-                        m_pData = new wchar_t[m_nSize + 1];
+                        m_pData = static_cast<wchar_t*>(PlanetKitMemory::AllocateArrayMemory((m_nSize + 1) * sizeof(wchar_t)));
                         wcscpy_s(m_pData, m_nSize + 1, src);
                     }
                     else {
@@ -450,11 +455,11 @@ namespace PlanetKit {
                             wchar_t* pTemp = m_pData;
 
                             m_nSize += nLen;
-                            m_pData = new wchar_t[m_nSize + 1];
+                            m_pData = static_cast<wchar_t*>(PlanetKitMemory::AllocateArrayMemory((m_nSize + 1) * sizeof(wchar_t)));
                             wcscpy_s(m_pData, m_nSize + 1, pTemp);
                             wcscat_s(m_pData, m_nSize + 1, rhs);
 
-                            delete[] pTemp;
+                            PlanetKitMemory::FreeArrayMemory(pTemp);
                         }
                         else {
                             Copy(rhs);
@@ -464,20 +469,16 @@ namespace PlanetKit {
             }
 
             void Clear() {
-                if (m_pData && m_nSize) {
-                    delete[] m_pData;
+                if (m_pData) {
+                    PlanetKitMemory::FreeArrayMemory(m_pData);
+                    m_pData = nullptr;
+                    m_nSize = 0;
                 }
-                else if (m_pData) {
-                    delete m_pData;
-                }
-
-                m_pData = nullptr;
-                m_nSize = 0;
             }
 
             void Initialize() {
-                m_pData = new wchar_t;
-                *m_pData = L'\0';
+                m_pData = static_cast<wchar_t*>(PlanetKitMemory::AllocateArrayMemory(1 * sizeof(wchar_t)));
+                m_pData[0] = L'\0';
                 m_nSize = 0;
             }
 
