@@ -15,9 +15,8 @@
 #pragma once
 #include "PlanetKitString.hpp"
 
-namespace PlanetKit
-{
-    struct HoldStatus {
+namespace PlanetKit {
+    struct PLANETKIT_API HoldStatus {
         /// Checks the hold status.
         bool bIsOnHold;
         /// Gets the hold reason string that can be nullptr.
