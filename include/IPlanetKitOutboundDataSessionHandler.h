@@ -20,7 +20,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API OutboundDataSession;
-    typedef AutoPtr<OutboundDataSession> OutboundDataSessionPtr;
+    using OutboundDataSessionPtr = AutoPtr<OutboundDataSession>;
 
     /**
      * Defines a set of callbacks related to changes of OutboundDataSession.
@@ -66,5 +66,5 @@ namespace PlanetKit {
         virtual void OnClosed(void* pUserData, EDataSessionClosedReason eClosedReason) = 0;
     };
 
-    typedef SharedPtr<IOutboundDataSessionHandler> IOutboundDataSessionHandlerPtr;
+    using IOutboundDataSessionHandlerPtr = SharedPtr<IOutboundDataSessionHandler>;
 };

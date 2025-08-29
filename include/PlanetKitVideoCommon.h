@@ -425,7 +425,8 @@ namespace PlanetKit  {
         /// Video max FPS.
         EVideoFps eMaxFps;
     };
-    typedef Optional<SVideoCapability> VideoCapabilityOptional;
+
+    using VideoCapabilityOptional = Optional<SVideoCapability>;
 
     /**
      * Capturer type
@@ -458,7 +459,7 @@ namespace PlanetKit  {
         PLNK_INITIAL_MY_VIDEO_STATE_PAUSE,
     }EInitialMyVideoState;
 
-    typedef Optional<EScreenShareState> EScreenShareStateOptional;
+    using EScreenShareStateOptional = Optional<EScreenShareState>;
 
     typedef struct ScreenShareStateResult {
         EScreenShareStateOptional eScreenShareState;

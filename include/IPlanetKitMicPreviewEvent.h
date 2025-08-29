@@ -17,9 +17,6 @@
 #include "PlanetKit.h"
 
 namespace PlanetKit {
-    class PLANETKIT_API IMicPreviewEvent;
-    typedef SharedPtr<IMicPreviewEvent> MicPreviewEventPtr;
-
     /**
      * Event to check the microphone device.
      */
@@ -32,4 +29,6 @@ namespace PlanetKit {
          */
         virtual void OnMicPreviewVolume(float fVolume) = 0;
     };
+
+    using MicPreviewEventPtr = SharedPtr<IMicPreviewEvent>;
 }

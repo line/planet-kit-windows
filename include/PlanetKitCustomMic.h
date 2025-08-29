@@ -32,6 +32,7 @@ namespace PlanetKit {
         }
 
         virtual bool DeregisterMicEvent(MicEventPtr pEvent) override {
+            PLNK_UNREFERENCED_PARAMETER(pEvent);
             m_pMicEvent = nullptr;
             return true;
         }

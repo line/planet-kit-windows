@@ -19,12 +19,10 @@
 #include <wincodec.h>
 
 namespace PlanetKit {
-    template class PLANETKIT_API SharedPtr<Image>;
-    typedef SharedPtr<Image> ImagePtr;
-
-    template class PLANETKIT_API Optional<ImagePtr>;
-    typedef Optional<ImagePtr> ImageOptional;
-
+    class PLANETKIT_API Image;
+    using ImagePtr = SharedPtr<Image>;
+    using ImageOptional = Optional<ImagePtr>;
+    
     class PLANETKIT_API Image {
     public:
         virtual ~Image() {}

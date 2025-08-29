@@ -31,5 +31,5 @@ namespace PlanetKit {
         virtual void OnRenderFailure(HWND hWnd) = 0;
     };
 
-    typedef SharedPtr<IVideoRenderEvent> IVideoRenderEventPtr;
+    using IVideoRenderEventPtr = SharedPtr<IVideoRenderEvent>;
 };

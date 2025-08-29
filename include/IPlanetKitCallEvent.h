@@ -30,7 +30,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API PlanetKitCall;
-    typedef AutoPtr<PlanetKitCall> PlanetKitCallPtr;
+    using PlanetKitCallPtr = AutoPtr<PlanetKitCall>;
 
     /// @brief Event callback APIs for 1-to-1 calls
     /**
@@ -207,5 +207,5 @@ namespace PlanetKit {
         virtual void OnRecordOnCloudUpdated(PlanetKitCallPtr pPlanetKitCall, RecordOnCloudPtr pRecordOnCloud) = 0;
     };
 
-    typedef SharedPtr<ICallEvent> ICallEventPtr;
+    using ICallEventPtr = SharedPtr<ICallEvent>;
 }

@@ -44,8 +44,8 @@ namespace PlanetKit {
          * @param eInitialMyVideoState Determines the initial video state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state, and you will need to call ResumeMyVideo to send the video to the peer.
          * @param bRecordOnCloud Whether to enable recording on the cloud.<br>DO NOT set this to true before consulting with the LINE Planet team.<br>If you want to use this feature, please contact us. (https://docs.lineplanet.me/ko/help/contact)
          * @remark
-         *  - [Preparation guide]( @see https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status ) <br>
-         *  - [CallStartMessage guide]( @see https://docs.lineplanet.me/windows/extended-functions/call-start-message ) <br>
+         *  - [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status) <br>
+         *  - [CallStartMessage guide](https://docs.lineplanet.me/windows/extended-functions/call-start-message)
          */
         virtual void AcceptCall(bool bPreparation, CallStartMessageOptional pCallStartMessage = NullOptional, EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME, bool bRecordOnCloud = false) = 0;
 

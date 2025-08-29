@@ -33,7 +33,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API PlanetKitConference;
-    typedef AutoPtr<PlanetKitConference> PlanetKitConferencePtr;
+    using PlanetKitConferencePtr = AutoPtr<PlanetKitConference>;
 
     /**
      * PlanetKit calls these APIs of IConferenceEvent when some events occur.
@@ -192,5 +192,5 @@ namespace PlanetKit {
         virtual void OnMyScreenShareStoppedByHold(PlanetKitConferencePtr pPlanetKitConference) = 0;
     };
 
-    typedef SharedPtr<IConferenceEvent> IConferenceEventPtr;
+    using IConferenceEventPtr = SharedPtr<IConferenceEvent>;
 }

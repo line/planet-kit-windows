@@ -22,6 +22,7 @@
 #include "PlanetKitHoldStatus.h"
 #include "PlanetKitVideoStatus.h"
 #include "PlanetKitSharedContents.h"
+#include "PlanetKitUserTypeContainer.h"
 
 namespace PlanetKit {
     /**
@@ -113,5 +114,10 @@ namespace PlanetKit {
 
         /// Gets shared contents.
         virtual SharedContentsOptional GetSharedContents() = 0;
+
+        /**
+         * Returns the type of the user.
+         */
+        virtual UserTypeContainerPtr GetUserType() = 0;
     };
 };

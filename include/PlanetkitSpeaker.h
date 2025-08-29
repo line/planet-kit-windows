@@ -19,8 +19,8 @@
 namespace PlanetKit {
     class PLANETKIT_API Speaker;
 
-    typedef SharedPtr<Speaker> SpeakerPtr;
-    typedef Optional<SpeakerPtr> SpeakerOptional;
+    using SpeakerPtr = SharedPtr<Speaker>;
+    using SpeakerOptional = Optional<SpeakerPtr>;
 
     class PLANETKIT_API Speaker {
     public:
