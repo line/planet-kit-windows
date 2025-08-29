@@ -15,25 +15,29 @@
 #pragma once
 
 #include "PlanetKitAutoPtr.hpp"
-#include "PlanetKitSharedPtr.hpp"
 #include "PlanetKitContainer.hpp"
 #include "PlanetKitOptional.hpp"
 #include "PlanetKitString.hpp"
 
 namespace PlanetKit {
-    using ByteOptional = Optional<unsigned char>;
+    template class PLANETKIT_API Optional<unsigned char>;
+    typedef Optional<unsigned char> ByteOptional;
 
-    using StringOptional = Optional<String>;
-    using WStringOptional = Optional<WString>;
+    template class PLANETKIT_API Optional<String>;
+    typedef Optional<String> StringOptional;
 
-    using StringArray = Array<String>;
-    using WStringArray = Array<WString>;
+    template class PLANETKIT_API Optional<WString>;
+    typedef Optional<WString> WStringOptional;
 
-    using FloatOptional = Optional<float>;
+    template class PLANETKIT_API Optional<float>;
+    typedef Optional<float> FloatOptional;
 
-    using UIntOptional = Optional<unsigned int>;
+    template class PLANETKIT_API Optional<unsigned int>;
+    typedef Optional<unsigned int> UIntOptional;
 
-    using BoolOptional = Optional<bool>;
+    template class PLANETKIT_API Optional<bool>;
+    typedef Optional<bool> BoolOptional;
 
-    using ByteArray = Array<unsigned char>;
+    template class PLANETKIT_API Array<unsigned char>;
+    typedef Array<unsigned char> ByteArray;
 };

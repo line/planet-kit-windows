@@ -18,22 +18,19 @@
 #include "PlanetKitCall.h"
 #include "PlanetKitConference.h"
 #include "PlanetKitAudioManager.h"
-#include "PlanetKitCCParam.h"
+#include "PlanetKitCcParam.h"
 
 #include "PlanetKitCameraController.h"
 #include "PlanetKitScreenShareController.h"
 
 #include "PlanetKitConfiguration.h"
 
-#include "PlanetKitVideoCommon.h"
+namespace PlanetKit 
+{
+    typedef AutoPtr<PlanetKitManager> PlanetKitManagerPtr;
 
-namespace PlanetKit {
-    class PLANETKIT_API PlanetKitManager;
-    typedef SharedPtr<PlanetKitManager> PlanetKitManagerPtr;
-
-    class PLANETKIT_API PlanetKitManager {
+    class PLANETKIT_API PlanetKitManager : public Base {
     public:
-        virtual ~PlanetKitManager() {}
         /**
          * Initializes PlanetKit SDK.<br>This must be called before your application can use the PlanetKit library.<br>
          * @param pConfiguration This parameter contains configuration values.
@@ -58,35 +55,26 @@ namespace PlanetKit {
         /**
         * Makes a call.
         * @param pParam CallParam that is created by MakeCallParam::CreateWithAccessToken
-        * @param microphoneOptional Select the microphone to use for this call.
         * @param pPlanetKitCall Assigns a PlanetKitCall instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone. 
-        *         Subsequently, the call may be terminated depending on the AllowCallWithoutMic setting in pParam.
         */
-        virtual SStartResult MakeCall(MakeCallParamPtr pParam, MicOptional micOptional, PlanetKitCallPtr* pPlanetKitCall) = 0;
+        virtual SStartResult MakeCall(MakeCallParamPtr pParam, PlanetKitCallPtr* pPlanetKitCall) = 0;
 
         /**
         * Verifies a call.
         * @param pParam CallParam that is created by VerifyCallParam::Create
-        * @param microphoneOptional Select the microphone to use for this call.
         * @param pPlanetKitCall  Assigns a PlanetKitCall instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone. 
-        *         Subsequently, the call may be terminated depending on the AllowCallWithoutMic setting in pParam.
         */
-        virtual SStartResult VerifyCall(VerifyCallParamPtr pParam, MicOptional micOptional, PlanetKitCallPtr* pPlanetKitCall) = 0;
+        virtual SStartResult VerifyCall(VerifyCallParamPtr pParam, PlanetKitCallPtr* pPlanetKitCall) = 0;
 
         /**
         * Joins a conference.
         * @param pConferenceParam Setting values for a conference.
-        * @param microphoneOptional Select the microphone to use for this conference.
         * @param pPlanetKitConference Assigns a PlanetKitConference instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the conference will proceed without a microphone. 
-        *         Subsequently, the con may be terminated depending on the AllowCallWithoutMic setting in pParam.
         */
-        virtual SStartResult JoinConference(ConferenceParamPtr pConferenceParam, MicOptional micOptional, PlanetKitConferencePtr& pPlanetKitConference) = 0;
+        virtual SStartResult JoinConference(ConferenceParamPtr pConferenceParam, PlanetKitConferencePtr& pPlanetKitConference) = 0;
 
         /**
          * Gets the connected conference instance.
@@ -99,19 +87,19 @@ namespace PlanetKit {
         * Gets the AudioManager instance.
         * @return Reference to AudioManager singleton instance. Returns nullptr on failure.
         */
-        virtual AudioManagerPtr GetAudioManager() = 0;
+        AudioManagerPtr GetAudioManager();
 
         /**
          * Gets the CameraController instance.
          * @return Reference to CameraController singleton instance. Returns nullptr on failure.
          */
-        virtual CameraControllerPtr GetCameraController() = 0;
+        CameraControllerPtr GetCameraController();
         
         /**
          * Gets the ScreenShareController instance.
          * @return Reference to ScreenShareController singleton instance. Returns nullptr on failure.
          */
-        virtual ScreenShareControllerPtr GetScreenShareController() = 0;
+        ScreenShareControllerPtr GetScreenShareController();
 
         /**
          * Updates the VoIP server URL.
@@ -120,7 +108,7 @@ namespace PlanetKit {
          * @remark
          *  - The maximum number of bytes for szServerUrl is 2048.
          */
-        virtual bool UpdateServerUrl(const WString& strServerUrl) = 0;
+        bool UpdateServerUrl(const WString& strServerUrl);
 
         /**
          * Gets the current VoIP server URL.
@@ -128,69 +116,46 @@ namespace PlanetKit {
          * @remark
          *  - This API can return nullptr when the URL string is empty.
          */
-        virtual const WString& GetServerUrl() = 0;
+        const WString& GetServerUrl();
 
         /**
         * Gets the PlanetKit version. 
         * @return Reference to null-terminated PlanetKit version string. Reference is valid for the lifetime of PlanetKitManager.
         */
-        virtual const WString& PlanetKitVersion() = 0;
+        const WString& PlanetKitVersion();
 
         /**
          * Gets user agent string. It includes `PlanetKit Version` and `Engine Version`.
          * @return Reference to null-terminated string. Reference is valid for the lifetime of PlanetKitManager.
          */
-        virtual const WString& UserAgentString() = 0;
+        const WString& UserAgentString();
+
+        /**
+        * Gets the default video transmission capability for the current system. 
+        * @return true on success.
+        */
+        bool GetDefaultVideoCapSend(SVideoCapability *pSend);
+
+        /**
+        * Gets the default video receiving capability for the current system.
+        * @return true on success.
+        */
+        bool GetDefaultVideoCapReceive(SVideoCapability *pReceive);
 
         /**
         * Checks whether the end device supports hardware video codec.
         * @return true if hardware codec is supported.
         */
-        virtual bool CanSupportVideoHWCodec() = 0;
+        bool CanSupportVideoHWCodec();
 
         /**
          * Creates a cc param.
          */
-        virtual CCParamPtr CreateCCParam(const char* strCCParam) = 0;
+        CCParamPtr CreateCCParam(const char* strCCParam);
 
-        /**
-         * Retrieves the default video settings applied when sending video to the peer during a call.
-         * @remark
-         *  - If PlanetKit is not initialized, NullOptional is returned.
-         */
-        virtual VideoCapabilityOptional GetCallDeviceDefaultVideoSendCapability() = 0;
-
-        /**
-         * Retrieves the default video settings applied when receiving video from the peer during a call.
-         * @remark
-         *  - If PlanetKit is not initialized, NullOptional is returned.
-         */
-        virtual VideoCapabilityOptional GetCallDeviceDefaultVideoReceiveCapability() = 0;
-
-        /**
-         * Retrieves the default video settings applied when sending video to the peer during a confernece.
-         * @remark
-         *  - If PlanetKit is not initialized, NullOptional is returned.
-         */
-        virtual VideoCapabilityOptional GetConferenceDeviceDefaultVideoSendCapability() = 0;
-
-        /**
-         * Retrieves the default video settings applied when receiving video from the peer during a confernece.
-         * @remark
-         *  - If PlanetKit is not initialized, NullOptional is returned.
-         */
-        virtual VideoCapabilityOptional GetConferenceDeviceDefaultVideoReceiveCapability() = 0;
-
-        /**
-         * Sets whether to attempt to use the hardware codec.
-         * @param sPreferredHardwareCodec Configuration for whether to attempt to use the hardware codec.
-         */
-        virtual void SetPreferredHardwareCodec(SPreferredHardwareCodec sPreferredHardwareCodec) = 0;
-
-        /**
-         * Gets whether to attempt to use the hardware codec.
-         * @return Configuration for whether to attempt to use the hardware codec.
-         */
-        virtual SPreferredHardwareCodec GetPreferredHardwareCodec() = 0;
+        
+    protected:
+        PlanetKitManager();
+        virtual ~PlanetKitManager();
     };
 }

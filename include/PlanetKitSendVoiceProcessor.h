@@ -17,7 +17,45 @@
 #include "PlanetKitAudioCommon.h"
 #include "IPlanetKitResultHandler.h"
 
-namespace PlanetKit {
+namespace PlanetKit
+{
+    class PLANETKIT_API SendVoiceProcessor;
+
+    template class PLANETKIT_API AutoPtr<SendVoiceProcessor>;
+    typedef AutoPtr<SendVoiceProcessor> SendVoiceProcessorPtr;
+
+    /// Acoustic Echo Canceller value
+    typedef enum EPlanetKitAcousticEchoCanceller {
+        /// Disabled
+        PLNK_ACOUSTIC_ECHO_CANCELLER_DISABLED               = 0,
+        /// The recommended value<br>Default
+        PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_RECOMMENDED  = 1,
+        /// Min
+        PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_MIN          = 2,
+        /// Max
+        PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_MAX          = 3,
+        /// Adaptive
+        PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_ADAPTIVE     = 4
+    }EPlanetKitAcousticEchoCanceller;
+
+    /// Auto Gain Control value
+    typedef enum EPlanetKitAutoGainControl {
+        /// Disabled
+        PLNK_AUTO_GAIN_CONTROL_TYPE_DISABLED                = 0,
+        /// Use AGC by using software
+        PLNK_AUTO_GAIN_CONTROL_TYPE_SOFTWARE               = 1,
+        /// Use AGC by using hardware<br>Default
+        PLNK_AUTO_GAIN_CONTROL_TYPE_HARDWARE                = 2,
+    } EPlanetKitAutoGainControl;
+
+    /// Noise Suppressor mode value
+    typedef enum EPlanetkitNoiseSuppressorMode {
+        /// Disabled
+        PLNK_NOISE_SUPPRESSOR_MODE_DISABLED                 = 0,
+        /// Enabled<br>Default
+        PLNK_NOISE_SUPPRESSOR_MODE_ENABLE                   = 1,
+    } EPlanetkitNoiseSuppressorMode;
+
     /**
      * @brief Gets SendVoiceProcessor to control VQE (Voice Quality Enhancement). Use SendVoiceProcessor when you need to turn on or off the S/W VQE filter functionality depending on your environment.
      */
@@ -90,6 +128,4 @@ namespace PlanetKit {
          */
         virtual bool SetNoiseSuppressor(EPlanetkitNoiseSuppressorMode ePlanetkitNoiseSuppressorMode = EPlanetkitNoiseSuppressorMode::PLNK_NOISE_SUPPRESSOR_MODE_ENABLE, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
-
-    typedef AutoPtr<SendVoiceProcessor> SendVoiceProcessorPtr;
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 // Copyright 2023 LINE Plus Corporation
 //
 // LINE Plus Corporation licenses this file to you under the Apache License,
@@ -12,17 +14,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-#pragma once
-
 #include "PlanetKit.h"
 #include "PlanetKitVideoCommon.h"
 
 namespace PlanetKit {
     /// Information for screen share.
-    class PLANETKIT_API ScreenShareInfo {
+    class PLANETKIT_API ScreenShareInfo : public Base {
     public:
-        virtual ~ScreenShareInfo() { }
-
         /**
          * Gets the name of the target to share the screen with.
          * @return The name of the target to share the screen with.
@@ -50,6 +48,45 @@ namespace PlanetKit {
         virtual EVideoCapturerType GetType() = 0;
     };
 
-    typedef SharedPtr<ScreenShareInfo> ScreenShareInfoPtr;
+    /// ScreenShareInfo pointer as AutoPtr
+    template class PLANETKIT_API AutoPtr<ScreenShareInfo>;
+    typedef AutoPtr<ScreenShareInfo> ScreenShareInfoPtr;
+
+    /// Array of ScreenShareInfo
+    template class PLANETKIT_API Array<ScreenShareInfoPtr>;
     typedef Array<ScreenShareInfoPtr> ScreenShareInfoArray;
+
+    /**
+     * Window state that is used by screen share.
+     */
+    typedef enum EWindowState
+    {
+        /// Window is unminimized.
+        PLNK_CAPTURE_WINDOW_EVENT_UNMINIMIZED,
+        /// Window is minimized.
+        PLNK_CAPTURE_WINDOW_EVENT_MINIMIZED,
+        /// Window rect is changed.
+        PLNK_CAPTURE_WINDOW_EVENT_RECT_CHANGED,
+        /// Window is closed.
+        PLNK_CAPTURE_WINDOW_EVENT_WINDOW_CLOSED
+    } EWindowState;
+
+    /**
+     * Parameter received through a listener when the state of the shared window is changed.
+     */
+    typedef struct SWindowStateChangeParam
+    {
+        /// Window information
+        ScreenShareInfoPtr pInfo;
+        /// Window state
+        EWindowState newState;
+    } SWindowStateChangeParam;
+
+    /// The interface for receiving a callback when frame processing is finished.
+    class PLANETKIT_API IVideoCapturerEvent {
+    public:
+        // A callback for VideoCaptureType::VIDEO_CAPTURE_WINDOW
+        virtual void OnCaptureWindowStateChanged(const SWindowStateChangeParam* pParam) = 0;
+    };
+
 }
