@@ -15,7 +15,6 @@
 #pragma once
 
 #include <string.h>
-#include <assert.h>
 
 #include "PlanetKitPredefine.h"
 #include "PlanetKitMemory.h"
@@ -321,9 +320,6 @@ namespace PlanetKit {
 
 
         const wchar_t operator[] (int idx) {
-            assert(!(idx > (int)m_nSize));
-            assert(!(idx < 0));
-
             if (idx >= (int)m_nSize) {
                 return L'\0';
             }
@@ -373,14 +369,27 @@ namespace PlanetKit {
          */
         WString Substring(const unsigned int unStart, const unsigned unLength = 0) const{
             WString strTemp;
+            
+            // Security fix: Add boundary check for start position
+            if (unStart >= m_nSize) {
+                return strTemp;  // Return empty string for out-of-bounds start
+            }
+            
             wchar_t* pstrChar = m_pData + unStart;
             if (unLength == 0) {
+                // Take substring from unStart to end of string
                 strTemp = pstrChar;
                 return strTemp;
             }
             else {
-                if (unStart + unLength > m_nSize) {
-                    return strTemp;
+                // Security fix: Check for integer overflow and bounds
+                if (unStart > m_nSize || unLength > m_nSize) {
+                    return strTemp;  // Return empty string for invalid parameters
+                }
+                
+                // Safe overflow check: avoid unStart + unLength calculation
+                if (unLength > m_nSize - unStart) {
+                    return strTemp;  // Return empty string for range that would exceed bounds
                 }
                 else {
                     wchar_t charTemp = m_pData[unStart + unLength];
@@ -423,8 +432,6 @@ namespace PlanetKit {
 
                 Clear();
 
-                assert(!(src == nullptr));
-
                 if (src && wcslen(src) > 0) {
                     m_nSize = wcslen(src);
 
@@ -445,8 +452,6 @@ namespace PlanetKit {
              * Append string
              */
             void AppendData(const wchar_t* rhs) {
-                assert(!(rhs == nullptr));
-
                 if (rhs != nullptr) {
                     size_t nLen = wcslen(rhs);
 

@@ -25,19 +25,22 @@ namespace PlanetKit {
         virtual ~IVideoCaptureDeviceEvent() { }
 
         /**
-         * This callback method is called when a camera device is added.
+         * This callback method is called when a camera device is added.\n
+         * This event is triggered for any camera device added to the system.
          * @param pInfo Information of the added camera device.
          */
         virtual void OnDeviceAdded(CameraInfoPtr pInfo) = 0;
 
         /**
-         * This callback method is called when a camera device is removed.
+         * This callback method is called when a camera device is removed.\n
+         * This event is triggered for any camera device removed from the system, including the selected camera.
          * @param pInfo Information of the removed camera device.
          */
         virtual void OnDeviceRemoved(CameraInfoPtr pInfo) = 0;
 
         /**
-         * This callback method is called when any camera control fails.
+         * This callback method is called when any camera control fails.\n
+         * This event is triggered when there are issues with the selected camera device.
          * @param eCameraControlResult Reason of failure.
          */
         virtual void OnCameraError(ECameraControlResult eCameraControlResult) = 0;
