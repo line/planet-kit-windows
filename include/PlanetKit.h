@@ -109,8 +109,10 @@ namespace PlanetKit {
         PLNK_KIT_START_FAIL_REASON_INVALID_PARAM = 1005,
         /// Another PlanetKitConference instance already exists.
         PLNK_KIT_START_FAIL_REASON_OTHER_CONFERENCE_IS_ALREADY_EXIST = 1006,
-        /// Peer ID is empty when you MakeCall.
+        /// Peer ID is empty when attempting to make a call.
         PLNK_KIT_START_FAIL_REASON_PEER_ID_IS_EMPTY = 1007,
+        /// MakeCallParam is nullptr when attempting to make a call.
+        PLNK_KIT_START_FAIL_REASON_MAKECALL_PARAM_IS_NULL = 1008,
 
         // Windows platform internal errors are reduced from value 1999.
         // If this error is returned, please contact the PlanetKit windows development team.
