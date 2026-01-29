@@ -124,6 +124,9 @@ namespace PlanetKit {
         PLNK_AUTO_GAIN_CONTROL_TYPE_SOFTWARE = 1,
         /// Use AGC by using hardware<br>Default
         PLNK_AUTO_GAIN_CONTROL_TYPE_HARDWARE = 2,
+        /// Use AGC by using hardware. 
+        /// Adjusts the input gain based on the speaker's voice level, even when echo is present in the environment.
+        PLNK_AUTO_GAIN_CONTROL_TYPE_HARDWARE_ECHO_TOLERANCE = 3,
     } EPlanetKitAutoGainControl;
 
     /// Noise Suppressor mode value
