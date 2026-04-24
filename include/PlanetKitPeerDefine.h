@@ -19,11 +19,11 @@
 
 namespace PlanetKit {
     class PLANETKIT_API Peer;
-    typedef AutoPtr<Peer> PeerPtr;
-    typedef Array<PeerPtr> PeerArray;
+    using PeerPtr = AutoPtr<Peer>;
+    using PeerArray = Array<PeerPtr>;
 
     class PLANETKIT_API PeerControl;
-    typedef AutoPtr<PeerControl> PeerControlPtr;
+    using PeerControlPtr = AutoPtr<PeerControl>;
 
     /**
      * Result callback API that is called after working of PeerControl::StartVideo.
@@ -38,6 +38,6 @@ namespace PlanetKit {
     /**
      * Result callback API that is called after working of PeerControl::StopVideo.
      */
-    using StoptVideoResultCallback = void(*)(PeerControlPtr pPeerControl, SRequestMediaResultParam* pRequestMediaResult, void* pUserData);
+    using StopVideoResultCallback = void(*)(PeerControlPtr pPeerControl, SRequestMediaResultParam* pRequestMediaResult, void* pUserData);
 
 };

@@ -46,5 +46,5 @@ namespace PlanetKit {
         virtual unsigned int GetSize() = 0;
     };
 
-    typedef SharedPtr<ShortDataParam> ShortDataParamPtr;
+    using ShortDataParamPtr = SharedPtr<ShortDataParam>;
 };

@@ -21,7 +21,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API UserId;
-    typedef SharedPtr<UserId> UserIdPtr;
+    using UserIdPtr = SharedPtr<UserId>;
 
     /// User identifier information class
     class PLANETKIT_API UserId {

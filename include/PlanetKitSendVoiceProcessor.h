@@ -79,17 +79,17 @@ namespace PlanetKit {
          * Gets the Noise Suppressor mode.
          * @return Current Noise Suppressor mode
          */
-        virtual EPlanetkitNoiseSuppressorMode GetNoiseSuppressorMode() = 0;
+        virtual EPlanetKitNoiseSuppressorMode GetNoiseSuppressorMode() = 0;
 
         /**
          * Sets the Noise Suppressor mode.
-         * @param ePlanetkitNoiseSuppressorMode Noise Suppressor mode
+         * @param ePlanetKitNoiseSuppressorMode Noise Suppressor mode
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success
          */
-        virtual bool SetNoiseSuppressor(EPlanetkitNoiseSuppressorMode ePlanetkitNoiseSuppressorMode = EPlanetkitNoiseSuppressorMode::PLNK_NOISE_SUPPRESSOR_MODE_ENABLE, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool SetNoiseSuppressor(EPlanetKitNoiseSuppressorMode ePlanetKitNoiseSuppressorMode = EPlanetKitNoiseSuppressorMode::PLNK_NOISE_SUPPRESSOR_MODE_ENABLE, void * pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 
-    typedef AutoPtr<SendVoiceProcessor> SendVoiceProcessorPtr;
+    using SendVoiceProcessorPtr = AutoPtr<SendVoiceProcessor>;
 }

@@ -65,5 +65,5 @@ namespace PlanetKit {
         virtual bool IsSupportVideoShareMode() = 0;
     };
 
-    typedef SharedPtr<CallConnectedParam> CallConnectedParamPtr;
+    using CallConnectedParamPtr = SharedPtr<CallConnectedParam>;
 };

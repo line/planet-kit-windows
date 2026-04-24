@@ -21,7 +21,7 @@
 namespace PlanetKit
 {
     class PLANETKIT_API VerifyCallParam;
-    typedef SharedPtr<VerifyCallParam> VerifyCallParamPtr;
+    using VerifyCallParamPtr = SharedPtr<VerifyCallParam>;
 
     /// Call parameter for VerifyCall API
     class PLANETKIT_API VerifyCallParam {
@@ -74,7 +74,7 @@ namespace PlanetKit
         /**
          * Gets the video receiving capability.
          */
-        virtual const VideoCapabilityOptional RecvVideoCapability() = 0;
+        virtual VideoCapabilityOptional RecvVideoCapability() = 0;
 
         /// Gets whether to allow making a 1-to-1 call even when PlanetKit can't start microphone.
         virtual bool IsAllowCallWithoutMic() = 0;
@@ -127,16 +127,12 @@ namespace PlanetKit
         virtual bool IsVideoCall() = 0;
 
         /// Gets the video sending capability.
-        virtual const VideoCapabilityOptional SendVideoCapability() = 0;
+        virtual VideoCapabilityOptional SendVideoCapability() = 0;
 
         /// Gets the maximum link bandwidth in kbps for sending.
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
         /// Gets the maximum link bandwidth in kbps for receiving.
         virtual unsigned int GetMaxReceiveLinkBandwidth() = 0;
-        /// Gets the audio input no source timeout option.
-        virtual int GetAudioInputNoSrcTimeOutSec() = 0;
-        /// Gets the video input no source timeout option.
-        virtual int GetVideoInputNoSrcTimeOutSec() = 0;
 
         // Set true to disable MLNS noise suppressor.
         /// Checks whether MLNS is used.
@@ -155,10 +151,6 @@ namespace PlanetKit
         virtual void SetMaxSendLinkBandwidth(unsigned int unMaxSendLinkBandwidth) = 0;
         /// Sets the maximum link bandwidth in kbps for receiving. Set 0 for default.
         virtual void SetMaxReceiveLinkBandwidth(unsigned int unMaxReceiveLinkBandwidth) = 0;
-        /// Sets the audio input no source timeout option. Set 0 for no timeout.
-        virtual void SetAudioInputNoSrcTimeOutSec(unsigned int nAudioInputNoSrcTimeOutSec) = 0;
-        /// Sets the video input no source timeout option. Set 0 for no timeout.
-        virtual void SetVideoInputNoSrcTimeOutSec(unsigned int nVideoInputNoSrcTimeOutSec) = 0;
 
         /// Enables/Disables MLNS.
         virtual void SetDisableMLNS(bool bDisable) = 0; // Set true to disable MLNS noise suppressor.
@@ -174,7 +166,7 @@ namespace PlanetKit
         virtual void SetAudioDescriptionInfo(bool bUse, unsigned int unAudioDescriptionInterval) = 0;
 
         /// Gets the audio description information.
-        virtual AudioDescriptionInfo GetAudioDescriptionInfo() = 0;
+        virtual const AudioDescriptionInfo& GetAudioDescriptionInfo() = 0;
 
         /**
          * Sets whether the end tone should be played regardless of the call state.

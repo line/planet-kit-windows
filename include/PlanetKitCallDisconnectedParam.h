@@ -48,5 +48,5 @@ namespace PlanetKit {
         virtual const WString& GetUserReleaseCode() = 0;
     };
 
-    typedef SharedPtr<CallDisconnectedParam> CallDisconnectedParamPtr;
+    using CallDisconnectedParamPtr = SharedPtr<CallDisconnectedParam>;
 };

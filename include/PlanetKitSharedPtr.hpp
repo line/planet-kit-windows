@@ -86,6 +86,14 @@ namespace PlanetKit {
             return control_block_ < other.control_block_;
         }
 
+        bool operator!() const {
+            return get() == nullptr;
+        }
+
+        explicit operator bool() const {
+            return get() != nullptr;
+        }
+
         template <typename U>
         SharedPtr<U> as() const {
             U* castedPtr = dynamic_cast<U*>(get());

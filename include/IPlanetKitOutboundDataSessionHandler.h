@@ -15,7 +15,7 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitDatasessionDefine.h"
+#include "PlanetKitDataSessionDefine.h"
 
 
 namespace PlanetKit {

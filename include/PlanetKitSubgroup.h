@@ -82,9 +82,9 @@ namespace PlanetKit {
 
         /**
         * Unsupports an inbound data session.
-        * @param nStreamId
+        * @param streamId
         * @return true on success
         */
-        virtual bool UnsupportInboundDataSession(DataSessionStreamIdT nStreamId) = 0;
+        virtual bool UnsupportInboundDataSession(DataSessionStreamIdT streamId) = 0;
     };
 };

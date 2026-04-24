@@ -22,7 +22,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API ConferenceParam;
-    typedef SharedPtr<ConferenceParam> ConferenceParamPtr;
+    using ConferenceParamPtr = SharedPtr<ConferenceParam>;
 
     constexpr unsigned int MinCustomUserType = 1;
     constexpr unsigned int MaxCustomUserType = 9999;
@@ -30,20 +30,6 @@ namespace PlanetKit {
     class PLANETKIT_API ConferenceParam {
     public:
         virtual ~ConferenceParam() { }
-
-        /**
-         * Creates an instance of the ConferenceParam class with an API key.
-         * @param pMyID Local user's ID and service ID
-         * @param strRoomID Room ID string, which should be encoded in UTF-16 and null-terminated
-         * @param strRoomServiceID Room service ID string, which should be encoded in UTF-16 and null-terminated
-         * @param strAPIKey API key string, which should be encoded in UTF-16 and null-terminated
-         * @return
-         *  - This API can fail if either strRoomID, strRoomServiceID, or strAPIKey is nullptr.<br>
-         *  - If failed to create a Configuration class, returns nullptr.
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        static ConferenceParamPtr CreateWithAPIKey(UserIdPtr pMyID, const WString& strRoomID, const WString& strRoomServiceID, const WString& strAPIKey);
 
         /**
          * Creates an instance of the ConferenceParam class with an access token.
@@ -147,14 +133,8 @@ namespace PlanetKit {
          */
         virtual void SetAppServerData(const WString& strAppServerData) = 0;
 
-        /// Gets the API Key.
-        virtual const WString& GetAPIKey() = 0;
-
         /// Gets the access token.
         virtual const WString& GetAccessToken() = 0;
-
-        /// Gets the connect token.
-        virtual EConnectToken ConnectToken() = 0;
 
         /// Sets the media type.
         virtual void SetIsVideoCall(bool bVideoCall) = 0;
@@ -171,10 +151,6 @@ namespace PlanetKit {
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
         /// Gets the maximum link bandwidth in kbps for receiving.
         virtual unsigned int GetMaxReceiveLinkBandwidth() = 0;
-        /// Gets the audio input no source timeout option.
-        virtual int GetAudioInputNoSrcTimeOutSec() = 0;
-        /// Gets the video input no source timeout option.
-        virtual int GetVideoInputNoSrcTimeOutSec() = 0;
 
         // Set true to disable MLNS noise suppressor.
         /// Checks whether MLNS is used.
@@ -193,10 +169,6 @@ namespace PlanetKit {
         virtual void SetMaxSendLinkBandwidth(unsigned int unMaxSendLinkBandwidth) = 0;
         /// Sets the maximum link bandwidth in kbps for receiving. Set 0 for default.
         virtual void SetMaxReceiveLinkBandwidth(unsigned int unMaxReceiveLinkBandwidth) = 0;
-        /// Sets the audio input no source timeout option. Set 0 for no timeout.
-        virtual void SetAudioInputNoSrcTimeOutSec(unsigned int nAudioInputNoSrcTimeOutSec) = 0;
-        /// Sets the video input no source timeout option. Set 0 for no timeout.
-        virtual void SetVideoInputNoSrcTimeOutSec(unsigned int nVideoInputNoSrcTimeOutSec) = 0;
 
         /// Enables/Disables MLNS.
         virtual void SetDisableMLNS(bool bDisable) = 0; // Set true to disable MLNS noise suppressor.
@@ -217,7 +189,7 @@ namespace PlanetKit {
         virtual void SetAudioDescriptionInfo(bool bUse, unsigned int unAudioDescriptionInterval) = 0;
 
         /// Gets the audio description information.
-        virtual AudioDescriptionInfo GetAudioDescriptionInfo() = 0;
+        virtual const AudioDescriptionInfo& GetAudioDescriptionInfo() = 0;
 
         /**
          * Sets whether the end tone should be played regardless of the conference state.

@@ -25,9 +25,9 @@ namespace PlanetKit {
 
         /**
         * Audio data callback called by the call instance. Called synchronously after audio is sent or received to/from the peer and the server.
-        * @param pAudioData
+        * @param sAudioData
         */
-        virtual void OnAudio(const SAudioData& pAudioData) = 0;
+        virtual void OnAudio(const SAudioData& sAudioData) = 0;
     };
 
     using ICallAudioReceiverPtr = SharedPtr<ICallAudioReceiver>;

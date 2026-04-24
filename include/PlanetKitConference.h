@@ -16,6 +16,7 @@
 
 #include "PlanetKit.h"
 #include "IPlanetKitResultHandler.h"
+#include "IPlanetKitSendShortDataResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitCameraController.h"
 #include "PlanetKitScreenShareController.h"
@@ -39,7 +40,7 @@ namespace PlanetKit  {
     class PLANETKIT_API IConferenceEvent;
 
     class PLANETKIT_API PlanetKitConference;
-    typedef AutoPtr<PlanetKitConference> PlanetKitConferencePtr;
+    using PlanetKitConferencePtr = AutoPtr<PlanetKitConference>;
 
     class PLANETKIT_API PlanetKitConference : public Base {
     public:
@@ -116,72 +117,6 @@ namespace PlanetKit  {
         virtual bool DeregisterPeersAudioReceiver(IConferenceAudioReceiverPtr pReceiver) = 0;
 
         /**
-         * Requests a subgroup member's video from the server.<br>
-         * This method returns false if the given member is not included in this session, or the given peer has not joined with video, or the given maxResolution is invalid.<br>
-         * For a given peer, this API may be called several times. But only the last maxResolution will be applied.
-         * @param pPeerId ID of the peer whose video you want to request.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param eVideoResolution Max resolution of the video that you wish to receive from the peer.
-         * @remark
-         *  - This API works asynchronously. If you want to get the result of API call, use the other two overloaded APIs.
-         * @see
-         *  - https://docs.lineplanet.me/windows/extended-functions/peer-video-resolution-in-group-call
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        virtual bool RequestPeerVideo(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution) = 0;
-
-        /**
-         * Requests a subgroup member's video from the server.<br>
-         * This method returns false if the given member is not included in this session, or the given peer has not joined with video, or the given maxResolution is invalid.<br>
-         * For a given peer, this API may be called several times. But only the last maxResolution will be applied.
-         * @param pPeerId ID of the peer whose video you want to request.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param eVideoResolution Max resolution of the video that you wish to receive from the peer.
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
-         * @remark
-         *  - This API works asynchronously. The callback function is called immediately after the API worked.
-         * @see
-         *  - https://docs.lineplanet.me/windows/extended-functions/peer-video-resolution-in-group-call
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        virtual bool RequestPeerVideo(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution, void* pUserData, RequestPeerVideoResultCallback pCallback) = 0;
-        
-        /**
-         * Requests a subgroup member's video from the server.<br>
-         * This method returns false if the given member is not included in this session, or the given peer has not joined with video, or the given maxResolution is invalid.<br>
-         * For a given peer, this API may be called several times. But only the last maxResolution will be applied.
-         * @param pPeerId ID of the peer whose video you want to request.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param eVideoResolution Max resolution of the video that you wish to receive from the peer.
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
-         * @remark
-         *  - This API works asynchronously. The callback is called when max resolution is reached after the API worked.
-         * @see
-         *  - https://docs.lineplanet.me/windows/extended-functions/peer-video-resolution-in-group-call
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        virtual bool RequestPeerVideo(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, EVideoResolution eVideoResolution, void* pUserData, RequestPeerVideoResolutionCallback pCallback) = 0;
-
-        /**
-         * Stops the video stream from a peer in the conference instance.
-         * @param pPeerId ID of the peer whose video you want to stop.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param szPeerServiceId Service ID of the peer whose video you want to stop.
-         * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
-         * @remark
-         *  - This API works asynchronously. The callback function is called immediately after the API worked.
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        virtual bool StopPeerVideo(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, void* pUserData = nullptr, RequestPeerVideoResultCallback pCallback = nullptr) = 0;
-
-        /**
          * Gets the peer list in the main room.
          * @return Array of Peers
          */
@@ -194,11 +129,11 @@ namespace PlanetKit  {
          * @param pData Short data. The maximum size of is 800 bytes.
          * @param nSize The size of pData.
          * @param pPeerId ID of the peer to whom to send the short data.
-         * @param pUserData User data to be passed when pCallback is called.
-         * @param pCallback This is a callback function that can receive the result.
+         * @param pUserData User data to be passed when pHandler is called.
+         * @param pHandler This is a callback function that can receive the result with a detailed failure reason.
          * @return true on success
          */
-        virtual bool SendShortData(const WString& strType, void* pData, unsigned int nSize, UserIdPtr pPeerId, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool SendShortData(const WString& strType, void* pData, unsigned int nSize, UserIdPtr pPeerId, void* pUserData = nullptr, SendShortDataResultHandler pHandler = nullptr) = 0;
 
         /**
          * Sends short data to all peers.<br>
@@ -206,11 +141,11 @@ namespace PlanetKit  {
          * @param strType User-defined data type to be sent along with the short data. After being converted to UTF-8, it must not exceed 100 bytes including the null-termination character.
          * @param pData Short data. The maximum size of is 800 bytes.
          * @param nSize The size of pData.
-         * @param pUserData User data to be passed when pCallback is called.
-         * @param pCallback This is a callback function that can receive the result.
+         * @param pUserData User data to be passed when pHandler is called.
+         * @param pHandler This is a callback function that can receive the result with a detailed failure reason.
          * @return true on success
          */
-        virtual bool SendShortDataToAllPeers(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool SendShortDataToAllPeers(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, SendShortDataResultHandler pHandler = nullptr) = 0;
 
         /**
          * Enables video transmission. 
@@ -308,9 +243,9 @@ namespace PlanetKit  {
 
         /**
          * Stops screen share with a reason. If the result is true, remove the screen share capturer.
-         * @param nUserReason Value must be between 0 and 39.
+         * @param nUserReason Value must be between 0 and 39. If the value is outside this range, it will be ignored.
          * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pResultHandler A callback function to be called after the API worked.
+         * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
         virtual bool StopMyScreenShare(int nUserReason, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
@@ -319,7 +254,7 @@ namespace PlanetKit  {
          * Changes the screen share destination.
          * @param strToSubgroupName Destination subgroup name string that is encoded in UTF-16 and null-terminated.
          * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pResultHandler A callback function to be called after the API worked.
+         * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
         virtual bool ChangeMyScreenShareDestination(const WString& strToSubgroupName, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
@@ -327,32 +262,10 @@ namespace PlanetKit  {
         /**
          * Changes the screen share destination to the main room.
          * @param pUserData User's data that will be passed along when the callback function is called.
-         * @param pResultHandler A callback function to be called after the API worked.
+         * @param pCallback A callback function to be called after the API worked.
          * @return true on success
          */
         virtual bool ChangeMyScreenShareDestinationToMainRoom(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
-
-        /**
-         * Requests a peer's screen share.
-         * @param pPeerId ID of the peer to whom you want to request screen share.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param pUSerData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
-         * @remark
-         *  - This API works asynchronously. The callback function is called immediately after the API worked.
-         */
-        virtual bool RequestPeerScreenShare(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, void* pUserData, RequestPeerVideoResultCallback pCallback) = 0;
-
-        /**
-         * Stops a peer's screen share.
-         * @param pPeerId ID of the peer whose screen share you want to stop.
-         * @param strSubgroupName Subgroup name string, which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param pUSerData User's data that will be passed along when the callback function is called.
-         * @param pCallback A callback function to be called after the API worked.
-         * @remark
-         *  - This API works asynchronously. The callback function is called immediately after the API worked.
-         */
-        virtual bool StopPeerScreenShare(UserIdPtr pPeerId, const WStringOptional& strSubgroupName, void* pUserData, RequestPeerVideoResultCallback pCallback) = 0;
 
         /**
          * Gets the content share interface.
@@ -458,12 +371,12 @@ namespace PlanetKit  {
 
         /**
          * Adds a window handle to render the local user's video view.
-         * @param hWind The window handle to render the local user's video view.
+         * @param hWnd The window handle to render the local user's video view.
          * @return
          *  - Returns true if the local user's video view is successfully added.<br>
          *  - Returns false if the local user's video view is already added or if it fails to add the view.
          */
-        virtual bool AddMyVideoView(WindowHandle hWind) = 0;
+        virtual bool AddMyVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the local user's video frames.
@@ -481,12 +394,12 @@ namespace PlanetKit  {
 
         /**
          * Removes a window handle to render the local user's video view.
-         * @param hWind The window handle to render the local user's video view.
+         * @param hWnd The window handle to render the local user's video view.
          * @return
          *  - Returns true if the local user's video view is successfully removed.<br>
          *  - Returns false if the local user's video view does not exist or if it fails to remove the view.
          */
-        virtual bool RemoveMyVideoView(WindowHandle hWind) = 0;
+        virtual bool RemoveMyVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the local user's video frames.
@@ -499,23 +412,23 @@ namespace PlanetKit  {
 
         /**
          * Adds a window handle to render a peer's video view.
-         * @param pPeerID Information on the Peer to be rendered.
-         * @param hWind The window handle to render a peer's video view.
+         * @param pPeerId Information on the Peer to be rendered.
+         * @param hWnd The window handle to render a peer's video view.
          * @return
          *  - Returns true if the peer's video view is successfully added.<br>
          *  - Returns false if the peer's video view is already added or if it fails to add the view.
          */
-        virtual bool AddPeerVideoView(UserIdPtr pPeerID, WindowHandle hWind) = 0;
+        virtual bool AddPeerVideoView(UserIdPtr pPeerId, WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the peer's video frames.
-         * @param pPeerID Information on the peer to be received.
+         * @param pPeerId Information on the peer to be received.
          * @param pReceiver The receiver that will receive the peer's video frames.
          * @return
          *  - Returns true if the peer's video frame receiver is successfully added.<br>
          *  - Returns false if the peer's video frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerVideoReceiver(UserIdPtr pPeerID, IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddPeerVideoReceiver(UserIdPtr pPeerId, IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the peer's video views and video frame receivers that are currently stored.
@@ -524,12 +437,12 @@ namespace PlanetKit  {
 
         /**
          * Removes a window handle to render a peer's video view.
-         * @param hWind The window handle to render a peer's video view.
+         * @param hWnd The window handle to render a peer's video view.
          * @return
          *  - Returns true if the peer's video view is successfully removed.<br>
          *  - Returns false if the peer's video view does not exist or if it fails to remove the view.
          */
-        virtual bool RemovePeerVideoView(WindowHandle hWind) = 0;
+        virtual bool RemovePeerVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver Handle to receive a peer's video frames.
@@ -542,12 +455,12 @@ namespace PlanetKit  {
 
         /**
          * Adds a window handle to render the local user's screen share view.
-         * @param hWind The window handle to render the local user's screen share view.
+         * @param hWnd The window handle to render the local user's screen share view.
          * @return
          *  - Returns true if the local user's screen share view is successfully added.<br>
          *  - Returns false if the local user's screen share view is already added or if it fails to add the view.
          */
-        virtual bool AddMyScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool AddMyScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the local user's screen share frames.
@@ -565,12 +478,12 @@ namespace PlanetKit  {
 
         /**
          * Removes a window handle to render the local user's screen share view.
-         * @param hWind The window handle to render the local user's screen share view.
+         * @param hWnd The window handle to render the local user's screen share view.
          * @return
          *  - Returns true if the local user's screen share view is successfully removed.<br>
          *  - Returns false if the local user's screen share view does not exist or if it fails to remove the view.
          */
-        virtual bool RemoveMyScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool RemoveMyScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the local user's screen share frames.
@@ -583,23 +496,23 @@ namespace PlanetKit  {
 
         /**
          * Adds a window handle to render a peer's screen share view.
-         * @param pPeerID Information on the Peer to be rendered.
-         * @param hWind The window handle to render a peer's screen share view.
+         * @param pPeerId Information on the Peer to be rendered.
+         * @param hWnd The window handle to render a peer's screen share view.
          * @return
          *  - Returns true if the peer's screen share view is successfully added.<br>
          *  - Returns false if the peer's screen share view is already added or if it fails to add the view.
          */
-        virtual bool AddPeerScreenShareVideoView(UserIdPtr pPeerID, WindowHandle hWind) = 0;
+        virtual bool AddPeerScreenShareVideoView(UserIdPtr pPeerId, WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the peer's screen share frames.
-         * @param pPeerID Information on the peer to be received.
+         * @param pPeerId Information on the peer to be received.
          * @param pReceiver The receiver that will receive the peer's screen share frames.
          * @return
          *  - Returns true if the peer's screen share frame receiver is successfully added.<br>
          *  - Returns false if the peer's screen share frame receiver is already added or if it fails to add the frame receiver.
          */
-        virtual bool AddPeerScreenShareVideoReceiver(UserIdPtr pPeerID, IVideoReceiverPtr pReceiver) = 0;
+        virtual bool AddPeerScreenShareVideoReceiver(UserIdPtr pPeerId, IVideoReceiverPtr pReceiver) = 0;
 
         /**
          * Clears all of the peer's screen share views and screen share frame receivers that are currently stored.
@@ -608,12 +521,12 @@ namespace PlanetKit  {
 
         /**
          * Removes a window handle to render a peer's screen share view.
-         * @param hWind The window handle to render a peer's screen share view.
+         * @param hWnd The window handle to render a peer's screen share view.
          * @return
          *  - Returns true if the peer's screen share view is successfully removed.<br>
          *  - Returns false if the peer's screen share view does not exist or if it fails to remove the view.
          */
-        virtual bool RemovePeerScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool RemovePeerScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the peer's screen share frames.

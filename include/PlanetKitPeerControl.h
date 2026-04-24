@@ -99,7 +99,7 @@ namespace PlanetKit {
          * @remark
          *  - The handles set through PeerControl::SetRenderer and the receivers established through PeerControl::SetReceiver will both be reset.
          */
-        virtual bool StopVideo(void* pUserData = nullptr, StoptVideoResultCallback pCallback = nullptr) = 0;
+        virtual bool StopVideo(void* pUserData = nullptr, StopVideoResultCallback pCallback = nullptr) = 0;
 
         /**
          * Starts rendering the peer's screen share.
@@ -122,12 +122,19 @@ namespace PlanetKit {
          * @remark
          *  - Only one video rendering window can be set for rendering the video frame.
          */
-        virtual void SetView(WindowHandle hWnd) = 0;
+        virtual VideoRenderPtr SetView(WindowHandle hWnd) = 0;
 
         /**
          * Clears the video rendering window.
          */
         virtual void ClearView() = 0;
+
+        /**
+         * Gets the video renderer for rendering the peer's video.
+         * @remark
+         *  - The return value can be nullptr if the WindowHandle is not set by PeerControl::SetView.
+         */
+        virtual VideoRenderPtr GetVideoRender() = 0;
 
         /**
          * Registers video receiver.

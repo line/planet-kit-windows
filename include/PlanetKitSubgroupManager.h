@@ -154,5 +154,5 @@ namespace PlanetKit {
         virtual bool ChangeMyVideoDestinationToMainRoom(void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
     };
 
-    typedef AutoPtr<SubgroupManager> SubgroupManagerPtr;
+    using SubgroupManagerPtr = AutoPtr<SubgroupManager>;
 };

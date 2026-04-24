@@ -42,9 +42,9 @@ namespace PlanetKit {
         virtual ~IMicExceptionEvent() {};
         /**
          * Event that occurs when there is a failure in using the microphone device.
-         * @param eMicrophoneStartError Microphone device error code.
+         * @param eMicStartError Microphone device error code.
          */
-        virtual void OnMicStartError(EMicStartError eMicrophoneStartError) = 0;
+        virtual void OnMicStartError(EMicStartError eMicStartError) = 0;
     };
 
     using MicExceptionEventPtr = SharedPtr<IMicExceptionEvent>;

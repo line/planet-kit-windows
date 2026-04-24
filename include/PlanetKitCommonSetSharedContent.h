@@ -39,6 +39,6 @@ namespace PlanetKit {
         virtual unsigned int DataSize() = 0;
     };
 
-    typedef SharedPtr<CommonSetSharedContent> CommonSetSharedContentPtr;
-    typedef Array<CommonSetSharedContentPtr> CommonSetSharedContentArray;
+    using CommonSetSharedContentPtr = SharedPtr<CommonSetSharedContent>;
+    using CommonSetSharedContentArray = Array<CommonSetSharedContentPtr>;
 };

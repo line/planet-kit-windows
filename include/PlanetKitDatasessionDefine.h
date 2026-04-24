@@ -18,12 +18,12 @@ namespace PlanetKit {
     const unsigned int kDataSessionStreamIdMin = 100;
     const unsigned int kDataSessionStreamIdMax = 1000;
 
-    typedef unsigned int DataSessionStreamIdT;
+    using DataSessionStreamIdT = unsigned int;
 
     /**
      * @brief Data session streaming type
      */
-    typedef enum EDataSessionType {
+    enum EDataSessionType {
         /// Lost messages will be retransmitted.
         PLNK_DATA_SESS_TYPE_RELIABLE_MSG = 0,
         /// Lost packets will be retransmitted.
@@ -34,20 +34,20 @@ namespace PlanetKit {
         PLNK_DATA_SESS_TYPE_UNRELIABLE_MSG,
         /// Not supported type
         PLNK_DATA_SESS_TYPE_UNKNOWN
-    } EDataSessionType;
+    };
 
     /**
      * @brief This is the definition of an exception that occurred during data session communication.
      */
-    typedef enum EDataSessException {
+    enum EDataSessException {
         /// The data traffic is too much.
         PLNK_DATA_SESS_EXCEPTION_TOO_LONG_QUEUED_DATA,
-    } EDataSessException;
+    };
 
     /**
      * Fail reason related to data session
      */
-    typedef enum EDataSessionFailReason {
+    enum EDataSessionFailReason {
         /// Reason none
         PLNK_DATA_SESS_FAIL_REASON_NONE = 0,
         /// An internal error occurred.
@@ -60,15 +60,15 @@ namespace PlanetKit {
         PLNK_DATA_SESS_FAIL_REASON_INVALID_ID = 5,
         /// The data session type is invalid.
         PLNK_DATA_SESS_FAIL_REASON_INVALID_TYPE = 6,
-    } EDataSessionFailReason;
+    };
 
 
-    typedef enum EDataSessionClosedReason {
+    enum EDataSessionClosedReason {
         /// Data session has ended.
         PLNK_DATA_SESSION_CLOSED_REASON_SESSION_END = 0,
         /// Unexpected error occurred internally.
         PLNK_DATA_SESSION_CLOSED_REASON_INTERNAL = 1,
         /// Data session ID is unsupported by the peer.
         PLNK_DATA_SESSION_CLOSED_REASON_UNSUPPORTED = 2,
-    } EDataSessionClosedReason;
+    };
 };

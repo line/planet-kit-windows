@@ -18,7 +18,7 @@ namespace PlanetKit {
     /**
      * PlanetKit state of a 1-to-1 call
      */
-    typedef enum ECallState {
+    enum ECallState {
         /// Idle
         CALL_IDLE,
         /// Trying to call
@@ -31,5 +31,5 @@ namespace PlanetKit {
         CALL_CONNECTED,
         /// Disconnected
         CALL_DISCONNECTED
-    } ECallState;
+    };
 };

@@ -31,12 +31,8 @@ namespace PlanetKit {
         virtual void OnRegisterResult(MyMediaStatusPtr pMyStatus, bool bResult) = 0;
         /// Called when the local user's video status is updated.
         virtual void OnUpdateVideoStatus(MyMediaStatusPtr pMyStatus, VideoStatus sStatus) = 0;
-        /// Called when the local user's video subgroup is updated.
-        virtual void OnUpdateVideoSubgroup(MyMediaStatusPtr pMyStatus, const WString& strSubgroupName) = 0;
         /// Called when the local user's screen share state is updated.
         virtual void OnUpdateScreenShareState(MyMediaStatusPtr pMyStatus, EScreenShareState eState) = 0;
-        /// Called when the local user's screen share subgroup is updated.
-        virtual void OnUpdateScreenShareSubgroup(MyMediaStatusPtr pMyStatus, const WString& strSubgroupName) = 0;
         /// Called when the local user's audio is muted.
         virtual void OnMuted(MyMediaStatusPtr pMyStatus) = 0;
         /// Called when the local user's audio is unmuted.
@@ -51,6 +47,18 @@ namespace PlanetKit {
          * @remark If the interval is 0, it does not occur.
          */
         virtual void OnMyAudioDescriptionUpdated(MyMediaStatusPtr pMyStatus, const MyAudioDescription& sMyAudioDescription) = 0;
+
+        /// Called when the local user's video subgroup is updated.
+        virtual void OnUpdateVideoSubgroup(MyMediaStatusPtr pMyStatus, const WString& strSubgroupName) {
+            PLNK_UNREFERENCED_PARAMETER(pMyStatus);
+            PLNK_UNREFERENCED_PARAMETER(strSubgroupName);
+        };
+
+        /// Called when the local user's screen share subgroup is updated.
+        virtual void OnUpdateScreenShareSubgroup(MyMediaStatusPtr pMyStatus, const WString& strSubgroupName) {
+            PLNK_UNREFERENCED_PARAMETER(pMyStatus);
+            PLNK_UNREFERENCED_PARAMETER(strSubgroupName);
+        };
     };
 
     using IMyMediaStatusEventPtr = SharedPtr<IMyMediaStatusEvent>;

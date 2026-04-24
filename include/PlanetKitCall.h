@@ -16,6 +16,7 @@
 
 #include "PlanetKit.h"
 #include "IPlanetKitResultHandler.h"
+#include "IPlanetKitSendShortDataResultHandler.h"
 #include "PlanetKitDataSessionInterface.h"
 #include "PlanetKitStatistics.h"
 #include "PlanetKitSendVoiceProcessor.h"
@@ -137,11 +138,11 @@ namespace PlanetKit {
          * @param strType After being converted to UTF-8, it must not exceed 100 bytes including the null-termination character.
          * @param pData The maximum size of pData is 800 bytes.
          * @param nSize The size of pData.
-         * @param pUserData User data to be passed when pCallback is called.
-         * @param pCallback This is a callback function that can receive the result.
+         * @param pUserData User data to be passed when pHandler is called.
+         * @param pHandler This is a callback function that can receive the result with a detailed failure reason.
          * @return true on success
          */
-        virtual bool SendShortData(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
+        virtual bool SendShortData(const WString& strType, void* pData, unsigned int nSize, void* pUserData = nullptr, SendShortDataResultHandler pHandler = nullptr) = 0;
 
         /**
          * Enables video transmission. 
@@ -174,8 +175,8 @@ namespace PlanetKit {
          * @param strHoldReason Hold reason string, which is encoded in UTF-16 and null-terminated.<br>The string can be up to 256 bytes.<br>If the string exceeds the size, content beyond the limit is truncated.
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
-         * @param pResultUSerData User data returned when pResultHandler is called.
-         * @param pResultHandler Pointer to a listener class that notifies the result of this API.
+         * @param pResultUSerData User data returned when pCallback is called.
+         * @param pCallback Pointer to a listener class that notifies the result of this API.
          * @return true on success
          */
         virtual bool Hold(const WStringOptional& strHoldReason = NullOptional, void* pUserData = nullptr, ResultCallback pCallback = nullptr) = 0;
@@ -237,7 +238,7 @@ namespace PlanetKit {
 
         /**
          * Stops the local user's screen share with a reason. If the result is true, remove the screen share capturer.
-         * @param nUserReason Value must be between 0 and 39.
+         * @param nUserReason Value must be between 0 and 39. If the value is outside this range, it will be ignored.
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success
@@ -319,11 +320,11 @@ namespace PlanetKit {
 
         /**
         * Call this API when you do not want to support a specific StreamID.
-        * @param nStreamId
+        * @param streamId
         * @return true on success
         * @remark This API can only be called from the receiver of the DataSession.
         */
-        virtual bool UnsupportInboundDataSession(DataSessionStreamIdT nStreamId) = 0;
+        virtual bool UnsupportInboundDataSession(DataSessionStreamIdT streamId) = 0;
 
         /**
          * Gets statistics information.
@@ -387,12 +388,12 @@ namespace PlanetKit {
 
         /**
          * Adds a window handle to render the local user's video view.
-         * @param hWind The window handle to render the local user's video view.
+         * @param hWnd The window handle to render the local user's video view.
          * @return
          *  - Returns true if the local user's video view is successfully added.<br>
          *  - Returns false if the local user's video view is already added or if it fails to add the view.
          */
-        virtual bool AddMyVideoView(WindowHandle hWind) = 0;
+        virtual bool AddMyVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the local user's video frames.
@@ -410,12 +411,12 @@ namespace PlanetKit {
 
         /**
          * Removes a window handle to render the local user's video view.
-         * @param hWind The window handle to render the local user's video view.
+         * @param hWnd The window handle to render the local user's video view.
          * @return
          *  - Returns true if the local user's video view is successfully removed.<br>
          *  - Returns false if the local user's video view does not exist or if it fails to remove the view.
          */
-        virtual bool RemoveMyVideoView(WindowHandle hWind) = 0;
+        virtual bool RemoveMyVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the local user's video frames.
@@ -428,12 +429,12 @@ namespace PlanetKit {
 
         /**
          * Adds a window handle to render a peer's video view.
-         * @param hWind The window handle to render a peer's video view.
+         * @param hWnd The window handle to render a peer's video view.
          * @return
          *  - Returns true if the peer's video view is successfully added.<br>
          *  - Returns false if the peer's video view is already added or if it fails to add the view.
          */
-        virtual bool AddPeerVideoView(WindowHandle hWind) = 0;
+        virtual bool AddPeerVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the peer's video frames.
@@ -451,12 +452,12 @@ namespace PlanetKit {
 
         /**
          * Removes a window handle to render a peer's video view.
-         * @param hWind The window handle to render a peer's video view.
+         * @param hWnd The window handle to render a peer's video view.
          * @return
          *  - Returns true if the peer's view is successfully removed.<br>
          *  - Returns false if the peer's video view does not exist or if it fails to remove the view.
          */
-        virtual bool RemovePeerVideoView(WindowHandle hWind) = 0;
+        virtual bool RemovePeerVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver Handle to receive a peer's video frames.
@@ -469,12 +470,12 @@ namespace PlanetKit {
 
         /**
          * Adds a window handle to render the local user's screen share view.
-         * @param hWind The window handle to render the local user's screen share view.
+         * @param hWnd The window handle to render the local user's screen share view.
          * @return
          *  - Returns true if the local user's screen share view is successfully added.<br>
          *  - Returns false if the local user's screen share view is already added or if it fails to add the view.
          */
-        virtual bool AddMyScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool AddMyScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Adds a receiver to receive the local user's screen share frames.
@@ -492,12 +493,12 @@ namespace PlanetKit {
 
         /**
          * Removes a window handle to render the local user's screen share view.
-         * @param hWind The window handle to render the local user's screen share view.
+         * @param hWnd The window handle to render the local user's screen share view.
          * @return
          *  - Returns true if the local user's screen share view is successfully removed.<br>
          *  - Returns false if the local user's screen share view does not exist or if it fails to remove the view.
          */
-        virtual bool RemoveMyScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool RemoveMyScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the local user's screen share frames.
@@ -510,12 +511,12 @@ namespace PlanetKit {
 
         /**
          * Adds a window handle to render a peer's screen share view.
-         * @param hWind The window handle to render a peer's screen share view.
+         * @param hWnd The window handle to render a peer's screen share view.
          * @return
          *  - Returns true if the peer's screen share view is successfully added.<br>
          *  - Returns false if the peer's screen share view is already added or if it fails to add the view.
          */
-        virtual bool AddPeerScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool AddPeerScreenShareVideoView(WindowHandle hWnd) = 0;
         
         /**
          * Adds a receiver to receive the peer's screen share frames.
@@ -533,12 +534,12 @@ namespace PlanetKit {
 
         /**
          * Removes a window handle to render a peer's screen share view.
-         * @param hWind The window handle to render a peer's screen share view.
+         * @param hWnd The window handle to render a peer's screen share view.
          * @return
          *  - Returns true if the peer's screen share view is successfully removed.<br>
          *  - Returns false if the peer's screen share view does not exist or if it fails to remove the view.
          */
-        virtual bool RemovePeerScreenShareVideoView(WindowHandle hWind) = 0;
+        virtual bool RemovePeerScreenShareVideoView(WindowHandle hWnd) = 0;
 
         /**
          * Removes a receiver to receive the peer's screen share frames.

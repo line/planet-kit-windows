@@ -20,14 +20,14 @@ namespace PlanetKit {
     /**
      * Audio device type
      */
-    typedef enum EAudioDeviceType {
+    enum EAudioDeviceType {
         /// Error type
         PLNK_AUDIO_DEVICE_TYPE_UNDEFINED = 0,
         /// Input device such as a microphone
         PLNK_AUDIO_DEVICE_TYPE_MIC,
         /// Output device such as a speaker
         PLNK_AUDIO_DEVICE_TYPE_SPEAKER
-    } EAudioDeviceType;
+    };
 
     /**
      * EAudioDeviceType represents whether a device is an input or output device.<br>
@@ -36,7 +36,7 @@ namespace PlanetKit {
      * If you want devices to be recognized more specifically, then use this value.<br>
      * @see https://docs.microsoft.com/en-us/windows/win32/coreaudio/pkey-audioendpoint-formfactor <br>
      */
-    typedef enum EPhysicalFormFactor {
+    enum EPhysicalFormFactor {
         /// Remote network device
         PLNK_PHYSICAL_FORM_FACTOR_REMOTE_NETWORK_DEVICE = 0,
         /// Speakers
@@ -63,24 +63,24 @@ namespace PlanetKit {
         PLNK_PHYSICAL_FORM_FACTOR_COUNT,
         /// None
         PLNK_PHYSICAL_FORM_FACTOR_NONE
-    }EPhysicalFormFactor;
+    };
 
 
     /**
      * Audio data sample format
      */
-    typedef enum EAudioDataSampleType {
+    enum EAudioDataSampleType {
         /// Sample format float
         PLNK_AUDIO_DATA_SAMPLE_TYPE_FLOAT_32,
         /// Sample format short
         PLNK_AUDIO_DATA_SAMPLE_TYPE_SHORT16
 
-    } EAudioDataSampleType;
+    };
 
     /**
      * Audio device sampling rate
      */
-    typedef enum EAudioDeviceSamplingRate {
+    enum EAudioDeviceSamplingRate {
         /// 48kHz
         SAMPLING_RATE_48K = 0,
         /// 32kHz
@@ -90,20 +90,20 @@ namespace PlanetKit {
         /// Max count (not used)
         SAMPLING_RATE_COUNT = 3
 
-    } EAudioDeviceSamplingRate;
+    };
 
     /**
      * Audio sample type.
      */
-    typedef enum EAudioSampleType {
+    enum EAudioSampleType {
         /// type float32
         PLNK_AUDIO_SAMPLE_TYPE_SIGNED_FLOAT32 = 0,
         /// type short16
         PLNK_AUDIO_SAMPLE_TYPE_SIGNED_SHORT16 = 1
-    } EAudioSampleType;
+    };
 
     /// Acoustic Echo Canceller value
-    typedef enum EPlanetKitAcousticEchoCanceller {
+    enum EPlanetKitAcousticEchoCanceller {
         /// Disabled
         PLNK_ACOUSTIC_ECHO_CANCELLER_DISABLED = 0,
         /// The recommended value<br>Default
@@ -114,33 +114,33 @@ namespace PlanetKit {
         PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_MAX = 3,
         /// Adaptive
         PLNK_ACOUSTIC_ECHO_CANCELLER_INTENSITY_ADAPTIVE = 4
-    }EPlanetKitAcousticEchoCanceller;
+    };
 
     /// Auto Gain Control value
-    typedef enum EPlanetKitAutoGainControl {
+    enum EPlanetKitAutoGainControl {
         /// Disabled
         PLNK_AUTO_GAIN_CONTROL_TYPE_DISABLED = 0,
-        /// Use AGC by using software
+        /// Use software-based AGC.
         PLNK_AUTO_GAIN_CONTROL_TYPE_SOFTWARE = 1,
-        /// Use AGC by using hardware<br>Default
+        /// Use hardware-based AGC. (Default)
         PLNK_AUTO_GAIN_CONTROL_TYPE_HARDWARE = 2,
-        /// Use AGC by using hardware. 
+        /// Use hardware-based AGC.
         /// Adjusts the input gain based on the speaker's voice level, even when echo is present in the environment.
         PLNK_AUTO_GAIN_CONTROL_TYPE_HARDWARE_ECHO_TOLERANCE = 3,
-    } EPlanetKitAutoGainControl;
+    };
 
     /// Noise Suppressor mode value
-    typedef enum EPlanetkitNoiseSuppressorMode {
+    enum EPlanetKitNoiseSuppressorMode {
         /// Disabled
         PLNK_NOISE_SUPPRESSOR_MODE_DISABLED = 0,
         /// Enabled<br>Default
         PLNK_NOISE_SUPPRESSOR_MODE_ENABLE = 1,
-    } EPlanetkitNoiseSuppressorMode;
+    };
 
     /**
      * Audio data
      */
-    typedef struct SAudioData {
+    struct SAudioData {
         /// Sampling rate
         unsigned int unAudioDataSamplingRate;
         /// Sample count
@@ -151,17 +151,17 @@ namespace PlanetKit {
         unsigned char* ucBuffer;
         /// Size of buffer
         unsigned int unBufferSize;
-    } SAudioData;
+    };
 
     /**
      * Audio device volume information
      */
-    typedef struct SAudioEndpointVolumeInfo {
+    struct SAudioEndpointVolumeInfo {
         /// Mute flag
         bool bMuted;
         /// Device master volume
         float fMasterVolume;
-    } SAudioEndpointVolumeInfo;
+    };
 
     /**
      * @brief Audio description of a peer, which can be obtained with IConferenceEvent::OnPeersAudioDescriptionUpdated
@@ -177,7 +177,7 @@ namespace PlanetKit {
         WStringOptional strTaggedSubgroupName;
     };
 
-    typedef Array<PeerAudioDescription> PeerAudioDescriptionArray;
+    using PeerAudioDescriptionArray = Array<PeerAudioDescription>;
 
     /**
      * @brief Audio description of the local user, which can be obtained with IConferenceEvent::OnMyAudioDescriptionUpdated or IMyMediaStatusEvent::OnMyAudioDescriptionUpdated

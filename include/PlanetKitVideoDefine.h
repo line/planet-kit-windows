@@ -38,7 +38,7 @@ namespace PlanetKit {
     /**
      * Window state that is used by screen share.
      */
-    typedef enum EWindowState {
+    enum EWindowState {
         /// Window is unminimized.
         PLNK_CAPTURE_WINDOW_EVENT_UNMINIMIZED,
         /// Window is minimized.
@@ -47,12 +47,12 @@ namespace PlanetKit {
         PLNK_CAPTURE_WINDOW_EVENT_RECT_CHANGED,
         /// Window is closed.
         PLNK_CAPTURE_WINDOW_EVENT_WINDOW_CLOSED
-    } EWindowState;
+    };
 
     /**
      * Rotation of video
      */
-    typedef enum EVideoRotation {
+    enum EVideoRotation {
         /// No rotation
         PLNK_VIDEO_ROTATION_0 = 0,
         /// Rotation by 90 degrees
@@ -61,12 +61,12 @@ namespace PlanetKit {
         PLNK_VIDEO_ROTATION_180 = 2,
         /// Rotation by 270 degrees
         PLNK_VIDEO_ROTATION_270 = 3
-    }EVideoRotation;
+    };
 
     /**
      * Video frame information
      */
-    typedef struct SVideoFrame {
+    struct SVideoFrame {
         /// Pointer to the frame buffer
         unsigned char* pbuffer;
         /// Allocated buffer size
@@ -77,7 +77,7 @@ namespace PlanetKit {
         unsigned int unWidth;
         /// Height
         unsigned int unHeight;
-        /// Tick
+        /// Tick count (microseconds)
         long long llTick;
         /// Time stamp
         long long llTimeStamp;
@@ -90,7 +90,7 @@ namespace PlanetKit {
         bool bSubgroupMain;
         /// Subgroup name that can be used if bSubgroupMain flag is false
         wchar_t szSubgroupName[PLNK_BUFFER_SIZE_512];
-    }SVideoFrame;
+    };
 
     template<typename T>
     inline T GET_VIDEO_DATA_LENGTH(const T& witdh, const T& height) {

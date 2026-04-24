@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "PlanetkitSpeaker.h"
+#include "PlanetKitSpeaker.h"
 
 namespace PlanetKit {
     class CustomSpeaker;
-    typedef SharedPtr<CustomSpeaker> CustomSpeakerPtr;
+    using CustomSpeakerPtr = SharedPtr<CustomSpeaker>;
 
     class CustomSpeaker : public Speaker {
     public:
@@ -42,6 +42,8 @@ namespace PlanetKit {
          * @param audioData Audio data.
          * @return true on success
          * @remark To implement custom audio and pull audio data from a call or conference session, you need to call the respective function.
+         * @remark For optimal performance, it is recommended to set the `unAudioDataSamplingRate` member (in Hz) of SAudioData
+         *         to one of the following values: 16000, 32000, or 48000.
          */
         virtual bool PullAudioData(SAudioData& audioData) {
             if (m_pSpeakerEvent.hasValue() == false) {

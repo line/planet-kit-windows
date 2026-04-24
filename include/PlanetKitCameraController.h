@@ -22,6 +22,8 @@
 #include "IPlanetKitVideoReceiver.h"
 
 namespace PlanetKit {
+    class CustomCamera;
+    
     /// The class for capturing with a camera.
     class PLANETKIT_API CameraController {
     public:
@@ -34,8 +36,8 @@ namespace PlanetKit {
         virtual void GetCapturerInfo(CameraInfoArray& arrCameraInfo) = 0;
 
         /**
-         * Changes the camera that will capture the current screen.
-         * @param pCameraInfo The device to capture the screen.
+         * Changes the camera to a new camera device.
+         * @param pCameraInfo The information of camera device.
          * @return
          *  - The result of the process of setting up the camera device.
          * @remark
@@ -44,7 +46,17 @@ namespace PlanetKit {
         virtual EVideoControlResult ChangeCamera(CameraInfoPtr pCameraInfo) = 0;
 
         /**
-         * Get selected camera information.
+         * Changes the camera to a custom camera device.
+         * @param pCustomCamera The custom camera device instance.
+         * @return
+         *  - The result of the process of setting up the camera device.
+         * @remark
+         *  - If you want to use a custom camera device when using PlanetKit, you can set it first with this function and then start.
+         */
+        virtual bool ChangeCamera(SharedPtr<CustomCamera> pCustomCamera) = 0;
+
+        /**
+         * Gets the information of the selected camera.
          * @return
          *  - The result of selected camera information class.
          * @remark
@@ -102,7 +114,7 @@ namespace PlanetKit {
         virtual EVirtualBackgroundType GetCurrentVirtualBackgroundType() = 0;
         /**
          * Starts a window handle to render a local user's preview.
-         * @param hWind The window handle to render a local user's preview.
+         * @param hWnd The window handle to render a local user's preview.
          * @return
          *  - Returns true if the local user's preview is successfully added.<br>
          *  - Returns false if the local user's preview already exists in the list of handles.<br>
@@ -112,7 +124,7 @@ namespace PlanetKit {
          *  - Added in PlanetKit 5.5, StartPreview() provides a different functionality than StartCapture(). StartPreview() can be used independently of call connection status, making it possible to preview the local user's video before a call, or before switching from an audio call to a video call.<br>
          *  - From PlanetKit 5.5, if video is enabled for a call or conference, the camera will automatically turn on when the call is connected.
          */
-        virtual bool StartPreview(WindowHandle hWind) = 0;
+        virtual bool StartPreview(WindowHandle hWnd) = 0;
 
         /**
          * Starts a receiver to receive a local user's preview frame.
@@ -130,11 +142,11 @@ namespace PlanetKit {
 
         /**
          * Stops the preview for the handle that was started.
-         * @param hWind The window handle to render a local user's preview.
+         * @param hWnd The window handle to render a local user's preview.
          * @return
          *  - If the preview is successfully removed, it returns true.
          */
-        virtual bool StopPreview(WindowHandle hWind) = 0;
+        virtual bool StopPreview(WindowHandle hWnd) = 0;
 
         /**
          * Stops the preview for the receiver that was started.
@@ -194,6 +206,7 @@ namespace PlanetKit {
          */
         virtual VideoRenderPtr GetRender(WindowHandle hWnd) = 0;
 
+    private:
         /**
          * Sends frame data to the counterpart.
          * @param sVideoFrame The frame to send to the counterpart.
@@ -204,15 +217,16 @@ namespace PlanetKit {
 
         /**
          * Checks whether it is currently possible to deliver frames to the counterpart.
-         * @param ull64tick The tick count of the current frame.
          * @return
          *  - Returns true if it is possible to send frames to the counterpart.
          * @remark
          *  - In case there is a current FPS limit, you need to check the speed of the current frame through the tick count value .
          *  - You verify whether the current frame can be delivered at an appropriate FPS by checking the speed of this frame.
          */
-        virtual bool IsPostingFrameAvailable(UINT64 ull64tick) = 0;
+        virtual bool IsPostingFrameAvailable() = 0;
+
+        friend class CustomCamera;
     };
 
-    typedef SharedPtr<CameraController> CameraControllerPtr;
+    using CameraControllerPtr = SharedPtr<CameraController>;
 }

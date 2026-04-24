@@ -33,5 +33,5 @@ namespace PlanetKit {
         virtual unsigned short FPS() = 0;
     };
 
-    typedef SharedPtr<StatisticsVideo> StatisticsVideoPtr;
+    using StatisticsVideoPtr = SharedPtr<StatisticsVideo>;
 };
