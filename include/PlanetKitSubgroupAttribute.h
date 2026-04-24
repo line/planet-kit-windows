@@ -37,5 +37,5 @@ namespace PlanetKit {
         virtual ESubgroupPeerUpdateType GetPeerUpdateType() = 0;
     };
 
-    typedef SharedPtr<SubgroupAttribute> SubgroupAttributePtr;
+    using SubgroupAttributePtr = SharedPtr<SubgroupAttribute>;
 };

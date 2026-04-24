@@ -49,5 +49,5 @@ namespace PlanetKit {
         virtual bool IsRecordOnCloudEnabled() = 0;
     };
 
-    typedef SharedPtr<CCParam> CCParamPtr;
+    using CCParamPtr = SharedPtr<CCParam>;
 }

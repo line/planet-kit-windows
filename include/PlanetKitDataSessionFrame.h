@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "PlanetKitDatasessionDefine.h"
+#include "PlanetKitDataSessionDefine.h"
 #include "PlanetKitSharedPtr.hpp"
 #include "PlanetKitCommonTypes.h"
 
@@ -47,5 +47,5 @@ namespace PlanetKit {
         virtual UserIdPtr GetUserID() = 0;
     };
 
-    typedef SharedPtr<DataSessionFrame> DataSessionFramePtr;
+    using DataSessionFramePtr = SharedPtr<DataSessionFrame>;
 };

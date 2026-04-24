@@ -29,5 +29,5 @@ namespace PlanetKit {
         virtual StatisticsNetworkPtr Network() = 0;
     };
 
-    typedef SharedPtr<StatisticsAudioSend> StatisticsAudioSendPtr;
+    using StatisticsAudioSendPtr = SharedPtr<StatisticsAudioSend>;
 };

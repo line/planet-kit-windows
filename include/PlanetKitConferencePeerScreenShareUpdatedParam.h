@@ -33,7 +33,10 @@ namespace PlanetKit {
 
         /// Gets the screen share state.
         virtual EScreenShareState ScreenShareState() = 0;
+
+        /// Gets the disabled reason when screen share is stopped.
+        virtual IntOptional GetDisabledReason() = 0;
     };
 
-    typedef SharedPtr<ConferencePeerScreenShareUpdatedParam> ConferencePeerScreenShareUpdatedParamPtr;
+    using ConferencePeerScreenShareUpdatedParamPtr = SharedPtr<ConferencePeerScreenShareUpdatedParam>;
 };

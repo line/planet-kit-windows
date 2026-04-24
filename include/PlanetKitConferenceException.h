@@ -37,6 +37,6 @@ namespace PlanetKit {
         virtual const WString& GetMessage() = 0;
     };
 
-    typedef SharedPtr<ConferenceException> ConferenceExceptionPtr;
-    typedef Array<ConferenceExceptionPtr> ConferenceExceptionArray;
+    using ConferenceExceptionPtr = SharedPtr<ConferenceException>;
+    using ConferenceExceptionArray = Array<ConferenceExceptionPtr>;
 };

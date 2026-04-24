@@ -35,8 +35,7 @@ namespace PlanetKit {
         virtual bool IsSupportVideoShareMode() = 0;
     };
 
-    typedef SharedPtr<ConferenceConnectedParam> ConferenceConnectedParamPtr;
-
+    using ConferenceConnectedParamPtr = SharedPtr<ConferenceConnectedParam>;
 };
 
 

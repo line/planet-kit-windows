@@ -38,5 +38,5 @@ namespace PlanetKit {
         virtual unsigned int BPS() = 0;
     };
 
-    typedef SharedPtr<StatisticsNetwork> StatisticsNetworkPtr;
+    using StatisticsNetworkPtr = SharedPtr<StatisticsNetwork>;
 };

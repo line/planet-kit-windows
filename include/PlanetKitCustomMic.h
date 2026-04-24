@@ -18,7 +18,7 @@
 
 namespace PlanetKit {
     class CustomMic;
-    typedef SharedPtr<CustomMic> CustomMicPtr;
+    using CustomMicPtr = SharedPtr<CustomMic>;
 
     class CustomMic : public Mic {
     public:
@@ -42,6 +42,8 @@ namespace PlanetKit {
          * @param audioData Audio data.
          * @return true on success
          * @remark To implement custom microphone and put audio data to a call or conference session, you need to call the respective function.
+         * @remark For optimal performance, it is recommended to set the `unAudioDataSamplingRate` member (in Hz) of SAudioData
+         *         to one of the following values: 16000, 32000, or 48000.
          */
         bool PutAudioData(SAudioData& audioData) {
             if (m_pMicEvent.hasValue() == false) {

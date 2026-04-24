@@ -30,5 +30,5 @@ namespace PlanetKit {
         virtual SubgroupPtr GetSubgroup() = 0;
     };
 
-    typedef SharedPtr<ConferenceVideoUpdatedParam> ConferenceVideoUpdatedParamPtr;
+    using ConferenceVideoUpdatedParamPtr = SharedPtr<ConferenceVideoUpdatedParam>;
 };

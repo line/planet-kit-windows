@@ -29,7 +29,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API PlanetKitManager;
-    typedef SharedPtr<PlanetKitManager> PlanetKitManagerPtr;
+    using PlanetKitManagerPtr = SharedPtr<PlanetKitManager>;
 
     class PLANETKIT_API PlanetKitManager {
     public:

@@ -21,8 +21,8 @@
 #include "IPlanetKitVideoInterceptor.h"
 
 namespace PlanetKit  {
-    typedef HWND WindowHandle;
-    typedef void* ScreenShareID; //HWND
+    using WindowHandle = HWND;
+    using ScreenShareID = void*; // HWND
 
     /**
      * Enumeration for the result of capturer APIs
@@ -124,7 +124,7 @@ namespace PlanetKit  {
     /**
      * @brief Video resolution that PlanetKit can support.
      */
-    typedef enum EVideoResolution {
+    enum EVideoResolution {
         /// Unknown resolution
         PLNK_VIDEO_RESOLUTION_UNKNOWN = -1, 
         /// Recommended resolution
@@ -142,12 +142,12 @@ namespace PlanetKit  {
 
         /// Max Value
         PLNK_VIDEO_RESOLUTION_MAX = PLNK_VIDEO_RESOLUTION_HD_FHD, 
-    }EVideoResolution;
+    };
 
     /**
      * Video resolution capability.
      */
-    typedef enum EVideoResolutionCapability {
+    enum EVideoResolutionCapability {
         /// QVGA resolution, max width and height (320, 240)
         PLNK_VIDEO_RESOLUTION_CAPABILITY_QVGA = 1,
         /// VGA resolution, max width and height (640, 480)
@@ -156,12 +156,12 @@ namespace PlanetKit  {
         PLNK_VIDEO_RESOLUTION_CAPABILITY_HD = 3,
         /// FHD resolution, max width and height (1920, 1080)
         PLNK_VIDEO_RESOLUTION_CAPABILITY_FHD = 4,
-    }  EVideoResolutionCapability;
+    };
 
     /**
      * Camera resolution that PlanetKit can support.
      */
-    typedef enum ECameraResolution {
+    enum ECameraResolution {
         /// VGA resolution (640:480)
         PLNK_CAMERA_RESOLUTION_VGA, 
         /// VGA 16:9 resolution (640:360)
@@ -170,7 +170,7 @@ namespace PlanetKit  {
         PLNK_CAMERA_RESOLUTION_HD, 
         /// VGA resolution (1920:1080)
         PLNK_CAMERA_RESOLUTION_FHD 
-    }ECameraResolution;
+    };
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
     constexpr ECameraResolution ECameraResolutionDefault = PLNK_CAMERA_RESOLUTION_HD;
@@ -182,7 +182,7 @@ namespace PlanetKit  {
     /**
      * Camera FPS that PlanetKit can support.
      */
-    typedef enum EVideoCaptureFps {
+    enum EVideoCaptureFps {
         /// Default
         PLNK_VIDEO_CAPTURE_FPS_DEFAULT = 0, 
         /// 5 fps
@@ -197,12 +197,12 @@ namespace PlanetKit  {
         PLNK_VIDEO_CAPTURE_FPS_30 = 30,
         /// Max, which means 30 fps
         PLNK_VIDEO_CAPTURE_FPS_MAX = PLNK_VIDEO_CAPTURE_FPS_30,
-    } EVideoCaptureFps;
+    };
 
     /**
      * Video FPS that PlanetKit can support.
      */
-    typedef enum EVideoFps {
+    enum EVideoFps {
         /// Undefined
         PLNK_VIDEO_FPS_UNDEFINED = 0,
         /// 5 fps
@@ -217,7 +217,7 @@ namespace PlanetKit  {
         PLNK_VIDEO_FPS_30,
         /// Max, which means 30 fps
         PLNK_VIDEO_FPS_MAX = PLNK_VIDEO_FPS_30,
-    }EVideoFps;
+    };
 
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
@@ -229,9 +229,9 @@ namespace PlanetKit  {
     /**
      * Capture media type
      */
-    typedef enum ECapturerMediaType {
+    enum ECapturerMediaType {
         /// Unknown
-        PLNK_CAPTURER_TYPE_Unknown = 0,
+        PLNK_CAPTURER_TYPE_UNKNOWN = 0,
         /// I420
         PLNK_CAPTURER_TYPE_I420,
         /// IYUV
@@ -299,11 +299,11 @@ namespace PlanetKit  {
         /// P016
         PLNK_CAPTURER_TYPE_P016,
         /// v210
-        PLNK_CAPTURER_TYPE_v210,
+        PLNK_CAPTURER_TYPE_V210,
         /// v216
-        PLNK_CAPTURER_TYPE_v216,
+        PLNK_CAPTURER_TYPE_V216,
         /// v410
-        PLNK_CAPTURER_TYPE_v410,
+        PLNK_CAPTURER_TYPE_V410,
         /// MP43
         PLNK_CAPTURER_TYPE_MP43,
         /// MP4S
@@ -371,25 +371,25 @@ namespace PlanetKit  {
         /// HEVC_HDCP
         PLNK_CAPTURER_TYPE_HEVC_HDCP,
         /// Base_HDCP
-        PLNK_CAPTURER_TYPE_Base_HDCP,
-    }ECapturerMediaType;
+        PLNK_CAPTURER_TYPE_BASE_HDCP,
+    };
 
     /**
      * An enumeration representing the mirroring types of a view.
      */
-    typedef enum EVideoMirrorType {
+    enum EVideoMirrorType {
         /// For the local user's video, the mirroring mode is determined based on the currently used camera.
         PLNK_MIRROR_TYPE_AUTO = 0,
         /// Activates mirroring for the view, displaying the original video flipped horizontally.
         PLNK_MIRROR_TYPE_MIRRORED = 1,
         /// Deactivates mirroring for the view, displaying the original video as it is.
         PLNK_MIRROR_TYPE_UNMIRRORED = 2
-    } EVideoMirrorType;
+    };
 
     /**
      * Rendered video ratio mode
      */
-    typedef enum EVideoAspectRatioMode {
+    enum EVideoAspectRatioMode {
         /// Fills the window and ignores the aspect ratio.
         PLNK_VIDEO_FILL_WINDOW,
         /// Keeps the aspect ratio and fits the window.
@@ -398,17 +398,17 @@ namespace PlanetKit  {
         PLNK_VIDEO_ASPECT_FILL, 
         /// Indicates an error type.
         PLNK_VIDEO_ASPECT_MODE_UNDEFINED 
-    }EVideoAspectRatioMode;
+    };
 
     /// Type to use when opening the camera.
-    typedef enum ECameraInfoType {
+    enum ECameraInfoType {
         /// Indicates the normal type. When opening the camera, it uses the optimal specification that can be supported.
         PLNK_CAMERA_INFO_NORMAL = 0,
         /// Indicates a type that uses only the MJPEG type. Opening the camera fails if the device does not support MJPEG.
         PLNK_CAMERA_INFO_ONLY_MJPEG,
         /// This type excludes the MJPEG type when opening the camera.
         PLNK_CAMERA_INFO_NOT_USE_MJPEG
-    }ECameraInfoType;
+    };
 
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1800)
     constexpr ECameraInfoType ECameraInfoTypeDefault = PLNK_CAMERA_INFO_NORMAL;
@@ -431,7 +431,7 @@ namespace PlanetKit  {
     /**
      * Capturer type
      */
-    typedef enum EVideoCapturerType {
+    enum EVideoCapturerType {
         /// Camera
         PLNK_VID_CAPTURER_CAMERA,
         /// Screen selected for screen share
@@ -440,48 +440,48 @@ namespace PlanetKit  {
         PLNK_VID_CAPTURER_WINDOW,
         /// Capturer is not found.
         PLNK_VID_CAPTURER_NO_CAPTURER,
-    } EVideoCapturerType;
+    };
 
     /**
      * Virtual background type
      */
-    typedef enum EVirtualBackgroundType {
+    enum EVirtualBackgroundType {
         /// No virtual background
         PLNK_VIRTUAL_BACKGROUND_TYPE_NONE,
         /// Blurred background
         PLNK_VIRTUAL_BACKGROUND_TYPE_BLUR,
         /// Image background
         PLNK_VIRTUAL_BACKGROUND_TYPE_IMAGE,
-    } EVirtualBackgroundType;
+    };
 
-    typedef enum EInitialMyVideoState {
+    enum EInitialMyVideoState {
         PLNK_INITIAL_MY_VIDEO_STATE_RESUME = 0,
         PLNK_INITIAL_MY_VIDEO_STATE_PAUSE,
-    }EInitialMyVideoState;
+    };
 
     using EScreenShareStateOptional = Optional<EScreenShareState>;
 
-    typedef struct ScreenShareStateResult {
+    struct ScreenShareStateResult {
         EScreenShareStateOptional eScreenShareState;
         EPeerGetFailReason ePeerGetFailReason = EPeerGetFailReason::PLNK_PEER_GET_FAIL_REASON_NONE;
-    } ScreenShareStateResult;
+    };
 
     /**
      * Result for PlanetKitConference::StopPeerVideo and PlanetKitConference::RequestPeerVideo, which is delivered by the callback API.
      */
-    typedef struct SRequestMediaResultParam {
+    struct SRequestMediaResultParam {
         /// Result of PlanetKitConference::StopPeerVideo or PlanetKitConference::RequestPeerVideo APIs
         bool bIsSuccess;
         /// Error code
         EMediaRequestError eError;
         /// Failure reason when API fails.
         const char* szFailReason;
-    } SRequestMediaResultParam;
+    };
 
     /**
      * Result for PlanetKitConference::RequestPeerVideo, which is delivered by the callback API.
      */
-    typedef struct SRequestVideoResolutionResultParam {
+    struct SRequestVideoResolutionResultParam {
         /// Result of PlanetKitConference::RequestPeerVideo APIs
         bool                bIsSuccess;
         /// Error code
@@ -492,7 +492,7 @@ namespace PlanetKit  {
         EVideoResolution    eReceiveRes;
         /// Failure reason when API fails.
         const char*         szFailReason;
-    } SRequestVideoResolutionResultParam;
+    };
 
     /**
      * The buffer formats currently supported for virtual background in PlanetKit.
@@ -505,7 +505,7 @@ namespace PlanetKit  {
     /**
      * Configuration that determines whether to attempt to use the hardware codec.
      */
-    typedef struct SPreferredHardwareCodec {
+    struct SPreferredHardwareCodec {
         // A value that determines whether to attempt to use the hardware codec when sending video to the peer during a call.
         bool bCallVideoSend = true;
         // A value that determines whether to attempt to use the hardware codec when receiving video from the peer during a call.
@@ -514,5 +514,5 @@ namespace PlanetKit  {
         bool bConferenceVideoSend = true;
         // A value that determines whether to attempt to use the hardware codec when receiving video from the peer during a conference.
         bool bConferenceVideoReceive = true;
-    }SPreferredHardwareCodec;
+    };
 }

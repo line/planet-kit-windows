@@ -57,7 +57,7 @@
 #define PLNK_UNREFERENCED_PARAMETER(P)  (P)
 
 namespace PlanetKit {
-    using PlanetKitByte = const char;
+    using PlanetKitByte = unsigned char;
 
     /**
      * @brief Fail reasons related to start
@@ -82,8 +82,6 @@ namespace PlanetKit {
         PLNK_START_FAIL_REASON_INVALID_USER_ID = 7,
         /// The service ID string is not in a valid format (https://docs.lineplanet.me/overview/glossary#service-id).
         PLNK_START_FAIL_REASON_INVALID_SERVICE_ID = 8,
-        /// The API-key string is not in a valid format (https://docs.lineplanet.me/overview/glossary#api-key).
-        PLNK_START_FAIL_REASON_INVALID_API_KEY = 9,
         /// The room ID string is not in a valid format (https://docs.lineplanet.me/overview/glossary#room-id).
         PLNK_START_FAIL_REASON_INVALID_ROOM_ID = 10,
         /// App server data is too long.
@@ -451,16 +449,6 @@ namespace PlanetKit {
 
         /// Not used definition
         PLNK_UE_TYPE_SIP_TERMINAL = 100,
-    };
-
-    /**
-     * @brief Type of connection token for connecting to the PlanetKit cloud server.
-     */
-    enum EConnectToken {
-        /// This feature will be deprecated soon. It is only a value temporarily maintained for backward compatibility.
-        API_KEY,
-        /// Default feature of the connect token.
-        ACCESS_TOKEN
     };
 
     /**

@@ -36,5 +36,5 @@ namespace PlanetKit {
         virtual size_t TotalCount() = 0;
     };
 
-    typedef SharedPtr<ConferencePeerUpdateParam> ConferencePeerUpdateParamPtr;
+    using ConferencePeerUpdateParamPtr = SharedPtr<ConferencePeerUpdateParam>;
 }

@@ -15,7 +15,7 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitDatasessionDefine.h"
+#include "PlanetKitDataSessionDefine.h"
 #include "PlanetKitDataSessionFrame.h"
 
 namespace PlanetKit {
@@ -31,17 +31,17 @@ namespace PlanetKit {
 
         /**
          * Called when when a chunk of data is received from the peer.
-         * @param nStreamId Stream ID
+         * @param streamId Stream ID
          * @param pFrame Received data
          */
-        virtual void OnReceive(DataSessionStreamIdT nStreamId, DataSessionFramePtr pFrame) = 0;
+        virtual void OnReceive(DataSessionStreamIdT streamId, DataSessionFramePtr pFrame) = 0;
 
         /**
          * Called when the inbound data session has been successfully made.
-         * @param pInboundDataInterface Inbound data session that is made by the MakeInboundDataSession API.
+         * @param pInboundDataSession Inbound data session that is made by the MakeInboundDataSession API.
          * @param pUserData User data that you sent when you called the MakeInboundDataSession API.
          */
-        virtual void OnSuccess(InboundDataSessionPtr pInboundDataInterface, void* pUserData) = 0;
+        virtual void OnSuccess(InboundDataSessionPtr pInboundDataSession, void* pUserData) = 0;
 
         /**
          * Called when a new inbound data session cannot be established.

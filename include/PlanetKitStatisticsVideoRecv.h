@@ -44,6 +44,6 @@ namespace PlanetKit {
         virtual StatisticsVideoPtr Video() = 0;
     };
 
-    typedef SharedPtr<StatisticsVideoRecv> StatisticsVideoRecvPtr;
-    typedef Array<StatisticsVideoRecvPtr> StatisticsVideoRecvArray;
+    using StatisticsVideoRecvPtr = SharedPtr<StatisticsVideoRecv>;
+    using StatisticsVideoRecvArray = Array<StatisticsVideoRecvPtr>;
 };

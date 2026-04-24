@@ -32,6 +32,7 @@ namespace PlanetKit {
     using FloatOptional = Optional<float>;
 
     using UIntOptional = Optional<unsigned int>;
+    using IntOptional = Optional<int>;
 
     using BoolOptional = Optional<bool>;
 

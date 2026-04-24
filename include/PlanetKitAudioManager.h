@@ -145,5 +145,5 @@ namespace PlanetKit {
         virtual bool StopMicPreview() = 0;
     };
 
-    typedef SharedPtr<AudioManager> AudioManagerPtr;
+    using AudioManagerPtr = SharedPtr<AudioManager>;
 }

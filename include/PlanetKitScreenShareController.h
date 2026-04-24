@@ -118,15 +118,15 @@ namespace PlanetKit
 
         /**
          * Checks whether it is currently possible to deliver frames to the counterpart.
-         * @param ull64tick The tick count of the current frame.
+         * @param ullTick The tick count of the current frame.
          * @return
          *  - Returns true if it is possible to send frames to the counterpart.
          * @remark
          *  - In case there is a current FPS limit, you need to check the speed of the current frame through the tick count value .
          *  - You verify whether the current frame can be delivered at an appropriate FPS by checking the speed of this frame.
          */
-        virtual bool IsPostingFrameAvailable(UINT64 ull64tick) = 0;
+        virtual bool IsPostingFrameAvailable(UINT64 ullTick) = 0;
     };
 
-    typedef SharedPtr<ScreenShareController> ScreenShareControllerPtr;
+    using ScreenShareControllerPtr = SharedPtr<ScreenShareController>;
 }

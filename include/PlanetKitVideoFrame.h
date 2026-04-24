@@ -37,5 +37,5 @@ namespace PlanetKit {
         virtual int GetStride() = 0;
     };
 
-    typedef SharedPtr<VideoFrame> VideoFramePtr;
+    using VideoFramePtr = SharedPtr<VideoFrame>;
 };

@@ -38,13 +38,13 @@ namespace PlanetKit {
 
         /**
          * Called when the peer's video data is activated.
-         * @param pVideoFrame Peer's video data. You can render the peer's video with this parameter.
+         * @param sVideoFrame Peer's video data. You can render the peer's video with this parameter.
          * @param szPeerId Peer's ID.
          * @param szPeerServiceId Peer's service ID.
          * @remark
          * - In the case of the local user's own frame, the ID and ServiceID will be nullptr.
          */
-        virtual void OnVideo(const SVideoFrame& pVideoFrame, UserIdPtr pUserID) = 0;
+        virtual void OnVideo(const SVideoFrame& sVideoFrame, UserIdPtr pUserID) = 0;
     };
 
     using IVideoReceiverPtr = SharedPtr<IVideoReceiver>;

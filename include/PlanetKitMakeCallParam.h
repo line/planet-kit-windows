@@ -23,7 +23,7 @@
 
 namespace PlanetKit {
     class PLANETKIT_API MakeCallParam;
-    typedef SharedPtr<MakeCallParam> MakeCallParamPtr;
+    using MakeCallParamPtr = SharedPtr<MakeCallParam>;
 
     /// Call parameter for MakeCall API
     class PLANETKIT_API MakeCallParam {
@@ -40,20 +40,6 @@ namespace PlanetKit {
          *  - This API can fail when the 'strToken' parameter is nullptr.
          */
         static MakeCallParamPtr CreateWithAccessToken(UserIdPtr pMyID, UserIdPtr pPeerID, const WString& strToken);
-
-        /**
-         * Creates an instance of the MakeCallParam class with an API key.
-         * @param pMyID Local user's ID and service ID
-         * @param peerID Peer's ID and service ID
-         * @param strKey API key string, which should be encoded in UTF-16 and null-terminated
-         * @remark
-         *  - The parameter 'strKey' must have a string value.<br>
-         *  - This API can fail when the 'strKey' parameter is nullptr.
-         * @deprecated
-         *  - This API is deprecated and will be removed in a future release.
-         */
-        static MakeCallParamPtr CreateWithAPIKey(UserIdPtr pMyID, UserIdPtr pPeerID, const WString& strKey);
-
 
         /// Gets the app server data.
         virtual const WString& GetAppServerData() = 0;
@@ -77,20 +63,14 @@ namespace PlanetKit {
          */
         virtual void SetCallStartMessage(CallStartMessagePtr pCallStartMessage) = 0;
 
-        /// Gets preparation status.
-        virtual bool IsPreparation() = 0;
+        /// Gets responder preparation status.
+        virtual bool UseResponderPreparation() = 0;
 
-        /// Sets preparation status.
-        virtual void SetPreparation(bool bPreparation) = 0;
-
-        /// Gets the API Key.
-        virtual const WString& APIKey() = 0;
+        /// Sets responder preparation status.
+        virtual void SetUseResponderPreparation(bool bUseResponderPreparation) = 0;
 
         /// Gets the access token.
         virtual const WString& AccessToken() = 0;
-
-        /// Gets the connect token.
-        virtual EConnectToken ConnectToken() = 0;
         
         /// Sets the media type.
         virtual void SetIsVideoCall(bool bVideoCall) = 0;
@@ -148,7 +128,7 @@ namespace PlanetKit {
         /**
          * Gets the video receiving capability.
          */
-        virtual const VideoCapabilityOptional RecvVideoCapability() = 0;
+        virtual VideoCapabilityOptional RecvVideoCapability() = 0;
 
         /// Gets whether to allow making a 1-to-1 call even when PlanetKit can't start microphone.
         virtual bool IsAllowCallWithoutMic() = 0;
@@ -201,16 +181,12 @@ namespace PlanetKit {
         virtual bool IsVideoCall() = 0;
 
         /// Gets the video sending capability.
-        virtual const VideoCapabilityOptional SendVideoCapability() = 0;
+        virtual VideoCapabilityOptional SendVideoCapability() = 0;
 
         /// Gets the maximum link bandwidth in kbps for sending.
         virtual unsigned int GetMaxSendLinkBandwidth() = 0;
         /// Gets the maximum link bandwidth in kbps for receiving.
         virtual unsigned int GetMaxReceiveLinkBandwidth() = 0;
-        /// Gets the audio input no source timeout option.
-        virtual int GetAudioInputNoSrcTimeOutSec() = 0;
-        /// Gets the video input no source timeout option.
-        virtual int GetVideoInputNoSrcTimeOutSec() = 0;
 
         // Set true to disable MLNS noise suppressor.
         /// Checks whether MLNS is used.
@@ -229,10 +205,6 @@ namespace PlanetKit {
         virtual void SetMaxSendLinkBandwidth(unsigned int unMaxSendLinkBandwidth) = 0;
         /// Sets the maximum link bandwidth in kbps for receiving. Set 0 for default.
         virtual void SetMaxReceiveLinkBandwidth(unsigned int unMaxReceiveLinkBandwidth) = 0;
-        /// Sets the audio input no source timeout option. Set 0 for no timeout.
-        virtual void SetAudioInputNoSrcTimeOutSec(unsigned int nAudioInputNoSrcTimeOutSec) = 0;
-        /// Sets the video input no source timeout option. Set 0 for no timeout.
-        virtual void SetVideoInputNoSrcTimeOutSec(unsigned int nVideoInputNoSrcTimeOutSec) = 0;
 
         /// Enables/Disables MLNS.
         virtual void SetDisableMLNS(bool bDisable) = 0; // Set true to disable MLNS noise suppressor.
@@ -253,7 +225,7 @@ namespace PlanetKit {
         virtual void SetAudioDescriptionInfo(bool bUse, unsigned int unAudioDescriptionInterval) = 0;
 
         /// Gets the audio description information.
-        virtual AudioDescriptionInfo GetAudioDescriptionInfo() = 0;
+        virtual const AudioDescriptionInfo& GetAudioDescriptionInfo() = 0;
 
         /**
          * Sets whether the end tone should be played regardless of the call state.

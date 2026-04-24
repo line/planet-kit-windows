@@ -50,6 +50,6 @@ namespace PlanetKit {
         virtual EVideoCapturerType GetType() = 0;
     };
 
-    typedef SharedPtr<ScreenShareInfo> ScreenShareInfoPtr;
-    typedef Array<ScreenShareInfoPtr> ScreenShareInfoArray;
+    using ScreenShareInfoPtr = SharedPtr<ScreenShareInfo>;
+    using ScreenShareInfoArray = Array<ScreenShareInfoPtr>;
 }

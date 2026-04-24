@@ -15,7 +15,6 @@
 #pragma once
 
 #include "PlanetKit.h"
-#include "PlanetKitCommonVideoStatus.h"
 #include "PlanetKitShortDataParam.h"
 #include "PlanetKitAudioCommon.h"
 #include "PlanetKitDataSessionInterface.h"
@@ -57,59 +56,102 @@ namespace PlanetKit {
         virtual void OnDisconnected(PlanetKitConferencePtr pPlanetKitConference, ConferenceDisconnectedParamPtr pParam) = 0;
 
         /**
+         * Called when a network is unavailable.<br>If a network is not recovered within nWillDisconnectAfterSec seconds, this session will be disconnected with PLNK_DISCONNECT_REASON_UNAVAILABLE_NETWORK.
+         * @param pPlanetKitConference Conference instance that the event was registered to.
+         * @param nWillDisconnectAfterSec Seconds left until the session is disconnected. If a network becomes available before nWillDisconnectAfterSec seconds, the session will not be disconnected.
+         */
+        virtual void OnNetworkUnavailable(PlanetKitConferencePtr pPlanetKitConference, int nWillDisconnectAfterSec) = 0;
+
+        /**
+         * Called when a network is available again.
+         * @param pPlanetKitConference Conference instance that the event was registered to.
+         */
+        virtual void OnNetworkReavailable(PlanetKitConferencePtr pPlanetKitConference) = 0;
+
+        /**
+         * Called when there is no video source for a certain period of time.
+         * @param pPlanetKitConference Conference instance that the event was registered to.
+         */
+        virtual void OnMyVideoNoSource(PlanetKitConferencePtr pPlanetKitConference) = 0;
+
+        /**
          * Called when the list of peers who are connected to or disconnected from the conference is updated.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pParam List of peers who are connected to or disconnected from the conference subgroup.
          */
-        virtual void OnPeerListUpdate(PlanetKitConferencePtr pPlanetKitConference, ConferencePeerUpdateParamPtr pParam) = 0;
+        virtual void OnPeerListUpdate(PlanetKitConferencePtr pPlanetKitConference, ConferencePeerUpdateParamPtr pParam) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(pParam);
+        };
 
         /**
          * Called when the video state of one or more conference subgroup peers is updated.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pParam Updated information of the peers' video.
          */
-        virtual void OnPeersVideoUpdated(PlanetKitConferencePtr pPlanetKitConference, ConferenceVideoUpdatedParamPtr pParam) = 0;
+        virtual void OnPeersVideoUpdated(PlanetKitConferencePtr pPlanetKitConference, ConferenceVideoUpdatedParamPtr pParam) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(pParam);
+        };
 
         /**
          * Called when the state of one or more conference public subgroup peers is updated.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pParam Updated information of the peers
          */
-        virtual void OnPublicSubgroupUpdated(PlanetKitConferencePtr pPlanetKitConference, const ConferenceSubgroupUpdatePeerArray& arrSubgroupUpdatePeer) = 0;
+        virtual void OnPublicSubgroupUpdated(PlanetKitConferencePtr pPlanetKitConference, const ConferenceSubgroupUpdatePeerArray& arrSubgroupUpdatePeer) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrSubgroupUpdatePeer);
+        };
 
         /**
          * Called when short data is received.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pParam Parameter for the short data
          */
-        virtual void OnReceivedShortData(PlanetKitConferencePtr pPlanetKitConference, ShortDataParamPtr pParam) = 0;
+        virtual void OnReceivedShortData(PlanetKitConferencePtr pPlanetKitConference, ShortDataParamPtr pParam) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(pParam);
+        };
 
         /**
          * Called when Hold() is called by a peer.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param arrPeerHold Parameter for the hold
          */
-        virtual void OnReceivedPeersHold(PlanetKitConferencePtr pPlanetKitConference, const PeerHoldArray& arrPeerHold) = 0;
+        virtual void OnReceivedPeersHold(PlanetKitConferencePtr pPlanetKitConference, const PeerHoldArray& arrPeerHold) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrPeerHold);
+        };
 
         /**
          * Called when Unhold() is called by a peer.
          * @param pPlanetKitConference Call instance that the event was registered to.
          */
-        virtual void OnReceivedPeersUnhold(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& arrPeer) = 0;
+        virtual void OnReceivedPeersUnhold(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& arrPeers) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrPeers);
+        };
 
         /**
          * Called when peers' microphone status sharing (mute) has been shared.
          * @param pPlanetKitConference Conference instance that the event was registered to.
-         * @param peerArray Information of peers who shared their mic status.
+         * @param arrPeers Information of peers who shared their mic status.
          */
-        virtual void OnPeersMicMuted(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& peerArray) = 0;
+        virtual void OnPeersMicMuted(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& arrPeers) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrPeers);
+        };
 
         /**
          * Called when peers' microphone status sharing (unmute) has been shared.
          * @param pPlanetKitConference Conference instance that the event was registered to.
-         * @param peerArray Information of peers who shared their mic status.
+         * @param arrPeers Information of peers who shared their mic status.
          */
-        virtual void OnPeersMicUnmuted(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& peerArray) = 0;
+        virtual void OnPeersMicUnmuted(PlanetKitConferencePtr pPlanetKitConference, const PeerArray& arrPeers) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrPeers);
+        };
 
         /**
          * Called when an audio mute/unmute request is received.
@@ -117,7 +159,11 @@ namespace PlanetKit {
          * @param pPeer Information of the peer who requested mic mute/unmute.
          * @param bEnableMute Whether to mute or unmute audio.
          */
-        virtual void OnReceivedMuteMyAudioRequest(PlanetKitConferencePtr pPlanetKitConference, PeerPtr pPeer, bool bEnableMute) = 0;
+        virtual void OnReceivedMuteMyAudioRequest(PlanetKitConferencePtr pPlanetKitConference, PeerPtr pPeer, bool bEnableMute) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(pPeer);
+            PLNK_UNREFERENCED_PARAMETER(bEnableMute);
+        };
 
         /**
          * Called when an app control message is received.
@@ -125,47 +171,41 @@ namespace PlanetKit {
          * @param pMessage App control message
          * @param nMessageSize Size of the app control message
          */
-        virtual void OnReceivedAppControlMessage(PlanetKitConferencePtr pPlanetKitConference, const void* pMessage, int nMessageSize) = 0;
+        virtual void OnReceivedAppControlMessage(PlanetKitConferencePtr pPlanetKitConference, const void* pMessage, int nMessageSize) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(pMessage);
+            PLNK_UNREFERENCED_PARAMETER(nMessageSize);
+        };
 
-        /**
-         * Called when a network is unavailable.<br>If a network is not recovered within nWillDisconnectAfterSec seconds, this session will be disconnected with PLNK_DISCONNECT_REASON_UNAVAILABLE_NETWORK.
-         * @param pPlanetKitConference Conference instance that the event was registered to.
-         * @param nWillDisconnectAfterSec Seconds left until the session is disconnected. If a network becomes available before nWillDisconnectAfterSec seconds, the session will not be disconnected.
-         */
-        virtual void OnNetworkUnavailable(PlanetKitConferencePtr pPlanetKitConference, int nWillDisconnectAfterSec) = 0;
-        
-        /**
-         * Called when a network is available again.
-         * @param pPlanetKitConference Conference instance that the event was registered to.
-         */
-        virtual void OnNetworkReavailable(PlanetKitConferencePtr pPlanetKitConference) = 0;
-        
         /**
          * Called when a peer sends a data through an inbound data session.
          * @param strSubgroupName Subgroup name string which is encoded in UTF-16 and null-terminated.<br>This can be `NullOptional` that means `MainRoom`.
-         * @param nStreamId Data session ID
+         * @param streamId Data session ID
          * @param eType Data session type
          */
-        virtual void OnDataSessionIncoming(const WStringOptional& strSubgroupName, DataSessionStreamIdT nStreamId, EDataSessionType eType) = 0;
+        virtual void OnDataSessionIncoming(const WStringOptional& strSubgroupName, DataSessionStreamIdT streamId, EDataSessionType eType) {
+            PLNK_UNREFERENCED_PARAMETER(strSubgroupName);
+            PLNK_UNREFERENCED_PARAMETER(streamId);
+            PLNK_UNREFERENCED_PARAMETER(eType);
+        };
 
         /**
         * Called when a peer starts or stops screen share in a subgroup.
         * @param pPeerScreenShareUpdateInfo Peer information
         */
-        virtual void OnPeerScreenShareUpdated(ConferencePeerScreenShareUpdatedParamPtr pPeerScreenShareUpdateInfo) = 0;
+        virtual void OnPeerScreenShareUpdated(ConferencePeerScreenShareUpdatedParamPtr pPeerScreenShareUpdateInfo) {
+            PLNK_UNREFERENCED_PARAMETER(pPeerScreenShareUpdateInfo);
+        };
 
         /**
          * Called after some errors have occurred in the conference room.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param arrExceptionMessage Exception messages as an array
          */
-        virtual void OnException(PlanetKitConferencePtr pPlanetKitConference, const ConferenceExceptionArray& arrExceptionMessage) = 0;
-
-        /**
-         * Called when there is no video source for a certain period of time.
-         * @param pPlanetKitConference Conference instance that the event was registered to.
-         */
-        virtual void OnMyVideoNoSource(PlanetKitConferencePtr pPlanetKitConference) = 0;
+        virtual void OnException(PlanetKitConferencePtr pPlanetKitConference, const ConferenceExceptionArray& arrExceptionMessage) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(arrExceptionMessage);
+        };
 
         /**
          * Called at each interval registered during the initialization of the conference, providing peers' volume values.
@@ -175,7 +215,11 @@ namespace PlanetKit {
          * @remark If the interval is 0, it does not occur.
          * @remark If you want to get a specific peer's volume, call Peer.GetVolumeSetting.
          */
-        virtual void OnPeersAudioDescriptionUpdated(PlanetKitConferencePtr pPlanetKitConference, unsigned char ucAverageVolumeLevel, const PeerAudioDescriptionArray& arrPeer) = 0;
+        virtual void OnPeersAudioDescriptionUpdated(PlanetKitConferencePtr pPlanetKitConference, unsigned char ucAverageVolumeLevel, const PeerAudioDescriptionArray& arrPeers) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(ucAverageVolumeLevel);
+            PLNK_UNREFERENCED_PARAMETER(arrPeers);
+        };
 
         /**
          * Called at each interval registered during the initialization of the conference, providing the local user's volume value.
@@ -183,13 +227,18 @@ namespace PlanetKit {
          * @param sMyAudioDescription The local user's audio description.
          * @remark If the interval is 0, it does not occur.
          */
-        virtual void OnMyAudioDescriptionUpdated(PlanetKitConferencePtr pPlanetKitConference, const MyAudioDescription& sMyAudioDescription) = 0;
+        virtual void OnMyAudioDescriptionUpdated(PlanetKitConferencePtr pPlanetKitConference, const MyAudioDescription& sMyAudioDescription) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+            PLNK_UNREFERENCED_PARAMETER(sMyAudioDescription);
+        };
 
         /**
         * Called when the local user holds during screen share.
         * @param pPlanetKitConference Conference instance that the event was registered to.
         */
-        virtual void OnMyScreenShareStoppedByHold(PlanetKitConferencePtr pPlanetKitConference) = 0;
+        virtual void OnMyScreenShareStoppedByHold(PlanetKitConferencePtr pPlanetKitConference) {
+            PLNK_UNREFERENCED_PARAMETER(pPlanetKitConference);
+        };
     };
 
     using IConferenceEventPtr = SharedPtr<IConferenceEvent>;

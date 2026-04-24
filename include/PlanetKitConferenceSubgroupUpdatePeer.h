@@ -35,6 +35,6 @@ namespace PlanetKit {
         virtual const WStringArray& GetUnsubscribedSubgroup() const = 0;
     };
 
-    typedef SharedPtr<ConferenceSubgroupUpdatePeer> ConferenceSubgroupUpdatePeerPtr;
-    typedef Array<ConferenceSubgroupUpdatePeerPtr> ConferenceSubgroupUpdatePeerArray;
+    using ConferenceSubgroupUpdatePeerPtr = SharedPtr<ConferenceSubgroupUpdatePeer>;
+    using ConferenceSubgroupUpdatePeerArray = Array<ConferenceSubgroupUpdatePeerPtr>;
 };

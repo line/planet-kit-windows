@@ -22,7 +22,11 @@ namespace PlanetKit {
     public:
         virtual ~IConferenceAudioReceiver() { }
 
-        virtual void OnAudio(const SAudioData& pAudioData) = 0;
+        /**
+         * Audio data callback called by the conference instance. Called synchronously after audio is sent or received to/from the peer and the server.
+         * @param sAudioData
+         */
+        virtual void OnAudio(const SAudioData& sAudioData) = 0;
     };
 
     using IConferenceAudioReceiverPtr = SharedPtr<IConferenceAudioReceiver>;

@@ -35,8 +35,8 @@ namespace PlanetKit {
          * Returns whether the peer set the preparation flag.
          * @see [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status)
          */
-        virtual bool IsPeerUsePreparation() = 0;
+        virtual bool IsPeerUseResponderPreparation() = 0;
     };
 
-    typedef SharedPtr<CallVerifiedParam> CallVerifiedParamPtr;
+    using CallVerifiedParamPtr = SharedPtr<CallVerifiedParam>;
 };

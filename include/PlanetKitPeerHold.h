@@ -20,8 +20,8 @@
 
 namespace PlanetKit {
     class PLANETKIT_API PeerHold;
-    typedef SharedPtr<PeerHold> PeerHoldPtr;
-    typedef Array<PeerHoldPtr> PeerHoldArray;
+    using PeerHoldPtr = SharedPtr<PeerHold>;
+    using PeerHoldArray = Array<PeerHoldPtr>;
 
     class PLANETKIT_API PeerHold : public Base {
     public:

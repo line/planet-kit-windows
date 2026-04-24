@@ -32,7 +32,7 @@ namespace PlanetKit {
         /// Called when a peer's video status is updated.
         virtual void OnVideoUpdated(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup, const VideoStatus& videoStatus) = 0;
         /// Called when a peer's screen share is updated.
-        virtual void OnScreenShareUpdated(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup, EScreenShareState eState) = 0;
+        virtual void OnScreenShareUpdated(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup, EScreenShareState eState, IntOptional nDisabledReason) = 0;
         /// Called when a peer subscribes to a subgroup.
         virtual void OnSubscribed(PeerControlPtr pPeerControl, SubgroupPtr pSubgroup) = 0;
         /// Called when a peer unsubscribes from a subgroup.

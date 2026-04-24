@@ -27,7 +27,7 @@ namespace PlanetKit {
     /**
      * @brief Reasons for subgroup subscription failure
      */
-    typedef enum ESubgroupSubscribeFailReason {
+    enum ESubgroupSubscribeFailReason {
         /// Undefined
         PLNK_SUBGRP_SUBS_FAIL_REASON_UNDEFINED = 0,
         /// Timeout
@@ -40,12 +40,12 @@ namespace PlanetKit {
         PLNK_SUBGRP_SUBS_FAIL_REASON_ALREADY_SUBSCRIBED = 4,
         /// Unknown
         PLNK_SUBGRP_SUBS_FAIL_REASON_UNKNOWN = 1000
-    } ESubgroupSubscribeFailReason;
+    };
 
     /**
      * @brief Reasons for subgroup unsubscription failure
      */
-    typedef enum ESubgroupUnsubscribeFailReason {
+    enum ESubgroupUnsubscribeFailReason {
         /// Undefined
         PLNK_SUBGRP_UNSUBS_FAIL_REASON_UNDEFINED = 0,
         /// The local user is sending audio to this subgroup and can't unsubscribe.
@@ -58,19 +58,19 @@ namespace PlanetKit {
         PLNK_SUBGRP_UNSUBS_FAIL_REASON_HAS_ACTIVE_SCREEN_SHARE = 4,
         /// Unknown
         PLNK_SUBGRP_UNSUBS_FAIL_REASON_UNKNOWN = 1000
-    } ESubgroupUnsubscribeFailReason;
+    };
 
     /**
      * @brief Enum of the subgroup peer update type in Subgroup
      */
-    typedef enum ESubgroupPeerUpdateType {
+    enum ESubgroupPeerUpdateType {
         /// None
         PLNK_SUBGRP_PEER_UPDATE_TYPE_NONE = 0,
         /// Public room
         PLNK_SUBGRP_PEER_UPDATE_TYPE_PUBLIC,
         /// Private room
         PLNK_SUBGRP_PEER_UPDATE_TYPE_PRIVATE,
-    } ESubgroupPeerUpdateType;
+    };
 
     using SubscribeResult = void(*)(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupSubscribeFailReason eReason, void* pUserData);
     using UnsubscribeResult = void(*)(SubgroupPtr pSubgroup, bool bSuccess, ESubgroupUnsubscribeFailReason eReason, void* pUserData);

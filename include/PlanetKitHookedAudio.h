@@ -27,27 +27,27 @@ namespace PlanetKit {
         /**
          * Sample rate of audio data.
          */
-        virtual const unsigned int GetSampleRate() = 0;
+        virtual unsigned int GetSampleRate() = 0;
 
         /**
          * The number of channels.
          */
-        virtual const unsigned int GetChannel() = 0;
+        virtual unsigned int GetChannel() = 0;
 
         /**
          * The sample type.
          */
-        virtual const EAudioSampleType GetAudioSampleType() = 0;
+        virtual EAudioSampleType GetAudioSampleType() = 0;
 
         /**
          * The sample count for each channel.
          */
-        virtual const unsigned int GetSampleCount() = 0;
+        virtual unsigned int GetSampleCount() = 0;
 
         /**
          * The sequence number of audio data.
          */
-        virtual const unsigned long long GetSequenceNumber() = 0;
+        virtual unsigned long long GetSequenceNumber() = 0;
 
         /**
          * Sets raw data of audio.
@@ -68,5 +68,5 @@ namespace PlanetKit {
         virtual const AudioData& GetAudioData() = 0;
     };
 
-    typedef AutoPtr<HookedAudio> HookedAudioPtr;
+    using HookedAudioPtr = AutoPtr<HookedAudio>;
 }
