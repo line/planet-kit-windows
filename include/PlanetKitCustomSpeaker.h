@@ -44,6 +44,13 @@ namespace PlanetKit {
          * @remark To implement custom audio and pull audio data from a call or conference session, you need to call the respective function.
          * @remark For optimal performance, it is recommended to set the `unAudioDataSamplingRate` member (in Hz) of SAudioData
          *         to one of the following values: 16000, 32000, or 48000.
+         * @remark The caller must initialize the following SAudioData fields before calling this function;
+         *         PlanetKit fills `ucBuffer` with audio data matching them:
+         *         - `eAudioDataSampleFormat` — output sample format (FLOAT_32 or SHORT16).
+         *         - `unAudioDataSampleCount` — number of samples to pull.
+         *         - `unAudioDataSamplingRate` — sample rate in Hz.
+         *         - `ucBuffer` / `unBufferSize` — destination buffer. `unBufferSize` must be at least
+         *           `unAudioDataSampleCount * (eAudioDataSampleFormat == SHORT16 ? sizeof(short) : sizeof(float))`.
          */
         virtual bool PullAudioData(SAudioData& audioData) {
             if (m_pSpeakerEvent.hasValue() == false) {

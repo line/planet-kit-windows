@@ -42,16 +42,28 @@ namespace PlanetKit {
          * Accepts an incoming call.
          * @param bPreparation If this value is true, the callee can delay connection until it calls FinishPreparation().
          * @param pCallStartMessage Call start message to send before the connection
-         * @param eInitialMyVideoState Determines the initial video state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state, and you will need to call ResumeMyVideo to send the video to the peer.
+         * @param eInitialMyVideoState Determines the initial state of the local user's video. If set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video starts paused, and you need to call ResumeMyVideo to send the video to the peer.
          * @param bRecordOnCloud Whether to enable recording on the cloud.<br>DO NOT set this to true before consulting with the LINE Planet team.<br>If you want to use this feature, please contact us. (https://docs.lineplanet.me/ko/help/contact)
+         * @param eInitialMyAudioState Determines the initial state of the local user's audio. If set to PLNK_INITIAL_MY_AUDIO_STATE_MUTED, the local audio is muted and the microphone is not used when the call starts.
          * @remark
          *  - [Preparation guide](https://docs.lineplanet.me/windows/extended-functions/responder-preparation-status) <br>
          *  - [CallStartMessage guide](https://docs.lineplanet.me/windows/extended-functions/call-start-message)
          */
-        virtual void AcceptCall(bool bPreparation, CallStartMessageOptional pCallStartMessage = NullOptional, EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME, bool bRecordOnCloud = false) = 0;
+        virtual void AcceptCall(bool bPreparation,
+                                CallStartMessageOptional pCallStartMessage = NullOptional,
+                                EInitialMyVideoState eInitialMyVideoState = PLNK_INITIAL_MY_VIDEO_STATE_RESUME,
+                                bool bRecordOnCloud = false,
+                                EInitialMyAudioState eInitialMyAudioState = PLNK_INITIAL_MY_AUDIO_STATE_UNMUTED) = 0;
 
         /**
         * Ends an active/verified call.
+        * @remark
+        *   EndCall starts the disconnect sequence but does not release the application's
+        *   PlanetKitCallPtr. The application must continue to hold the strong reference until
+        *   ICallEvent::OnDisconnected fires.
+        * @see ICallEvent::OnDisconnected
+        * @see PlanetKitManager::MakeCall
+        * @see PlanetKitManager::VerifyCall
         */
         virtual void EndCall() = 0;
 
@@ -146,7 +158,7 @@ namespace PlanetKit {
 
         /**
          * Enables video transmission. 
-         * @param eInitialMyVideoState Determines the initial video state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state, and you will need to call ResumeMyVideo to send the video to the peer.
+         * @param eInitialMyVideoState Determines the initial state of the local user's video. If set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video starts paused, and you need to call ResumeMyVideo to send the video to the peer.
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success

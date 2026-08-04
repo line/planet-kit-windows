@@ -166,6 +166,16 @@ namespace PlanetKit {
 
         /**
          * Sets the ICallEvent listener class.
+         * @param pEvent Event handler. The instance pointed to by pEvent must outlive the call (it must remain alive until ICallEvent::OnDisconnected fires).
+         * @remark
+         *   Calling SetCallEvent is required before PlanetKitManager::MakeCall.
+         *   ICallEvent::OnDisconnected determines the safe release point of the returned PlanetKitCallPtr;
+         *   without a registered handler the application has no signal for when to release the reference.
+         *   The typical application pattern is to store pEvent as a data member of the same host class
+         *   (for example, a UI page or controller) that also holds the PlanetKitCallPtr returned by
+         *   PlanetKitManager::MakeCall, so the handler's lifetime is naturally bound to the host.
+         * @see PlanetKitManager::MakeCall
+         * @see ICallEvent::OnDisconnected
          */
         virtual void SetCallEvent(ICallEventPtr pEvent) = 0;
 
@@ -241,13 +251,25 @@ namespace PlanetKit {
         virtual bool IsPlayEndtoneRegardlessOfCallState() = 0;
 
         /**
-         * Retrieves the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after making the call.
+         * Retrieves the initial state of the local user's video. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video is paused when the call starts.
          */
         virtual EInitialMyVideoState GetInitialMyVideoState() = 0;
 
         /**
-         * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after making the call.
+         * Sets the initial state of the local user's video. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video is paused when the call starts.
          */
         virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
+
+        /**
+         * Retrieves the initial state of the local user's audio. If it is set to PLNK_INITIAL_MY_AUDIO_STATE_MUTED,
+         * the local audio is muted and the microphone is not used when the call starts.
+         */
+        virtual EInitialMyAudioState GetInitialMyAudioState() = 0;
+
+        /**
+         * Sets the initial state of the local user's audio. If it is set to PLNK_INITIAL_MY_AUDIO_STATE_MUTED,
+         * the local audio is muted and the microphone is not used when the call starts.
+         */
+        virtual void SetInitialMyAudioState(EInitialMyAudioState eInitialMyAudioState) = 0;
     };
 }

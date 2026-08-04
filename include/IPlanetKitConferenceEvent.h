@@ -52,6 +52,12 @@ namespace PlanetKit {
          * Called when the conference state is changed to disconnected.
          * @param pPlanetKitConference Conference instance that the event was registered to.
          * @param pDisconnectedParam Information parameter
+         * @remark
+         *   This is the safe release point for the PlanetKitConferencePtr returned from
+         *   PlanetKitManager::JoinConference. Releasing the strong reference earlier (for example,
+         *   immediately after PlanetKitConference::LeaveConference, or letting a function-local
+         *   PlanetKitConferencePtr go out of scope) can crash inside the SDK's event dispatch.
+         * @see PlanetKitManager::JoinConference
          */
         virtual void OnDisconnected(PlanetKitConferencePtr pPlanetKitConference, ConferenceDisconnectedParamPtr pParam) = 0;
 

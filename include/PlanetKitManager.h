@@ -57,34 +57,89 @@ namespace PlanetKit {
 
         /**
         * Makes a call.
-        * @param pParam CallParam that is created by MakeCallParam::CreateWithAccessToken
-        * @param microphoneOptional Select the microphone to use for this call.
+        * @param pParam CallParam that is created by MakeCallParam::CreateWithAccessToken.
+        *               MakeCallParam::SetCallEvent must be called on pParam before MakeCall.
+        * @param micOptional Select the microphone to use for this call.
         * @param pPlanetKitCall Assigns a PlanetKitCall instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone. 
+        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone.
         *         Subsequently, the call may be terminated depending on the AllowCallWithoutMic setting in pParam.
+        * @remark Passing NullOptional here unconditionally clears any microphone previously configured via
+        *         AudioManager::ChangeMic(). To use a previously-configured microphone for this call, pass
+        *         pPlanetKitManager->GetAudioManager()->GetCurrentMic() instead.
+        *         To run truly without a microphone, also call pParam->SetAllowCallWithoutMic(true);
+        *         otherwise the call auto-disconnects with reason AUDIO_TX_NO_SRC after 5 seconds of no audio source.
+        * @remark <b>Ownership</b><br>
+        *         The returned PlanetKitCallPtr is the application's strong reference to the call.
+        *         The SDK retains internal references to the call object and dispatches events asynchronously,
+        *         so the application must:
+        *         - Register an ICallEvent handler via MakeCallParam::SetCallEvent on pParam before calling MakeCall.
+        *         - Hold the returned PlanetKitCallPtr (typically as a member variable) until ICallEvent::OnDisconnected fires.
+        *         - Release the reference only from inside ICallEvent::OnDisconnected, or after it has fired.
+        *           Releasing earlier can crash inside the SDK's event dispatch.
+        *         - To end an active call, call PlanetKitCall::EndCall and then wait for ICallEvent::OnDisconnected before releasing.
+        * @see MakeCallParam::SetCallEvent
+        * @see ICallEvent::OnDisconnected
+        * @see PlanetKitCall::EndCall
+        * @see PlanetKitManager::VerifyCall
         */
         virtual SStartResult MakeCall(MakeCallParamPtr pParam, MicOptional micOptional, PlanetKitCallPtr* pPlanetKitCall) = 0;
 
         /**
         * Verifies a call.
-        * @param pParam CallParam that is created by VerifyCallParam::Create
-        * @param microphoneOptional Select the microphone to use for this call.
+        * @param pParam CallParam that is created by VerifyCallParam::Create.
+        *               VerifyCallParam::SetCallEvent must be called on pParam before VerifyCall.
+        * @param micOptional Select the microphone to use for this call.
         * @param pPlanetKitCall  Assigns a PlanetKitCall instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone. 
+        * @remark If NullOptional or a deselected microphone value is passed, the call will proceed without a microphone.
         *         Subsequently, the call may be terminated depending on the AllowCallWithoutMic setting in pParam.
+        * @remark Passing NullOptional here unconditionally clears any microphone previously configured via
+        *         AudioManager::ChangeMic(). To use a previously-configured microphone for this call, pass
+        *         pPlanetKitManager->GetAudioManager()->GetCurrentMic() instead.
+        *         To run truly without a microphone, also call pParam->SetAllowCallWithoutMic(true);
+        *         otherwise the call auto-disconnects with reason AUDIO_TX_NO_SRC after 5 seconds of no audio source.
+        * @remark <b>Ownership</b><br>
+        *         The returned PlanetKitCallPtr is the application's strong reference to the call.
+        *         The SDK retains internal references to the call object and dispatches events asynchronously,
+        *         so the application must:
+        *         - Register an ICallEvent handler via VerifyCallParam::SetCallEvent on pParam before calling VerifyCall.
+        *         - Hold the returned PlanetKitCallPtr (typically as a member variable) until ICallEvent::OnDisconnected fires.
+        *         - Release the reference only from inside ICallEvent::OnDisconnected, or after it has fired.
+        *           Releasing earlier can crash inside the SDK's event dispatch.
+        *         - To end an active call, call PlanetKitCall::EndCall and then wait for ICallEvent::OnDisconnected before releasing.
+        * @see VerifyCallParam::SetCallEvent
+        * @see ICallEvent::OnDisconnected
+        * @see PlanetKitCall::EndCall
+        * @see PlanetKitManager::MakeCall
         */
         virtual SStartResult VerifyCall(VerifyCallParamPtr pParam, MicOptional micOptional, PlanetKitCallPtr* pPlanetKitCall) = 0;
 
         /**
         * Joins a conference.
         * @param pConferenceParam Setting values for a conference.
-        * @param microphoneOptional Select the microphone to use for this conference.
+        *               ConferenceParam::SetConferenceEvent must be called on pConferenceParam before JoinConference.
+        * @param micOptional Select the microphone to use for this conference.
         * @param pPlanetKitConference Assigns a PlanetKitConference instance on success.
         * @return SStartResult
-        * @remark If NullOptional or a deselected microphone value is passed, the conference will proceed without a microphone. 
-        *         Subsequently, the con may be terminated depending on the AllowCallWithoutMic setting in pParam.
+        * @remark If NullOptional or a deselected microphone value is passed, the conference will proceed without a microphone.
+        *         Subsequently, the conference may be terminated depending on the AllowConferenceWithoutMic setting in pConferenceParam.
+        * @remark Passing NullOptional here unconditionally clears any microphone previously configured via
+        *         AudioManager::ChangeMic(). To use a previously-configured microphone for this conference, pass
+        *         pPlanetKitManager->GetAudioManager()->GetCurrentMic() instead.
+        *         To run truly without a microphone, also call pConferenceParam->SetAllowConferenceWithoutMic(true);
+        *         otherwise the conference auto-disconnects with reason AUDIO_TX_NO_SRC after 5 seconds of no audio source.
+        * @remark <b>Ownership</b><br>
+        *         The returned PlanetKitConferencePtr is the application's strong reference to the conference.
+        *         The SDK retains internal references to the conference object and dispatches events asynchronously,
+        *         so the application must:
+        *         - Register an IConferenceEvent handler via ConferenceParam::SetConferenceEvent on pConferenceParam
+        *           before calling JoinConference.
+        *         - Hold the returned PlanetKitConferencePtr (typically as a member variable) until
+        *           IConferenceEvent::OnDisconnected fires.
+        *         - Release the reference only from inside IConferenceEvent::OnDisconnected, or after it has fired.
+        * @see ConferenceParam::SetConferenceEvent
+        * @see IConferenceEvent::OnDisconnected
         */
         virtual SStartResult JoinConference(ConferenceParamPtr pConferenceParam, MicOptional micOptional, PlanetKitConferencePtr& pPlanetKitConference) = 0;
 
