@@ -16,3 +16,15 @@
 
 #include "PlanetKitAudioDeviceInfo.h"
 #include "IPlanetKitAudioVolumeLevelChangedEvent.h"
+
+namespace PlanetKit {
+    /**
+     * @brief Initial state of the local user's audio when a call or conference starts.
+     */
+    enum EInitialMyAudioState {
+        /// Start with the local audio unmuted and sent to the peer from the beginning. This is the default.
+        PLNK_INITIAL_MY_AUDIO_STATE_UNMUTED = 0,
+        /// Start with the local audio muted. The microphone is not used at start, so the local audio is not sent to the peer and the peer is notified that the local user's audio is muted.
+        PLNK_INITIAL_MY_AUDIO_STATE_MUTED   = 1,
+    };
+}

@@ -177,7 +177,33 @@ namespace PlanetKit  {
 #else
 #define ECameraResolutionDefault (PlanetKit::ECameraResolution::PLNK_CAMERA_RESOLUTION_HD)
 #endif
-    
+
+    /**
+     * Camera focus mode.
+     * @see CameraInfo::GetFocusMode, CameraInfo::SetFocusMode
+     */
+    enum EFocusMode {
+        /// Auto focus. Entering this mode triggers the camera's auto-focus routine.
+        PLNK_FOCUS_MODE_AUTO   = 0,
+        /// Manual focus. The focus position is fixed to the manual focus value.
+        PLNK_FOCUS_MODE_MANUAL = 1,
+    };
+
+    /**
+     * Result of a camera focus control API call.
+     * @see CameraInfo::GetFocusMode, CameraInfo::SetFocusMode,
+     *      CameraInfo::SetManualFocusValue
+     */
+    enum EFocusControlResult {
+        /// The call succeeded.
+        PLNK_FOCUS_CONTROL_RESULT_SUCCESS        = 0,
+        /// The requested focus mode is not supported, or the camera does not support focus control at all.
+        PLNK_FOCUS_CONTROL_RESULT_NOT_SUPPORTED  = 1,
+        /// The manual focus value argument is outside the valid 0-100 range.
+        PLNK_FOCUS_CONTROL_RESULT_OUT_OF_RANGE   = 2,
+        /// The underlying OS focus control call failed.
+        PLNK_FOCUS_CONTROL_RESULT_INTERNAL_ERROR = 3,
+    };
 
     /**
      * Camera FPS that PlanetKit can support.

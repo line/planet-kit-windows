@@ -103,7 +103,18 @@ namespace PlanetKit {
          */
         virtual void SetRoomServiceId(const WString& strRoomServiceId) = 0;
 
-        /// Sets a conference callback event instance.
+        /**
+         * Sets a conference callback event instance.
+         * @param pEvent Event handler. The instance pointed to by pEvent must outlive the conference (it must remain alive until IConferenceEvent::OnDisconnected fires).
+         * @remark
+         *   Calling SetConferenceEvent is required before PlanetKitManager::JoinConference.
+         *   IConferenceEvent::OnDisconnected determines the safe release point of the returned PlanetKitConferencePtr.
+         *   The typical application pattern is to store pEvent as a data member of the same host class
+         *   (for example, a UI page or controller) that also holds the PlanetKitConferencePtr returned
+         *   by PlanetKitManager::JoinConference, so the handler's lifetime is naturally bound to the host.
+         * @see PlanetKitManager::JoinConference
+         * @see IConferenceEvent::OnDisconnected
+         */
         virtual void SetConferenceEvent(IConferenceEventPtr pEvent) = 0;
         
         /**
@@ -205,12 +216,12 @@ namespace PlanetKit {
         virtual bool IsPlayEndtoneRegardlessOfConferenceState() = 0;
 
         /**
-         * Retrieves the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
+         * Retrieves the initial state of the local user's video. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video is paused when the conference starts.
          */
         virtual EInitialMyVideoState GetInitialMyVideoState() = 0;
 
         /**
-         * Sets the current video initial state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state after joining the conference.
+         * Sets the initial state of the local user's video. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video is paused when the conference starts.
          */
         virtual void SetInitialMyVideoState(EInitialMyVideoState eInitialMyVideoState) = 0;
 
@@ -220,9 +231,9 @@ namespace PlanetKit {
          * The custom user type is represented as an unsigned integer value.
          *
          * @param customUserType The custom user type value, which should be in the range of 1 to 9999.
-         * 
+         *
          * @remark If the value of customUserType falls outside the range of `MinCustomUserType` to `MaxCustomUserType`, the assignment fails and the previously set value is retained.
-         * 
+         *
          * @see MinCustomUserType
          * @see MaxCustomUserType
          */
@@ -230,9 +241,21 @@ namespace PlanetKit {
 
         /**
          * Gets the custom user type.
-         * 
+         *
          * @see SetCustomUserType
          */
         virtual unsigned int GetCustomUserType() = 0;
+
+        /**
+         * Retrieves the initial state of the local user's audio. If it is set to PLNK_INITIAL_MY_AUDIO_STATE_MUTED,
+         * the local audio is muted and the microphone is not used when the conference starts.
+         */
+        virtual EInitialMyAudioState GetInitialMyAudioState() = 0;
+
+        /**
+         * Sets the initial state of the local user's audio. If it is set to PLNK_INITIAL_MY_AUDIO_STATE_MUTED,
+         * the local audio is muted and the microphone is not used when the conference starts.
+         */
+        virtual void SetInitialMyAudioState(EInitialMyAudioState eInitialMyAudioState) = 0;
     };
 }

@@ -112,6 +112,16 @@ namespace PlanetKit
 
         /**
          * Sets the ICallEvent listener class.
+         * @param pEvent Event handler. The instance pointed to by pEvent must outlive the call (it must remain alive until ICallEvent::OnDisconnected fires).
+         * @remark
+         *   Calling SetCallEvent is required before PlanetKitManager::VerifyCall.
+         *   ICallEvent::OnDisconnected determines the safe release point of the returned PlanetKitCallPtr;
+         *   without a registered handler the application has no signal for when to release the reference.
+         *   The typical application pattern is to store pEvent as a data member of the same host class
+         *   (for example, a UI page or controller) that also holds the PlanetKitCallPtr returned by
+         *   PlanetKitManager::VerifyCall, so the handler's lifetime is naturally bound to the host.
+         * @see PlanetKitManager::VerifyCall
+         * @see ICallEvent::OnDisconnected
          */
         virtual void SetCallEvent(ICallEventPtr pEvent) = 0;
 

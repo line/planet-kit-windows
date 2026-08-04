@@ -47,6 +47,14 @@ namespace PlanetKit  {
         /**
         * Leaves the conference.
         * @return true on success
+        *
+        * @remark
+        *   LeaveConference starts the disconnect sequence but does not release the
+        *   application's PlanetKitConferencePtr. The application must continue to
+        *   hold the strong reference until IConferenceEvent::OnDisconnected fires.
+        *
+        * @see IConferenceEvent::OnDisconnected
+        * @see PlanetKitManager::JoinConference
         */
         virtual bool LeaveConference() = 0;
 
@@ -149,7 +157,7 @@ namespace PlanetKit  {
 
         /**
          * Enables video transmission. 
-         * @param eInitialMyVideoState Determines the initial video state. If it is set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the video will start in a paused state, and you will need to call ResumeMyVideo to send the video to the peer. 
+         * @param eInitialMyVideoState Determines the initial state of the local user's video. If set to PLNK_INITIAL_MY_VIDEO_STATE_PAUSE, the local video starts paused, and you need to call ResumeMyVideo to send the video to the peer.
          * @param pUserData User data to be passed when pCallback is called.
          * @param pCallback This is a callback function that can receive the result.
          * @return true on success

@@ -62,6 +62,14 @@ namespace PlanetKit {
          * Called when the call state is changed to disconnected.
          * @param pPlanetKitCall Call instance that the event was registered to.
          * @param pDisconnectedParam Information parameter
+         * @remark
+         *   This is the safe release point for the PlanetKitCallPtr returned from
+         *   PlanetKitManager::MakeCall or PlanetKitManager::VerifyCall. Releasing the
+         *   strong reference earlier (for example, immediately after PlanetKitCall::EndCall,
+         *   or letting a function-local PlanetKitCallPtr go out of scope) can crash inside
+         *   the SDK's event dispatch.
+         * @see PlanetKitManager::MakeCall
+         * @see PlanetKitManager::VerifyCall
          */
         virtual void OnDisconnected(PlanetKitCallPtr pPlanetKitCall, CallDisconnectedParamPtr pDisconnectedParam) = 0;
 
